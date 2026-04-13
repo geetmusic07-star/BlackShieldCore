@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlackShield Core — AI-Powered Cybersecurity</title>
+  <meta name="description"
+    content="BlackShield Core delivers enterprise-grade AI-powered cybersecurity. Precision threat detection, intelligent defense systems.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-deep: #020617;
+      --bg-mid: #0a1628;
+      --blue-accent: #3b82f6;
+      --blue-muted: #1d4ed8;
+      --blue-dim: #1e3a5f;
+      --text-primary: #f1f5f9;
+      --text-secondary: rgba(148, 163, 184, 0.8);
+      --text-tertiary: rgba(100, 116, 139, 0.6);
+    }
+
+    html {
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* ===== THREE.JS CANVAS ===== */
+    #webgl-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* ===== BACKGROUND ===== */
+    .bg-gradient {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 65% 45%, rgba(15, 23, 42, 0.6) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 80% at 70% 50%, rgba(30, 58, 95, 0.15) 0%, transparent 60%),
+        linear-gradient(180deg, #020617 0%, #0a1628 40%, #020617 100%);
+    }
+
+    /* Subtle grid overlay for depth */
+    .bg-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(59, 130, 246, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
+    }
+
+    /* ===== TOP NAV ===== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .nav-logo-icon {
+      width: 28px;
+      height: 28px;
+      border: 1.5px solid var(--blue-accent);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .nav-logo-icon::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--blue-accent);
+      border-radius: 2px;
+    }
+
+    .nav-logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-cta {
+      padding: 9px 22px;
+      background: transparent;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 6px;
+      color: var(--blue-accent) !important;
+      font-weight: 500 !important;
+      transition: all 0.3s ease !important;
+      cursor: pointer;
+    }
+
+    .nav-cta:hover {
+      background: rgba(59, 130, 246, 0.08) !important;
+      border-color: rgba(59, 130, 246, 0.5) !important;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .hero {
+      position: relative;
+      z-index: 10;
+      width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 48px;
+      pointer-events: none;
+    }
+
+    .hero>* {
+      pointer-events: auto;
+    }
+
+    .hero-content {
+      max-width: 560px;
+      padding-top: 20px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(59, 130, 246, 0.06);
+      border: 1px solid rgba(59, 130, 246, 0.12);
+      border-radius: 20px;
+      margin-bottom: 32px;
+    }
+
+    .hero-tag-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--blue-accent);
+      border-radius: 50%;
+      animation: tagPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes tagPulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    .hero-tag-text {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue-accent);
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(40px, 5vw, 68px);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -1.5px;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+    }
+
+    .hero-title .highlight {
+      background: linear-gradient(135deg, var(--blue-accent), #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 440px;
+      margin-bottom: 40px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: var(--blue-accent);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+    }
+
+    .btn-primary svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: transparent;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(148, 163, 184, 0.3);
+      color: var(--text-primary);
+    }
+
+    /* ===== HERO STATS ===== */
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(148, 163, 184, 0.08);
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-value {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== MOUSE HINT ===== */
+    .mouse-hint {
+      position: fixed;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+    }
+
+    .mouse-hint:hover {
+      opacity: 0.6;
+    }
+
+    .mouse-box {
+      width: 20px;
+      height: 32px;
+      border: 1.5px solid var(--text-tertiary);
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .mouse-box::after {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3px;
+      height: 6px;
+      background: var(--text-tertiary);
+      border-radius: 2px;
+      animation: mouseScroll 1.8s ease-in-out infinite;
+    }
+
+    @keyframes mouseScroll {
+
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+
+      60% {
+        transform: translateX(-50%) translateY(8px);
+        opacity: 0;
+      }
+    }
+
+    .mouse-label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .nav {
+        padding: 16px 24px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding: 0 24px;
+      }
+
+      .hero-content {
+        max-width: 100%;
+        padding-top: 100px;
+      }
+
+      .hero-title {
+        font-size: 36px;
+      }
+
+      .hero-stats {
+        gap: 24px;
+      }
+
+      .stat-value {
+        font-size: 22px;
+      }
+
+      .mouse-hint {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-gradient"></div>
+  <div class="bg-grid"></div>
+  <canvas id="webgl-canvas"></canvas>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon"></div>
+      <span class="nav-logo-text">BlackShield</span>
+    </a>
+    <div class="nav-links">
+      <a href="#">Platform</a>
+      <a href="#">Solutions</a>
+      <a href="#">Research</a>
+      <a href="#">About</a>
+      <a href="#" class="nav-cta">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-tag">
+        <span class="hero-tag-dot"></span>
+        <span class="hero-tag-text">Systems Online</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="highlight">AI-Powered</span><br>
+        Cybersecurity<br>
+        Infrastructure
+      </h1>
+
+      <p class="hero-desc">
+        Enterprise-grade threat intelligence powered by adaptive neural networks.
+        Real-time defense systems that learn, evolve, and protect at machine speed.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="#" class="btn-primary">
+          Deploy Now
+          <svg viewBox="0 0 16 16">
+            <path d="M3 8h10M9 4l4 4-4 4" />
+          </svg>
+        </a>
+        <a href="#" class="btn-secondary">
+          View Documentation
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-value">99.97%</span>
+          <span class="stat-label">Threat Detection</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">&lt;12ms</span>
+          <span class="stat-label">Response Time</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">2.4M+</span>
+          <span class="stat-label">Endpoints Secured</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="mouse-hint">
+    <div class="mouse-box"></div>
+    <span class="mouse-label">Scroll</span>
+  </div>
+
+  <!-- THREE.JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      // ── SETUP ──────────────────────────────────────────────
+      const canvas = document.getElementById('webgl-canvas');
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: false,
+        powerPreference: 'high-performance'
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+      camera.position.set(0, 0, 6);
+
+      // ── MOUSE TRACKING ─────────────────────────────────────
+      const mouse = { x: 0, y: 0, smoothX: 0, smoothY: 0 };
+      const mouseWorld = new THREE.Vector3();
+
+      document.addEventListener('mousemove', (e) => {
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+      });
+
+      // ── PARTICLE SYSTEM ────────────────────────────────────
+      const PARTICLE_COUNT = 35000;
+      const positions = new Float32Array(PARTICLE_COUNT * 3);
+      const basePositions = new Float32Array(PARTICLE_COUNT * 3);
+      const velocities = new Float32Array(PARTICLE_COUNT * 3);
+      const colors = new Float32Array(PARTICLE_COUNT * 3);
+      const sizes = new Float32Array(PARTICLE_COUNT);
+      const phases = new Float32Array(PARTICLE_COUNT);
+      const layers = new Float32Array(PARTICLE_COUNT); // 0=core, 1=shell, 2=atmosphere
+
+      // Color palette — muted, elegant
+      const colCore = new THREE.Color('#60a5fa');
+      const colMid = new THREE.Color('#3b82f6');
+      const colDim = new THREE.Color('#1e40af');
+      const colDark = new THREE.Color('#0f172a');
+
+      // ── SHAPE GENERATION ───────────────────────────────────
+      // Complex topology: displaced torus-sphere hybrid with internal streams
+      function generateParticles() {
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          const t = i / PARTICLE_COUNT;
+          let x, y, z, layer;
+
+          if (t < 0.55) {
+            // CORE: Dense distorted sphere
+            layer = 0;
+            const phi = Math.acos(1 - 2 * Math.random());
+            const theta = Math.random() * Math.PI * 2;
+            let r = 1.4 + (Math.random() - 0.5) * 0.15;
+
+            // Organic displacement
+            const nx = Math.sin(phi) * Math.cos(theta);
+            const ny = Math.sin(phi) * Math.sin(theta);
+            const nz = Math.cos(phi);
+            r += Math.sin(nx * 5 + ny * 3) * Math.cos(ny * 4 + nz * 6) * 0.12;
+            r += Math.sin(nx * 11 + nz * 7) * 0.04;
+
+            x = r * nx;
+            y = r * ny;
+            z = r * nz;
+
+          } else if (t < 0.78) {
+            // SHELL: Orbital ring structures
+            layer = 1;
+            const ringIdx = Math.floor(Math.random() * 3);
+            const angle = Math.random() * Math.PI * 2;
+            let ringR, tiltX, tiltZ;
+
+            if (ringIdx === 0) { ringR = 1.9; tiltX = 0.3; tiltZ = 0.1; }
+            else if (ringIdx === 1) { ringR = 2.1; tiltX = -0.5; tiltZ = 0.8; }
+            else { ringR = 1.7; tiltX = 1.2; tiltZ = -0.3; }
+
+            x = Math.cos(angle) * ringR + (Math.random() - 0.5) * 0.25;
+            y = (Math.random() - 0.5) * 0.15;
+            z = Math.sin(angle) * ringR + (Math.random() - 0.5) * 0.25;
+
+            // Apply tilt rotation
+            const cy = Math.cos(tiltX), sy = Math.sin(tiltX);
+            const cz = Math.cos(tiltZ), sz = Math.sin(tiltZ);
+            const x1 = x * cz - y * sz;
+            const y1 = x * sz + y * cz;
+            const z1 = z;
+            const x2 = x1;
+            const y2 = y1 * cy - z1 * sy;
+            const z2 = y1 * sy + z1 * cy;
+            x = x2; y = y2; z = z2;
+
+          } else {
+            // ATMOSPHERE: Sparse outer particles
+            layer = 2;
+            const phi = Math.acos(1 - 2 * Math.random());
+            const theta = Math.random() * Math.PI * 2;
+            const r = 2.0 + Math.random() * 1.2;
+            x = r * Math.sin(phi) * Math.cos(theta);
+            y = r * Math.sin(phi) * Math.sin(theta);
+            z = r * Math.cos(phi);
+          }
+
+          const idx = i * 3;
+          positions[idx] = x;
+          positions[idx + 1] = y;
+          positions[idx + 2] = z;
+          basePositions[idx] = x;
+          basePositions[idx + 1] = y;
+          basePositions[idx + 2] = z;
+
+          velocities[idx] = 0;
+          velocities[idx + 1] = 0;
+          velocities[idx + 2] = 0;
+
+          layers[i] = layer;
+          phases[i] = Math.random() * Math.PI * 2;
+
+          // Size by layer
+          if (layer === 0) sizes[i] = 0.8 + Math.random() * 0.4;
+          else if (layer === 1) sizes[i] = 0.5 + Math.random() * 0.3;
+          else sizes[i] = 0.3 + Math.random() * 0.3;
+
+          // Color by layer + randomness for variety
+          const dist = Math.sqrt(x * x + y * y + z * z);
+          const brightness = Math.random();
+          let col = new THREE.Color();
+
+          if (layer === 0) {
+            if (brightness > 0.7) col.copy(colCore);
+            else if (brightness > 0.3) col.lerpColors(colMid, colCore, brightness);
+            else col.lerpColors(colDim, colMid, brightness);
+          } else if (layer === 1) {
+            col.lerpColors(colDim, colMid, brightness * 0.6);
+          } else {
+            col.lerpColors(colDark, colDim, brightness * 0.4);
+          }
+
+          colors[idx] = col.r;
+          colors[idx + 1] = col.g;
+          colors[idx + 2] = col.b;
+        }
+      }
+
+      generateParticles();
+
+      // ── GEOMETRY & MATERIAL ────────────────────────────────
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+      const vertexShader = `
+    attribute float size;
+    varying vec3 vColor;
+    varying float vDist;
+    uniform float uTime;
+
+    void main() {
+      vColor = color;
+      vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+      vDist = -mvPosition.z;
+      gl_PointSize = size * (55.0 / vDist);
+      gl_PointSize = max(gl_PointSize, 0.5);
+      gl_Position = projectionMatrix * mvPosition;
+    }
+  `;
+
+      const fragmentShader = `
+    varying vec3 vColor;
+    varying float vDist;
+
+    void main() {
+      float d = length(gl_PointCoord - vec2(0.5));
+      if (d > 0.5) discard;
+
+      // Sharp circle with very subtle soft edge
+      float alpha = smoothstep(0.5, 0.38, d);
+
+      // Distance fade
+      float distFade = clamp(1.0 - (vDist - 4.0) / 8.0, 0.1, 1.0);
+      alpha *= distFade;
+
+      gl_FragColor = vec4(vColor, alpha * 0.85);
+    }
+  `;
+
+      const material = new THREE.ShaderMaterial({
+        vertexShader,
+        fragmentShader,
+        vertexColors: true,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.NormalBlending,
+        uniforms: {
+          uTime: { value: 0 }
+        }
+      });
+
+      const particles = new THREE.Points(geometry, material);
+      // Position the system to the right
+      particles.position.set(1.8, 0.1, 0);
+      scene.add(particles);
+
+      // ── PHYSICS UPDATE ─────────────────────────────────────
+      const DAMPING = 0.92;
+      const RETURN_FORCE = 0.008;
+      const CURSOR_RADIUS = 2.0;
+      const CURSOR_STRENGTH = 0.15;
+
+      function updateParticles(time, dt) {
+        const posAttr = geometry.attributes.position;
+        const posArray = posAttr.array;
+
+        // Get cursor position in world space (on a plane at z=0, relative to particles)
+        const cursorX = mouse.smoothX * 4 - particles.position.x;
+        const cursorY = mouse.smoothY * 2.5 - particles.position.y;
+        const cursorZ = 1.5;
+
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          const idx = i * 3;
+          const bx = basePositions[idx];
+          const by = basePositions[idx + 1];
+          const bz = basePositions[idx + 2];
+          const layer = layers[i];
+          const phase = phases[i];
+
+          // Internal organic motion
+          let targetX = bx;
+          let targetY = by;
+          let targetZ = bz;
+
+          if (layer === 0) {
+            // Core: slow breathing + subtle drift
+            const breathe = Math.sin(time * 0.4 + phase) * 0.03;
+            const drift = Math.sin(time * 0.2 + phase * 2) * 0.02;
+            const len = Math.sqrt(bx * bx + by * by + bz * bz);
+            if (len > 0) {
+              targetX += (bx / len) * breathe + Math.sin(time * 0.3 + by * 2) * drift;
+              targetY += (by / len) * breathe + Math.cos(time * 0.25 + bz * 2) * drift;
+              targetZ += (bz / len) * breathe + Math.sin(time * 0.35 + bx * 2) * drift;
+            }
+          } else if (layer === 1) {
+            // Shell: slow orbital drift
+            const angle = time * 0.08 + phase;
+            const cos_a = Math.cos(angle * 0.3);
+            const sin_a = Math.sin(angle * 0.3);
+            targetX = bx * cos_a - bz * sin_a * 0.05 + bx * (1 - 0.05);
+            targetZ = bx * sin_a * 0.05 + bz * cos_a * 0.05 + bz * (1 - 0.05);
+            // Simpler: just rotate slowly
+            const rotSpeed = 0.02 + (i % 3) * 0.005;
+            const ca = Math.cos(time * rotSpeed);
+            const sa = Math.sin(time * rotSpeed);
+            targetX = bx * ca - bz * sa;
+            targetZ = bx * sa + bz * ca;
+            targetY = by + Math.sin(time * 0.3 + phase) * 0.02;
+          } else {
+            // Atmosphere: gentle float
+            targetX = bx + Math.sin(time * 0.15 + phase) * 0.06;
+            targetY = by + Math.cos(time * 0.12 + phase * 1.3) * 0.06;
+            targetZ = bz + Math.sin(time * 0.18 + phase * 0.7) * 0.04;
+          }
+
+          // Spring return force
+          let fx = (targetX - posArray[idx]) * RETURN_FORCE;
+          let fy = (targetY - posArray[idx + 1]) * RETURN_FORCE;
+          let fz = (targetZ - posArray[idx + 2]) * RETURN_FORCE;
+
+          // Cursor interaction — push away
+          const dx = posArray[idx] - cursorX;
+          const dy = posArray[idx + 1] - cursorY;
+          const dz = posArray[idx + 2] - cursorZ;
+          const distSq = dx * dx + dy * dy + dz * dz;
+          const cursorRadSq = CURSOR_RADIUS * CURSOR_RADIUS;
+
+          if (distSq < cursorRadSq && distSq > 0.001) {
+            const dist = Math.sqrt(distSq);
+            const force = (1 - dist / CURSOR_RADIUS) * CURSOR_STRENGTH;
+            const invDist = 1 / dist;
+            fx += dx * invDist * force;
+            fy += dy * invDist * force;
+            fz += dz * invDist * force;
+          }
+
+          // Apply velocity
+          velocities[idx] = (velocities[idx] + fx) * DAMPING;
+          velocities[idx + 1] = (velocities[idx + 1] + fy) * DAMPING;
+          velocities[idx + 2] = (velocities[idx + 2] + fz) * DAMPING;
+
+          posArray[idx] += velocities[idx];
+          posArray[idx + 1] += velocities[idx + 1];
+          posArray[idx + 2] += velocities[idx + 2];
+        }
+
+        posAttr.needsUpdate = true;
+      }
+
+      // ── RESIZE ─────────────────────────────────────────────
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // ── ANIMATION LOOP ─────────────────────────────────────
+      let prevTime = 0;
+
+      function animate(timestamp) {
+        requestAnimationFrame(animate);
+
+        const time = timestamp * 0.001;
+        const dt = Math.min(time - prevTime, 0.05);
+        prevTime = time;
+
+        // Smooth mouse
+        mouse.smoothX += (mouse.x - mouse.smoothX) * 0.04;
+        mouse.smoothY += (mouse.y - mouse.smoothY) * 0.04;
+
+        // Slow overall rotation
+        particles.rotation.y = time * 0.05;
+        particles.rotation.x = Math.sin(time * 0.08) * 0.06;
+
+        // Update uniforms
+        material.uniforms.uTime.value = time;
+
+        // Physics
+        updateParticles(time, dt);
+
+        renderer.render(scene, camera);
+      }
+
+      animate(0);
+    })();
+  </script>
+
+</body>
+
+</html>
