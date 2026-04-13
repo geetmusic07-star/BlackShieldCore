@@ -9,8 +9,7 @@
     content="BlackShield Core delivers enterprise-grade AI-powered cybersecurity. Precision threat detection, intelligent defense systems.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
   <style>
     *,
@@ -40,7 +39,7 @@
     body {
       background: var(--bg-deep);
       color: var(--text-primary);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
@@ -128,11 +127,10 @@
     }
 
     .nav-logo-text {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 14px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
+      font-family: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.01em;
     }
 
     .nav-links {
@@ -188,7 +186,7 @@
 
     .hero-content {
       max-width: 560px;
-      padding-top: 20px;
+      padding-top: 100px;
     }
 
     .hero-tag {
@@ -231,11 +229,11 @@
     }
 
     .hero-title {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(40px, 5vw, 68px);
+      font-family: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(48px, 6vw, 76px);
       font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: -1.5px;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
       color: var(--text-primary);
       margin-bottom: 24px;
     }
@@ -271,7 +269,7 @@
       border: none;
       border-radius: 8px;
       color: #fff;
-      font-family: 'Inter', sans-serif;
+      font-family: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
@@ -401,6 +399,95 @@
       }
     }
 
+    /* ===== SECTIONS & LAYOUT ===== */
+    .section-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 96px 48px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .section-header {
+      margin-bottom: 64px;
+      max-width: 600px;
+    }
+
+    .section-title {
+      font-family: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-title .highlight {
+      color: var(--blue-accent);
+    }
+
+    .section-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    /* ===== COMPONENTS ===== */
+    .grid {
+      display: grid;
+      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid rgba(59, 130, 246, 0.1);
+      border-radius: 12px;
+      padding: 32px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card:hover {
+      background: rgba(15, 23, 42, 0.7);
+      border-color: rgba(59, 130, 246, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .card-title {
+      font-family: 'SF Pro Display', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .card-text {
+      font-size: 14px;
+      line-height: 1.6;
+      font-weight: 400;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: rgba(59, 130, 246, 0.06);
+      border: 1px solid rgba(59, 130, 246, 0.12);
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--blue-accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
     .mouse-label {
       font-size: 10px;
       letter-spacing: 1.5px;
@@ -455,62 +542,382 @@
   <!-- NAV -->
   <nav class="nav">
     <a href="#" class="nav-logo">
-      <div class="nav-logo-icon"></div>
-      <span class="nav-logo-text">BlackShield</span>
+      <svg class="nav-logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+        style="width: 24px; height: 24px;">
+        <path d="M7 4H5v16h2" stroke="var(--blue-accent)" stroke-width="2" stroke-linecap="square" />
+        <path d="M17 4h2v16h-2" stroke="var(--blue-accent)" stroke-width="2" stroke-linecap="square" />
+        <rect x="9" y="8" width="6" height="8" fill="var(--blue-accent)" />
+      </svg>
+      <span class="nav-logo-text">BlackShield Core</span>
     </a>
     <div class="nav-links">
-      <a href="#">Platform</a>
-      <a href="#">Solutions</a>
-      <a href="#">Research</a>
-      <a href="#">About</a>
-      <a href="#" class="nav-cta">Get Started</a>
+      <a href="#labs">Labs</a>
+      <a href="#projects">Projects</a>
+      <a href="#case-studies">Case Studies</a>
+      <a href="#blog">Research</a>
+      <a href="#about">About</a>
+      <a href="#" class="nav-cta">Enter Labs</a>
     </div>
   </nav>
 
   <!-- HERO -->
   <section class="hero" id="hero">
     <div class="hero-content">
-      <div class="hero-tag">
-        <span class="hero-tag-dot"></span>
-        <span class="hero-tag-text">Systems Online</span>
-      </div>
 
       <h1 class="hero-title">
-        <span class="highlight">AI-Powered</span><br>
-        Cybersecurity<br>
-        Infrastructure
+        <span class="highlight">Offensive Security</span><br>
+        & Defensive<br>
+        Architecture
       </h1>
 
       <p class="hero-desc">
-        Enterprise-grade threat intelligence powered by adaptive neural networks.
-        Real-time defense systems that learn, evolve, and protect at machine speed.
+        Advanced research laboratory engineering autonomous threat hunting, exploit analysis, and neural defense
+        systems. Operations and simulations mapped at scale.
       </p>
 
       <div class="hero-buttons">
         <a href="#" class="btn-primary">
-          Deploy Now
+          Enter Labs
           <svg viewBox="0 0 16 16">
             <path d="M3 8h10M9 4l4 4-4 4" />
           </svg>
         </a>
         <a href="#" class="btn-secondary">
-          View Documentation
+          View Research
         </a>
       </div>
 
       <div class="hero-stats">
         <div class="stat">
-          <span class="stat-value">99.97%</span>
-          <span class="stat-label">Threat Detection</span>
+          <span class="stat-value">142</span>
+          <span class="stat-label">Confirmed CVEs</span>
         </div>
         <div class="stat">
-          <span class="stat-value">&lt;12ms</span>
-          <span class="stat-label">Response Time</span>
+          <span class="stat-value">14</span>
+          <span class="stat-label">Custom Labs</span>
         </div>
         <div class="stat">
-          <span class="stat-value">2.4M+</span>
-          <span class="stat-label">Endpoints Secured</span>
+          <span class="stat-value">28+</span>
+          <span class="stat-label">Research Projects</span>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="intro" class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Beyond <span class="highlight">Defense</span></h2>
+      <p class="section-desc">
+        I specialize in offensive security research, defensive architecture, and applied AI. Building intelligent
+        systems that autonomously identify and mitigate complex vulnerabilities.
+      </p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <span class="badge" style="width: fit-content;">Architecture</span>
+        <h3 class="card-title">Threat Intelligence</h3>
+        <p class="card-text">Developing massive-scale data ingestion pipelines to process, analyze, and neutralize
+          active threats across enterprise networks.</p>
+      </div>
+      <div class="card">
+        <span class="badge" style="width: fit-content;">Applied AI</span>
+        <h3 class="card-title">Neural Defense</h3>
+        <p class="card-text">Training specialized language models to detect zero-day exploits, prompt injection attacks,
+          and anomalous behavior patterns.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="dashboard" class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Security <span class="highlight">Dashboard</span></h2>
+      <p class="section-desc">Active threat environment analysis, simulating real-time CVE feeds and network anomalies.
+      </p>
+    </div>
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+      <div class="card">
+        <span class="badge"
+          style="width: fit-content; border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.1);">Critical</span>
+        <h3 class="card-title" style="font-size: 16px;">CVE-2026-X892</h3>
+        <p class="card-text">Zero-day remote code execution in popular enterprise IAM protocol. Active exploitation
+          detected.</p>
+      </div>
+      <div class="card">
+        <span class="badge"
+          style="width: fit-content; border-color: #f59e0b; color: #f59e0b; background: rgba(245, 158, 11, 0.1);">High</span>
+        <h3 class="card-title" style="font-size: 16px;">Anomalous Auth Spike</h3>
+        <p class="card-text">Credential stuffing attack originating from 12k distinct endpoints targeting gateway nodes.
+        </p>
+      </div>
+      <div class="card">
+        <span class="badge"
+          style="width: fit-content; border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1);">Resolved</span>
+        <h3 class="card-title" style="font-size: 16px;">Data Exfiltration Attempt</h3>
+        <p class="card-text">Neural models intercepted and dropped malicious lateral movement inside segment US-East-2.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="labs" class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Interactive <span class="highlight">Labs</span></h2>
+      <p class="section-desc">Safe environments simulating real-world vulnerabilities. Examine the attack vector,
+        payload execution, and mitigation strategy.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <span class="badge" style="width: fit-content;">Web Target</span>
+        <h3 class="card-title">Cross-Site Scripting (XSS)</h3>
+        <p class="card-text"><strong>Mechanism:</strong> Reflected DOM injection via unsanitized search
+          parameters.<br><strong>Impact:</strong> Session hijacking.<br><strong>Mitigation:</strong> Context-aware
+          output encoding.</p>
+        <a href="#" class="btn-secondary"
+          style="margin-top: 12px; font-size: 12px; width: fit-content; padding: 10px 16px;">Launch Lab</a>
+      </div>
+      <div class="card">
+        <span class="badge" style="width: fit-content;">Database</span>
+        <h3 class="card-title">Blind SQL Injection</h3>
+        <p class="card-text"><strong>Mechanism:</strong> Time-based boolean inference extracting backend
+          schemas.<br><strong>Impact:</strong> Complete data extraction.<br><strong>Mitigation:</strong> Prepared
+          statements & strictly typed ORMs.</p>
+        <a href="#" class="btn-secondary"
+          style="margin-top: 12px; font-size: 12px; width: fit-content; padding: 10px 16px;">Launch Lab</a>
+      </div>
+      <div class="card">
+        <span class="badge" style="width: fit-content;">Access Control</span>
+        <h3 class="card-title">Broken OAuth Flow</h3>
+        <p class="card-text"><strong>Mechanism:</strong> State parameter omission allowing CSRF forced
+          authorization.<br><strong>Impact:</strong> Unauthorized account hijacking.<br><strong>Mitigation:</strong>
+          Enforced cryptographic nonces.</p>
+        <a href="#" class="btn-secondary"
+          style="margin-top: 12px; font-size: 12px; width: fit-content; padding: 10px 16px;">Launch Lab</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">AI + Security <span class="highlight">Projects</span></h2>
+      <p class="section-desc">Bridging the gap between artificial intelligence and offensive security. Engineering
+        autonomous tools for threat hunting and defense.</p>
+    </div>
+    <div class="grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="card">
+        <h3 class="card-title">LLM Prompt Injection Shield</h3>
+        <p class="card-text"><strong>The Problem:</strong> Enterprise AI agents are vulnerable to adversarial prompts
+          resulting in data leaks.<br><br><strong>Approach:</strong> Developed an intermediary neural filter trained on
+          50k adversarial payloads to classify and sanitize inputs instantly.<br><br><strong>Outcome:</strong> 99.4%
+          detection rate of sophisticated jailbreaks with under 15ms latency overhead.</p>
+      </div>
+      <div class="card">
+        <h3 class="card-title">Phishing Taxonomy Engine</h3>
+        <p class="card-text"><strong>The Problem:</strong> Polymorphic spear-phishing campaigns bypass static email
+          gateways.<br><br><strong>Approach:</strong> A computer-vision and NLP hybrid model evaluating domain
+          permutations, visual rendering similarity, and linguistic urgency.<br><br><strong>Outcome:</strong> Integrated
+          directly into mail relays, neutralizing targeted C-suite spoofing attacks.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="tools" class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Offensive <span class="highlight">Toolkit</span></h2>
+      <p class="section-desc">Custom utilities developed for rapid assessment, cryptanalysis, and payload generation.
+      </p>
+    </div>
+    <div class="grid" style="grid-template-columns: repeat(4, 1fr);">
+      <div class="card" style="padding: 24px; align-items: center; text-align: center;">
+        <span class="badge" style="margin-bottom: 8px;">Utility</span>
+        <h3 class="card-title" style="font-size: 16px;">JWT Decoder</h3>
+        <a href="#" class="btn-secondary" style="margin-top: auto; font-size: 11px; padding: 8px 12px;">Open Tool</a>
+      </div>
+      <div class="card" style="padding: 24px; align-items: center; text-align: center;">
+        <span class="badge" style="margin-bottom: 8px;">Crypto</span>
+        <h3 class="card-title" style="font-size: 16px;">Hash Analyzer</h3>
+        <a href="#" class="btn-secondary" style="margin-top: auto; font-size: 11px; padding: 8px 12px;">Open Tool</a>
+      </div>
+      <div class="card" style="padding: 24px; align-items: center; text-align: center;">
+        <span class="badge" style="margin-bottom: 8px;">Audit</span>
+        <h3 class="card-title" style="font-size: 16px;">Log Parser</h3>
+        <a href="#" class="btn-secondary" style="margin-top: auto; font-size: 11px; padding: 8px 12px;">Open Tool</a>
+      </div>
+      <div class="card" style="padding: 24px; align-items: center; text-align: center;">
+        <span class="badge" style="margin-bottom: 8px;">Auth</span>
+        <h3 class="card-title" style="font-size: 16px;">Pass Entropy</h3>
+        <a href="#" class="btn-secondary" style="margin-top: auto; font-size: 11px; padding: 8px 12px;">Open Tool</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="case-studies" class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Case <span class="highlight">Studies</span></h2>
+      <p class="section-desc">Declassified audits and post-mortem analysis of critical vulnerabilities.</p>
+    </div>
+    <div class="grid" style="grid-template-columns: 1fr;">
+      <div class="card" style="flex-direction: row; flex-wrap: wrap; gap: 32px; justify-content: space-between;">
+        <div style="flex: 1; min-width: 300px;">
+          <span class="badge" style="margin-bottom: 16px;">Financial Tech</span>
+          <h3 class="card-title" style="margin-bottom: 12px;">Bypassing 2FA via Race Condition</h3>
+          <p class="card-text"><strong>Analysis:</strong> Identified a severe multi-threading flaw in the OTP validation
+            microservice of a major payment gateway, allowing simultaneous parallel requests to exhaust and bypass
+            rate-limiting counters.</p>
+        </div>
+        <div style="flex: 1; min-width: 300px; border-left: 1px solid rgba(148, 163, 184, 0.1); padding-left: 32px;">
+          <p class="card-text"><strong>Solution:</strong> Implemented strict database row-level locking and atomic Redis
+            operations during the token lifecycle phase.</p>
+          <p class="card-text" style="margin-top: 12px; color: var(--blue-accent);"><strong>Result:</strong> $2M+ in
+            potential fraud prevented. Vulnerability patched globally.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="home-lab" class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Home <span class="highlight">Lab</span></h2>
+      <p class="section-desc">Personal infrastructure for exploit development and threat simulation.</p>
+    </div>
+    <div class="grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="card">
+        <span class="badge" style="width: fit-content;">Architecture</span>
+        <h3 class="card-title">Network Segmentation</h3>
+        <p class="card-text">Type 1 Hypervisor running 14 isolated VLANs. Full packet inspection pipeline logging to
+          Elasticsearch for SIEM analysis and alert tuning.</p>
+      </div>
+      <div class="card">
+        <span class="badge" style="width: fit-content;">Simulations</span>
+        <h3 class="card-title">Proxmox Range</h3>
+        <p class="card-text">Automated Active Directory lab generation via Terraform. Used to test lateral movement
+          techniques (Pass-the-Hash, Kerberoasting) and EDR evasion.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="osint" class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">OSINT & <span class="highlight">Research</span></h2>
+      <p class="section-desc">Deep-dive analysis spanning threat actor profiling, credential leaks, and domain
+        correlations.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <h3 class="card-title" style="font-size: 16px;">Phishing Domain Cartography</h3>
+        <p class="card-text">Mapping the infrastructure of the APT-29 clone campaigns targeting European NGOs.</p>
+        <span class="card-text" style="font-size: 11px; opacity: 0.6; margin-top: auto;">Updated: 2 days ago</span>
+      </div>
+      <div class="card">
+        <h3 class="card-title" style="font-size: 16px;">Breach Data Correlation</h3>
+        <p class="card-text">Analyzing password reuse patterns across the top 100 recent database leaks to calculate
+          enterprise risk metrics.</p>
+        <span class="card-text" style="font-size: 11px; opacity: 0.6; margin-top: auto;">Updated: 1 week ago</span>
+      </div>
+      <div class="card">
+        <h3 class="card-title" style="font-size: 16px;">Social Engineering Deconstruction</h3>
+        <p class="card-text">A breakdown of the spear-phishing pretext utilized in the recent multi-million dollar
+          supply chain attack.</p>
+        <span class="card-text" style="font-size: 11px; opacity: 0.6; margin-top: auto;">Updated: 3 weeks ago</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="blog" class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Technical <span class="highlight">Blog</span></h2>
+      <p class="section-desc">Advanced offensive techniques and modern defensive architectures.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="card"
+        style="padding: 24px; flex-direction: row; align-items: center; justify-content: space-between; cursor: pointer;">
+        <div>
+          <span class="badge" style="margin-bottom: 8px;">Exploit Dev</span>
+          <h3 class="card-title" style="font-size: 18px;">Weaponizing Deserialization in Java 17</h3>
+        </div>
+        <span style="color: var(--text-secondary);">&rarr;</span>
+      </div>
+      <div class="card"
+        style="padding: 24px; flex-direction: row; align-items: center; justify-content: space-between; cursor: pointer;">
+        <div>
+          <span class="badge" style="margin-bottom: 8px;">AI / ML</span>
+          <h3 class="card-title" style="font-size: 18px;">Adversarial Attacks on Intrusion Detection Systems</h3>
+        </div>
+        <span style="color: var(--text-secondary);">&rarr;</span>
+      </div>
+      <div class="card"
+        style="padding: 24px; flex-direction: row; align-items: center; justify-content: space-between; cursor: pointer;">
+        <div>
+          <span class="badge" style="margin-bottom: 8px;">Cloud Security</span>
+          <h3 class="card-title" style="font-size: 18px;">Escalating IAM Privileges via AWS Metadata Service v2</h3>
+        </div>
+        <span style="color: var(--text-secondary);">&rarr;</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="gamification" class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Hack <span class="highlight">Metrics</span></h2>
+      <p class="section-desc">Live performance stats from competitive platforms and bug bounty triages.</p>
+    </div>
+    <div class="grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="card" style="align-items: center; text-align: center;">
+        <span class="stat-value" style="font-size: 48px; color: var(--blue-accent);">Top 1%</span>
+        <h3 class="card-title" style="font-size: 14px; color: var(--text-secondary);">HackTheBox Global Rank</h3>
+      </div>
+      <div class="card" style="align-items: center; text-align: center;">
+        <span class="stat-value" style="font-size: 48px; color: var(--blue-accent);">142</span>
+        <h3 class="card-title" style="font-size: 14px; color: var(--text-secondary);">Validated CVEs / Bugs</h3>
+      </div>
+      <div class="card" style="align-items: center; text-align: center;">
+        <span class="stat-value" style="font-size: 48px; color: var(--blue-accent);">$150k+</span>
+        <h3 class="card-title" style="font-size: 14px; color: var(--text-secondary);">Bounties Rewarded</h3>
+      </div>
+    </div>
+  </section>
+
+  <section id="talks" class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Keynotes & <span class="highlight">Talks</span></h2>
+      <p class="section-desc">Conference presentations and public security briefings.</p>
+    </div>
+    <div class="grid" style="grid-template-columns: 1fr 1fr;">
+      <div class="card">
+        <div
+          style="width: 100%; height: 200px; background: rgba(0,0,0,0.5); border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: rgba(255,255,255,0.2);">
+          ▶</div>
+        <h3 class="card-title">DEF CON 32</h3>
+        <p class="card-text">"Poisoning the Well: AI Training Data Manipulation for Targeted Exfiltration"</p>
+      </div>
+      <div class="card">
+        <div
+          style="width: 100%; height: 200px; background: rgba(0,0,0,0.5); border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: rgba(255,255,255,0.2);">
+          ▶</div>
+        <h3 class="card-title">Black Hat USA 2025</h3>
+        <p class="card-text">"Automating the Purple Team: Next-Gen Simulation Tools"</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">System <span class="highlight">Operator</span></h2>
+      <p class="section-desc">
+        Cybersecurity researcher and engineer based in the terminal. Always exploring the boundaries of security
+        automation.
+      </p>
+    </div>
+    <div class="card" style="max-width: 600px;">
+      <h3 class="card-title">Connect</h3>
+      <p class="card-text">Active operations, open-source projects, and security write-ups are available on my primary
+        endpoints.</p>
+      <div style="display: flex; gap: 16px; margin-top: 8px;">
+        <a href="#" class="btn-primary" style="padding: 10px 20px; font-size: 13px;">GitHub
+          <svg viewBox="0 0 16 16">
+            <path d="M3 8h10M9 4l4 4-4 4" />
+          </svg>
+        </a>
+        <a href="#" class="btn-secondary" style="padding: 10px 20px; font-size: 13px;">LinkedIn</a>
       </div>
     </div>
   </section>
@@ -618,14 +1025,13 @@
             x = x2; y = y2; z = z2;
 
           } else {
-            // ATMOSPHERE: Sparse outer particles
+            // ATMOSPHERE: Same particles, simply mapping width/height across background volume
+            // Z depth is strictly bounded to identical local z logic (-3 to +3) to ensure EXACT shader 
+            // distFade density sizing, brightness, and texture rules. No new particles invented.
             layer = 2;
-            const phi = Math.acos(1 - 2 * Math.random());
-            const theta = Math.random() * Math.PI * 2;
-            const r = 2.0 + Math.random() * 1.2;
-            x = r * Math.sin(phi) * Math.cos(theta);
-            y = r * Math.sin(phi) * Math.sin(theta);
-            z = r * Math.cos(phi);
+            x = (Math.random() - 0.5) * 32 - 1.8;
+            y = (Math.random() - 0.5) * 18;
+            z = (Math.random() - 0.5) * 6;
           }
 
           const idx = i * 3;
@@ -725,7 +1131,7 @@
       });
 
       const particles = new THREE.Points(geometry, material);
-      // Position the system to the right
+      // Position the system exactly as reference to preserve target size scale
       particles.position.set(1.8, 0.1, 0);
       scene.add(particles);
 
