@@ -958,7 +958,7 @@
       });
 
       // ── PARTICLE SYSTEM ────────────────────────────────────
-      const PARTICLE_COUNT = 35000;
+      const PARTICLE_COUNT = 73500;
       const positions = new Float32Array(PARTICLE_COUNT * 3);
       const basePositions = new Float32Array(PARTICLE_COUNT * 3);
       const velocities = new Float32Array(PARTICLE_COUNT * 3);
@@ -977,10 +977,9 @@
       // Complex topology: displaced torus-sphere hybrid with internal streams
       function generateParticles() {
         for (let i = 0; i < PARTICLE_COUNT; i++) {
-          const t = i / PARTICLE_COUNT;
           let x, y, z, layer;
 
-          if (t < 0.55) {
+          if (i < 19250) {
             // CORE: Dense distorted sphere
             layer = 0;
             const phi = Math.acos(1 - 2 * Math.random());
@@ -998,7 +997,7 @@
             y = r * ny;
             z = r * nz;
 
-          } else if (t < 0.78) {
+          } else if (i < 27300) {
             // SHELL: Orbital ring structures
             layer = 1;
             const ringIdx = Math.floor(Math.random() * 3);
