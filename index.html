@@ -4,31 +4,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BlackShield Core — AI-Powered Cybersecurity</title>
+  <title>BlackShield Core — AI-Driven Cybersecurity Intelligence</title>
   <meta name="description"
-    content="BlackShield Core delivers enterprise-grade AI-powered cybersecurity. Precision threat detection, intelligent defense systems.">
+    content="BlackShield Core fuses adversarial AI research with offensive security engineering. Autonomous threat hunting, exploit analysis, and neural defense systems.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    *,
-    *::before,
-    *::after {
+    /* ═══════════════════════════════════════════
+       DESIGN SYSTEM — TASTE-SKILL CALIBRATED
+       DESIGN_VARIANCE: 8  |  MOTION_INTENSITY: 7  |  VISUAL_DENSITY: 4
+       Palette: Zinc/Slate base + singular Emerald accent
+       Font: Outfit (display) + JetBrains Mono (data)
+       ═══════════════════════════════════════════ */
+
+    *, *::before, *::after {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
     :root {
-      --bg-deep: #020617;
-      --bg-mid: #0a1628;
-      --blue-accent: #3b82f6;
-      --blue-muted: #1d4ed8;
-      --blue-dim: #1e3a5f;
-      --text-primary: #f1f5f9;
-      --text-secondary: rgba(148, 163, 184, 0.8);
-      --text-tertiary: rgba(100, 116, 139, 0.6);
+      --bg-void: #09090b;
+      --bg-surface: #18181b;
+      --bg-elevated: #27272a;
+      --border-subtle: rgba(63, 63, 70, 0.5);
+      --border-dim: rgba(63, 63, 70, 0.25);
+      --accent: #34d399;
+      --accent-muted: #059669;
+      --accent-dim: rgba(52, 211, 153, 0.08);
+      --accent-glow: rgba(52, 211, 153, 0.15);
+      --text-primary: #fafafa;
+      --text-secondary: rgba(161, 161, 170, 0.85);
+      --text-tertiary: rgba(113, 113, 122, 0.7);
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Outfit', system-ui, -apple-system, sans-serif;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     html {
@@ -37,15 +49,25 @@
     }
 
     body {
-      background: var(--bg-deep);
+      background: var(--bg-void);
       color: var(--text-primary);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: var(--sans);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
     }
 
-    /* ===== THREE.JS CANVAS ===== */
+    /* ===== NOISE GRAIN OVERLAY ===== */
+    .grain-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* ===== CANVAS ===== */
     #webgl-canvas {
       position: fixed;
       top: 0;
@@ -56,234 +78,279 @@
       pointer-events: none;
     }
 
-    /* ===== BACKGROUND ===== */
-    .bg-gradient {
+    /* ===== AMBIENT BACKGROUND ===== */
+    .bg-ambient {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      inset: 0;
       z-index: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 65% 45%, rgba(15, 23, 42, 0.6) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 80% at 70% 50%, rgba(30, 58, 95, 0.15) 0%, transparent 60%),
-        linear-gradient(180deg, #020617 0%, #0a1628 40%, #020617 100%);
+        radial-gradient(ellipse 50% 40% at 75% 40%, rgba(52, 211, 153, 0.04) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 25% 60%, rgba(52, 211, 153, 0.02) 0%, transparent 60%),
+        linear-gradient(180deg, #09090b 0%, #0f0f12 50%, #09090b 100%);
     }
 
-    /* Subtle grid overlay for depth */
-    .bg-grid {
+    .bg-grid-lines {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      inset: 0;
       z-index: 0;
       background-image:
-        linear-gradient(rgba(59, 130, 246, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(59, 130, 246, 0.02) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
-      -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
+        linear-gradient(rgba(52, 211, 153, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(52, 211, 153, 0.015) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 50% 40% at 70% 45%, rgba(0,0,0,0.6) 0%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse 50% 40% at 70% 45%, rgba(0,0,0,0.6) 0%, transparent 70%);
     }
 
-    /* ===== TOP NAV ===== */
+    /* ===== NAV ===== */
     .nav {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      z-index: 100;
-      padding: 28px 48px;
+      z-index: 200;
+      padding: 24px 48px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(9, 9, 11, 0.6);
+      border-bottom: 1px solid var(--border-dim);
+      transition: all 0.4s var(--ease-out-expo);
     }
 
     .nav-logo {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       text-decoration: none;
       color: var(--text-primary);
     }
 
-    .nav-logo-icon {
-      width: 28px;
-      height: 28px;
-      border: 1.5px solid var(--blue-accent);
-      border-radius: 6px;
+    .nav-logo-mark {
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid var(--accent);
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
+      transition: all 0.3s var(--ease-out-expo);
     }
 
-    .nav-logo-icon::before {
+    .nav-logo-mark::before {
       content: '';
-      width: 8px;
-      height: 8px;
-      background: var(--blue-accent);
-      border-radius: 2px;
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 3px;
+      transition: transform 0.3s var(--ease-spring);
+    }
+
+    .nav-logo:hover .nav-logo-mark::before {
+      transform: rotate(45deg) scale(1.1);
     }
 
     .nav-logo-text {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-weight: 600;
       font-size: 15px;
-      letter-spacing: -0.01em;
+      letter-spacing: -0.02em;
     }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 36px;
+      gap: 32px;
     }
 
     .nav-links a {
-      color: var(--text-secondary);
+      color: var(--text-tertiary);
       text-decoration: none;
       font-size: 13px;
       font-weight: 400;
-      letter-spacing: 0.3px;
-      transition: color 0.3s ease;
+      letter-spacing: 0.02em;
+      transition: color 0.3s var(--ease-out-expo);
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width 0.4s var(--ease-out-expo);
     }
 
     .nav-links a:hover {
       color: var(--text-primary);
     }
 
-    .nav-cta {
-      padding: 9px 22px;
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta-btn {
+      padding: 10px 24px;
       background: transparent;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      border-radius: 6px;
-      color: var(--blue-accent) !important;
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      border-radius: 8px;
+      color: var(--accent) !important;
       font-weight: 500 !important;
-      transition: all 0.3s ease !important;
+      font-size: 13px !important;
+      transition: all 0.3s var(--ease-out-expo) !important;
       cursor: pointer;
     }
 
-    .nav-cta:hover {
-      background: rgba(59, 130, 246, 0.08) !important;
-      border-color: rgba(59, 130, 246, 0.5) !important;
+    .nav-cta-btn:hover {
+      background: var(--accent-dim) !important;
+      border-color: rgba(52, 211, 153, 0.45) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(52, 211, 153, 0.12);
     }
 
-    /* ===== HERO SECTION ===== */
+    .nav-cta-btn::after {
+      display: none !important;
+    }
+
+    /* ===== HERO — ASYMMETRIC SPLIT (DESIGN_VARIANCE: 8) ===== */
     .hero {
       position: relative;
       z-index: 10;
-      width: 100vw;
-      min-height: 100vh;
-      display: flex;
+      width: 100%;
+      min-height: 100dvh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       align-items: center;
       padding: 0 48px;
       pointer-events: none;
     }
 
-    .hero>* {
+    .hero > * {
       pointer-events: auto;
     }
 
     .hero-content {
-      max-width: 560px;
-      padding-top: 100px;
+      max-width: 580px;
+      padding-top: 40px;
     }
 
     .hero-tag {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      background: rgba(59, 130, 246, 0.06);
-      border: 1px solid rgba(59, 130, 246, 0.12);
-      border-radius: 20px;
-      margin-bottom: 32px;
+      gap: 10px;
+      padding: 7px 16px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(52, 211, 153, 0.12);
+      border-radius: 100px;
+      margin-bottom: 36px;
+      animation: fadeInUp 0.8s var(--ease-out-expo) 0.2s both;
     }
 
     .hero-tag-dot {
       width: 6px;
       height: 6px;
-      background: var(--blue-accent);
+      background: var(--accent);
       border-radius: 50%;
-      animation: tagPulse 2s ease-in-out infinite;
+      animation: breathe 2.5s ease-in-out infinite;
     }
 
-    @keyframes tagPulse {
-
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0.4;
-      }
+    @keyframes breathe {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
     }
 
-    .hero-tag-text {
-      font-size: 11px;
+    .hero-tag-label {
+      font-family: var(--mono);
+      font-size: 10px;
       font-weight: 500;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.8px;
       text-transform: uppercase;
-      color: var(--blue-accent);
+      color: var(--accent);
     }
 
     .hero-title {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: clamp(48px, 6vw, 76px);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.04em;
+      font-family: var(--sans);
+      font-size: clamp(42px, 5.5vw, 72px);
+      font-weight: 700;
+      line-height: 1.02;
+      letter-spacing: -0.045em;
       color: var(--text-primary);
-      margin-bottom: 24px;
+      margin-bottom: 28px;
+      animation: fadeInUp 0.8s var(--ease-out-expo) 0.35s both;
     }
 
-    .hero-title .highlight {
-      background: linear-gradient(135deg, var(--blue-accent), #60a5fa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .hero-title .accent-text {
+      color: var(--accent);
     }
 
     .hero-desc {
       font-size: 16px;
       font-weight: 300;
-      line-height: 1.7;
+      line-height: 1.75;
       color: var(--text-secondary);
-      max-width: 440px;
-      margin-bottom: 40px;
+      max-width: 460px;
+      margin-bottom: 44px;
+      animation: fadeInUp 0.8s var(--ease-out-expo) 0.5s both;
     }
 
-    .hero-buttons {
+    .hero-actions {
       display: flex;
       align-items: center;
       gap: 16px;
+      animation: fadeInUp 0.8s var(--ease-out-expo) 0.65s both;
     }
 
-    .btn-primary {
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn-main {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 14px 28px;
-      background: var(--blue-accent);
+      gap: 10px;
+      padding: 14px 32px;
+      background: var(--accent);
       border: none;
-      border-radius: 8px;
-      color: #fff;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      border-radius: 10px;
+      color: var(--bg-void);
+      font-family: var(--sans);
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s var(--ease-out-expo);
       text-decoration: none;
+      position: relative;
+      overflow: hidden;
     }
 
-    .btn-primary:hover {
-      background: #2563eb;
-      transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+    .btn-main::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.3s;
     }
 
-    .btn-primary svg {
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(52, 211, 153, 0.3);
+    }
+
+    .btn-main:hover::before {
+      opacity: 1;
+    }
+
+    .btn-main:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .btn-main svg {
       width: 16px;
       height: 16px;
       fill: none;
@@ -291,62 +358,82 @@
       stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
+      transition: transform 0.3s var(--ease-out-expo);
     }
 
-    .btn-secondary {
+    .btn-main:hover svg {
+      transform: translateX(3px);
+    }
+
+    .btn-ghost {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       padding: 14px 28px;
       background: transparent;
-      border: 1px solid rgba(148, 163, 184, 0.15);
-      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
       color: var(--text-secondary);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: var(--sans);
       font-size: 14px;
       font-weight: 400;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s var(--ease-out-expo);
       text-decoration: none;
     }
 
-    .btn-secondary:hover {
-      border-color: rgba(148, 163, 184, 0.3);
+    .btn-ghost:hover {
+      border-color: var(--text-tertiary);
       color: var(--text-primary);
+      transform: translateY(-1px);
     }
 
-    /* ===== HERO STATS ===== */
-    .hero-stats {
+    .btn-ghost:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    /* Hero Stats */
+    .hero-metrics {
       display: flex;
       gap: 48px;
-      margin-top: 64px;
+      margin-top: 72px;
       padding-top: 32px;
-      border-top: 1px solid rgba(148, 163, 184, 0.08);
+      border-top: 1px solid var(--border-dim);
+      animation: fadeInUp 0.8s var(--ease-out-expo) 0.8s both;
     }
 
-    .stat {
+    .metric {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
     }
 
-    .stat-value {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    .metric-value {
+      font-family: var(--mono);
       font-size: 28px;
-      font-weight: 700;
+      font-weight: 500;
       color: var(--text-primary);
-      letter-spacing: -0.5px;
+      letter-spacing: -0.02em;
     }
 
-    .stat-label {
-      font-size: 12px;
+    .metric-label {
+      font-size: 11px;
       font-weight: 400;
       color: var(--text-tertiary);
       letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
 
-    /* ===== MOUSE HINT ===== */
-    .mouse-hint {
+    /* Hero right side — visual placeholder for 3D sphere */
+    .hero-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* ===== SCROLL INDICATOR ===== */
+    .scroll-indicator {
       position: fixed;
       bottom: 36px;
       left: 50%;
@@ -355,150 +442,835 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      opacity: 0.3;
-      transition: opacity 0.3s ease;
+      gap: 10px;
+      opacity: 0.25;
+      transition: opacity 0.4s var(--ease-out-expo);
+      animation: fadeInUp 1s var(--ease-out-expo) 1.2s both;
     }
 
-    .mouse-hint:hover {
-      opacity: 0.6;
+    .scroll-indicator:hover {
+      opacity: 0.5;
     }
 
-    .mouse-box {
+    .scroll-pill {
       width: 20px;
-      height: 32px;
+      height: 34px;
       border: 1.5px solid var(--text-tertiary);
-      border-radius: 10px;
+      border-radius: 12px;
       position: relative;
     }
 
-    .mouse-box::after {
+    .scroll-pill::after {
       content: '';
       position: absolute;
-      top: 6px;
+      top: 7px;
       left: 50%;
       transform: translateX(-50%);
       width: 3px;
-      height: 6px;
-      background: var(--text-tertiary);
+      height: 7px;
+      background: var(--accent);
       border-radius: 2px;
-      animation: mouseScroll 1.8s ease-in-out infinite;
+      animation: scrollDot 2s ease-in-out infinite;
     }
 
-    @keyframes mouseScroll {
-
-      0%,
-      100% {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
-      }
-
-      60% {
-        transform: translateX(-50%) translateY(8px);
-        opacity: 0;
-      }
+    @keyframes scrollDot {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+      60% { transform: translateX(-50%) translateY(10px); opacity: 0; }
     }
 
-    /* ===== SECTIONS & LAYOUT ===== */
-    .section-container {
-      max-width: 1200px;
+    .scroll-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    /* ===== KINETIC MARQUEE ===== */
+    .marquee-band {
+      position: relative;
+      z-index: 10;
+      overflow: hidden;
+      padding: 20px 0;
+      border-top: 1px solid var(--border-dim);
+      border-bottom: 1px solid var(--border-dim);
+      background: rgba(9, 9, 11, 0.5);
+      backdrop-filter: blur(8px);
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marqueeSlide 40s linear infinite;
+    }
+
+    .marquee-track:hover {
+      animation-play-state: paused;
+    }
+
+    @keyframes marqueeSlide {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .marquee-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 40px;
+      white-space: nowrap;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .marquee-item .dot {
+      width: 4px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ===== SECTIONS ===== */
+    .section {
+      max-width: 1280px;
       margin: 0 auto;
-      padding: 96px 48px;
+      padding: 120px 48px;
       position: relative;
       z-index: 10;
     }
 
-    .section-header {
-      margin-bottom: 64px;
+    .section-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .section-heading {
+      font-family: var(--sans);
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 16px;
       max-width: 600px;
     }
 
-    .section-title {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 32px;
+    .section-subtext {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin-bottom: 56px;
+    }
+
+    /* ===== ASYMMETRIC 2-COL ZIG-ZAG ===== */
+    .zigzag {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .zigzag.reverse {
+      grid-template-columns: 1fr 1.15fr;
+    }
+
+    .zigzag.reverse .zigzag-content {
+      order: 2;
+    }
+
+    .zigzag.reverse .zigzag-visual {
+      order: 1;
+    }
+
+    .zigzag-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .zigzag-visual {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 16 / 11;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* ===== SPOTLIGHT BORDER CARD ===== */
+    .spotlight-card {
+      position: relative;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 16px;
+      padding: 36px;
+      transition: all 0.4s var(--ease-out-expo);
+      overflow: hidden;
+    }
+
+    .spotlight-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 17px;
+      background: conic-gradient(from var(--spotlight-angle, 0deg), transparent 60%, var(--accent-glow) 80%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.4s var(--ease-out-expo);
+      z-index: -1;
+    }
+
+    .spotlight-card:hover::before {
+      opacity: 1;
+    }
+
+    .spotlight-card:hover {
+      border-color: rgba(52, 211, 153, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Inner refraction border for glass effect */
+    .spotlight-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      pointer-events: none;
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(52, 211, 153, 0.1);
+      border-radius: 100px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      width: fit-content;
+      margin-bottom: 8px;
+    }
+
+    .card-heading {
+      font-family: var(--sans);
+      font-size: 20px;
       font-weight: 600;
       color: var(--text-primary);
-      margin-bottom: 16px;
       letter-spacing: -0.02em;
+      margin-bottom: 8px;
     }
 
-    .section-title .highlight {
-      color: var(--blue-accent);
-    }
-
-    .section-desc {
-      font-size: 15px;
-      line-height: 1.6;
+    .card-body {
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 300;
       color: var(--text-secondary);
     }
 
-    /* ===== COMPONENTS ===== */
-    .grid {
+    /* ===== BENTO GRID — ASYMMETRIC ===== */
+    .bento {
       display: grid;
-      gap: 24px;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 20px;
     }
 
-    .card {
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid rgba(59, 130, 246, 0.1);
+    .bento-wide {
+      grid-column: span 2;
+    }
+
+    .bento-tall {
+      grid-row: span 2;
+    }
+
+    /* ===== DASHBOARD PANEL STYLES ===== */
+    .panel {
+      position: relative;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 16px;
+      padding: 28px;
+      overflow: hidden;
+      transition: all 0.4s var(--ease-out-expo);
+    }
+
+    .panel:hover {
+      border-color: var(--border-subtle);
+    }
+
+    .panel::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      pointer-events: none;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: -0.01em;
+    }
+
+    .panel-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+
+    .panel-status .live-dot {
+      width: 5px;
+      height: 5px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: breathe 2s ease-in-out infinite;
+    }
+
+    /* Threat feed items */
+    .threat-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-dim);
+      transition: all 0.3s var(--ease-out-expo);
+    }
+
+    .threat-item:last-child {
+      border-bottom: none;
+    }
+
+    .threat-item:hover {
+      padding-left: 8px;
+    }
+
+    .threat-severity {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .sev-critical { background: #f43f5e; box-shadow: 0 0 8px rgba(244, 63, 94, 0.3); }
+    .sev-high { background: #f59e0b; }
+    .sev-medium { background: #3b82f6; }
+    .sev-resolved { background: var(--accent); }
+
+    .threat-info {
+      flex: 1;
+    }
+
+    .threat-id {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 3px;
+    }
+
+    .threat-desc {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      line-height: 1.5;
+    }
+
+    .threat-time {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+    }
+
+    /* Metric blocks */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .metric-block {
+      padding: 16px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-dim);
+      transition: all 0.3s var(--ease-out-expo);
+    }
+
+    .metric-block:hover {
+      border-color: var(--border-subtle);
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .metric-block-value {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .metric-block-label {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.3px;
+    }
+
+    .metric-block-change {
+      font-family: var(--mono);
+      font-size: 10px;
+      margin-top: 6px;
+    }
+
+    .change-up { color: var(--accent); }
+    .change-down { color: #f43f5e; }
+
+    /* ===== TERMINAL-STYLE PANEL ===== */
+    .terminal-panel {
+      background: var(--bg-void);
+      border: 1px solid var(--border-dim);
       border-radius: 12px;
-      padding: 32px;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border-dim);
+    }
+
+    .terminal-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .terminal-dot-r { background: #f43f5e; }
+    .terminal-dot-y { background: #f59e0b; }
+    .terminal-dot-g { background: var(--accent); }
+
+    .terminal-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-left: 8px;
+    }
+
+    .terminal-body {
+      padding: 20px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.9;
+      color: var(--text-secondary);
+    }
+
+    .terminal-body .prompt {
+      color: var(--accent);
+    }
+
+    .terminal-body .comment {
+      color: var(--text-tertiary);
+    }
+
+    .terminal-body .output {
+      color: var(--text-primary);
+    }
+
+    .terminal-cursor {
+      display: inline-block;
+      width: 7px;
+      height: 14px;
+      background: var(--accent);
+      margin-left: 2px;
+      animation: cursorBlink 1s step-end infinite;
+      vertical-align: text-bottom;
+    }
+
+    @keyframes cursorBlink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ===== FEATURE ROWS — "ZIG-ZAG" ===== */
+    .feature-row {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 64px;
+      align-items: center;
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border-dim);
+    }
+
+    .feature-row:last-child {
+      border-bottom: none;
+    }
+
+    .feature-row.reverse {
+      grid-template-columns: 1.1fr 1fr;
+    }
+
+    .feature-row.reverse .feature-text {
+      order: 2;
+    }
+
+    .feature-row.reverse .feature-demo {
+      order: 1;
+    }
+
+    .feature-text {
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
 
-    .card:hover {
-      background: rgba(15, 23, 42, 0.7);
-      border-color: rgba(59, 130, 246, 0.3);
-      transform: translateY(-2px);
+    .feature-text .card-badge {
+      margin-bottom: 0;
     }
 
-    .card-title {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 18px;
+    .feature-heading {
+      font-family: var(--sans);
+      font-size: 28px;
       font-weight: 600;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .feature-body {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 440px;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .feature-list li::before {
+      content: '';
+      width: 16px;
+      height: 1px;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .feature-demo {
+      position: relative;
+    }
+
+    /* ===== CASE STUDY / FULL-WIDTH ===== */
+    .case-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      padding: 48px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 20px;
+      margin-bottom: 24px;
+      transition: all 0.4s var(--ease-out-expo);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .case-block::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      pointer-events: none;
+    }
+
+    .case-block:hover {
+      border-color: rgba(52, 211, 153, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    }
+
+    .case-left {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .case-right {
+      border-left: 1px solid var(--border-dim);
+      padding-left: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .case-outcome {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ===== TOOLKIT ROW ===== */
+    .toolkit-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .tool-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+      padding: 32px 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 14px;
+      transition: all 0.4s var(--ease-out-expo);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-cell::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      pointer-events: none;
+    }
+
+    .tool-cell:hover {
+      border-color: rgba(52, 211, 153, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    }
+
+    .tool-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(52, 211, 153, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tool-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .tool-name {
+      font-size: 14px;
+      font-weight: 500;
       color: var(--text-primary);
       letter-spacing: -0.01em;
     }
 
-    .card-text {
-      font-size: 14px;
-      line-height: 1.6;
-      font-weight: 400;
-      color: rgba(148, 163, 184, 0.9);
+    .tool-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      background: rgba(59, 130, 246, 0.06);
-      border: 1px solid rgba(59, 130, 246, 0.12);
-      border-radius: 20px;
+    /* ===== FOOTER ===== */
+    .site-footer {
+      position: relative;
+      z-index: 10;
+      padding: 64px 48px 40px;
+      border-top: 1px solid var(--border-dim);
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-brand-name {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .footer-brand-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-tertiary);
+      max-width: 320px;
+    }
+
+    .footer-col-title {
+      font-family: var(--mono);
       font-size: 10px;
       font-weight: 500;
-      color: var(--blue-accent);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .mouse-label {
-      font-size: 10px;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--text-tertiary);
+      margin-bottom: 20px;
     }
 
-    /* ===== RESPONSIVE ===== */
+    .footer-col a {
+      display: block;
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-bottom: 12px;
+      transition: color 0.3s var(--ease-out-expo);
+    }
+
+    .footer-col a:hover {
+      color: var(--accent);
+    }
+
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-dim);
+    }
+
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.3px;
+    }
+
+    .footer-links-bottom {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links-bottom a {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-decoration: none;
+      transition: color 0.3s var(--ease-out-expo);
+    }
+
+    .footer-links-bottom a:hover {
+      color: var(--text-secondary);
+    }
+
+    /* ===== ANIMATED ELEMENTS ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: all 0.7s var(--ease-out-expo);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger children */
+    .stagger-children .reveal:nth-child(1) { transition-delay: 0ms; }
+    .stagger-children .reveal:nth-child(2) { transition-delay: 80ms; }
+    .stagger-children .reveal:nth-child(3) { transition-delay: 160ms; }
+    .stagger-children .reveal:nth-child(4) { transition-delay: 240ms; }
+    .stagger-children .reveal:nth-child(5) { transition-delay: 320ms; }
+    .stagger-children .reveal:nth-child(6) { transition-delay: 400ms; }
+
+    /* ===== TEXT SCRAMBLE ===== */
+    .scramble-text {
+      font-family: var(--mono);
+    }
+
+    /* ===== SHIMMER LOADING BAR ===== */
+    .shimmer-bar {
+      height: 3px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        var(--accent) 50%,
+        transparent 100%);
+      background-size: 200% 100%;
+      animation: shimmerSlide 2s ease-in-out infinite;
+      border-radius: 2px;
+    }
+
+    @keyframes shimmerSlide {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* ===== RESPONSIVE — MOBILE OVERRIDE ===== */
     @media (max-width: 768px) {
       .nav {
-        padding: 16px 24px;
+        padding: 16px 20px;
       }
 
       .nav-links {
@@ -506,28 +1278,103 @@
       }
 
       .hero {
-        padding: 0 24px;
+        grid-template-columns: 1fr;
+        padding: 0 20px;
+      }
+
+      .hero-visual {
+        display: none;
       }
 
       .hero-content {
         max-width: 100%;
-        padding-top: 100px;
+        padding-top: 120px;
       }
 
       .hero-title {
         font-size: 36px;
       }
 
-      .hero-stats {
+      .hero-metrics {
         gap: 24px;
+        flex-wrap: wrap;
       }
 
-      .stat-value {
+      .metric-value {
         font-size: 22px;
       }
 
-      .mouse-hint {
+      .section {
+        padding: 80px 20px;
+      }
+
+      .bento {
+        grid-template-columns: 1fr;
+      }
+
+      .bento-wide {
+        grid-column: span 1;
+      }
+
+      .bento-tall {
+        grid-row: span 1;
+      }
+
+      .feature-row,
+      .feature-row.reverse {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .feature-row.reverse .feature-text,
+      .feature-row.reverse .feature-demo {
+        order: unset;
+      }
+
+      .zigzag, .zigzag.reverse {
+        grid-template-columns: 1fr;
+      }
+
+      .zigzag.reverse .zigzag-content,
+      .zigzag.reverse .zigzag-visual {
+        order: unset;
+      }
+
+      .case-block {
+        grid-template-columns: 1fr;
+        padding: 28px;
+      }
+
+      .case-right {
+        border-left: none;
+        padding-left: 0;
+        padding-top: 24px;
+        border-top: 1px solid var(--border-dim);
+      }
+
+      .toolkit-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+      }
+
+      .scroll-indicator {
         display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .toolkit-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -535,887 +1382,810 @@
 
 <body>
 
-  <div class="bg-gradient"></div>
-  <div class="bg-grid"></div>
+  <div class="grain-overlay"></div>
+  <div class="bg-ambient"></div>
+  <div class="bg-grid-lines"></div>
   <canvas id="webgl-canvas"></canvas>
 
-  <!-- NAV -->
-  <nav class="nav">
+  <!-- ═══ NAV ═══ -->
+  <nav class="nav" id="main-nav">
     <a href="#" class="nav-logo">
-      <svg class="nav-logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-        style="width: 24px; height: 24px;">
-        <path d="M7 4H5v16h2" stroke="var(--blue-accent)" stroke-width="2" stroke-linecap="square" />
-        <path d="M17 4h2v16h-2" stroke="var(--blue-accent)" stroke-width="2" stroke-linecap="square" />
-        <rect x="9" y="8" width="6" height="8" fill="var(--blue-accent)" />
-      </svg>
+      <div class="nav-logo-mark"></div>
       <span class="nav-logo-text">BlackShield Core</span>
     </a>
     <div class="nav-links">
+      <a href="#capabilities">Capabilities</a>
+      <a href="#intelligence">Intelligence</a>
       <a href="#labs">Labs</a>
-      <a href="#projects">Projects</a>
-      <a href="#case-studies">Case Studies</a>
-      <a href="#blog">Research</a>
-      <a href="#about">About</a>
-      <a href="#" class="nav-cta">Enter Labs</a>
+      <a href="#research">Research</a>
+      <a href="#toolkit">Toolkit</a>
+      <a href="#" class="nav-cta-btn">Enter Platform</a>
     </div>
   </nav>
 
-  <!-- HERO -->
+  <!-- ═══ HERO — ASYMMETRIC SPLIT ═══ -->
   <section class="hero" id="hero">
     <div class="hero-content">
+      <div class="hero-tag">
+        <span class="hero-tag-dot"></span>
+        <span class="hero-tag-label">Systems Online</span>
+      </div>
 
       <h1 class="hero-title">
-        <span class="highlight">Offensive Security</span><br>
-        & Defensive<br>
-        Architecture
+        <span class="accent-text">Adversarial AI</span><br>
+        Meets Precision<br>
+        Defense
       </h1>
 
       <p class="hero-desc">
-        Advanced research laboratory engineering autonomous threat hunting, exploit analysis, and neural defense
-        systems. Operations and simulations mapped at scale.
+        Autonomous threat hunting fused with neural defense architectures.
+        We engineer systems that predict, intercept, and neutralize
+        threats before impact.
       </p>
 
-      <div class="hero-buttons">
-        <a href="#" class="btn-primary">
-          Enter Labs
-          <svg viewBox="0 0 16 16">
-            <path d="M3 8h10M9 4l4 4-4 4" />
-          </svg>
+      <div class="hero-actions">
+        <a href="#" class="btn-main">
+          Enter Platform
+          <svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
         </a>
-        <a href="#" class="btn-secondary">
+        <a href="#research" class="btn-ghost">
           View Research
         </a>
       </div>
 
-      <div class="hero-stats">
-        <div class="stat">
-          <span class="stat-value">142</span>
-          <span class="stat-label">Confirmed CVEs</span>
+      <div class="hero-metrics">
+        <div class="metric">
+          <span class="metric-value" data-scramble="142">142</span>
+          <span class="metric-label">Confirmed CVEs</span>
         </div>
-        <div class="stat">
-          <span class="stat-value">14</span>
-          <span class="stat-label">Custom Labs</span>
+        <div class="metric">
+          <span class="metric-value" data-scramble="14">14</span>
+          <span class="metric-label">Active Labs</span>
         </div>
-        <div class="stat">
-          <span class="stat-value">28+</span>
-          <span class="stat-label">Research Projects</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="intro" class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">Beyond <span class="highlight">Defense</span></h2>
-      <p class="section-desc">
-        I specialize in offensive security research, defensive architecture, and applied AI. Building intelligent
-        systems that autonomously identify and mitigate complex vulnerabilities.
-      </p>
-    </div>
-    <div class="grid">
-      <div class="card">
-        <span class="badge" style="width: fit-content;">Architecture</span>
-        <h3 class="card-title">Threat Intelligence</h3>
-        <p class="card-text">Developing massive-scale data ingestion pipelines to process, analyze, and neutralize
-          active threats across enterprise networks.</p>
-      </div>
-      <div class="card">
-        <span class="badge" style="width: fit-content;">Applied AI</span>
-        <h3 class="card-title">Neural Defense</h3>
-        <p class="card-text">Training specialized language models to detect zero-day exploits, prompt injection attacks,
-          and anomalous behavior patterns.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="dashboard" class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">Security <span class="highlight">Dashboard</span></h2>
-      <p class="section-desc">Active threat environment analysis, simulating real-time CVE feeds and network anomalies.
-      </p>
-    </div>
-    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
-      <div class="card">
-        <span class="badge"
-          style="width: fit-content; border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.1);">Critical</span>
-        <h3 class="card-title" style="font-size: 16px;">CVE-2026-X892</h3>
-        <p class="card-text">Zero-day remote code execution in popular enterprise IAM protocol. Active exploitation
-          detected.</p>
-      </div>
-      <div class="card">
-        <span class="badge"
-          style="width: fit-content; border-color: #f59e0b; color: #f59e0b; background: rgba(245, 158, 11, 0.1);">High</span>
-        <h3 class="card-title" style="font-size: 16px;">Anomalous Auth Spike</h3>
-        <p class="card-text">Credential stuffing attack originating from 12k distinct endpoints targeting gateway nodes.
-        </p>
-      </div>
-      <div class="card">
-        <span class="badge"
-          style="width: fit-content; border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1);">Resolved</span>
-        <h3 class="card-title" style="font-size: 16px;">Data Exfiltration Attempt</h3>
-        <p class="card-text">Neural models intercepted and dropped malicious lateral movement inside segment US-East-2.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <section id="labs" class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">Interactive <span class="highlight">Labs</span></h2>
-      <p class="section-desc">Safe environments simulating real-world vulnerabilities. Examine the attack vector,
-        payload execution, and mitigation strategy.</p>
-    </div>
-    <div class="grid">
-      <div class="card">
-        <span class="badge" style="width: fit-content;">Web Target</span>
-        <h3 class="card-title">Cross-Site Scripting (XSS)</h3>
-        <p class="card-text"><strong>Mechanism:</strong> Reflected DOM injection via unsanitized search
-          parameters.<br><strong>Impact:</strong> Session hijacking.<br><strong>Mitigation:</strong> Context-aware
-          output encoding.</p>
-        <a href="#" class="btn-secondary"
-          style="margin-top: 12px; font-size: 12px; width: fit-content; padding: 10px 16px;">Launch Lab</a>
-      </div>
-      <div class="card">
-        <span class="badge" style="width: fit-content;">Database</span>
-        <h3 class="card-title">Blind SQL Injection</h3>
-        <p class="card-text"><strong>Mechanism:</strong> Time-based boolean inference extracting backend
-          schemas.<br><strong>Impact:</strong> Complete data extraction.<br><strong>Mitigation:</strong> Prepared
-          statements & strictly typed ORMs.</p>
-        <a href="#" class="btn-secondary"
-          style="margin-top: 12px; font-size: 12px; width: fit-content; padding: 10px 16px;">Launch Lab</a>
-      </div>
-      <div class="card">
-        <span class="badge" style="width: fit-content;">Access Control</span>
-        <h3 class="card-title">Broken OAuth Flow</h3>
-        <p class="card-text"><strong>Mechanism:</strong> State parameter omission allowing CSRF forced
-          authorization.<br><strong>Impact:</strong> Unauthorized account hijacking.<br><strong>Mitigation:</strong>
-          Enforced cryptographic nonces.</p>
-        <a href="#" class="btn-secondary"
-          style="margin-top: 12px; font-size: 12px; width: fit-content; padding: 10px 16px;">Launch Lab</a>
-      </div>
-    </div>
-  </section>
-
-  <section id="projects" class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">AI + Security <span class="highlight">Projects</span></h2>
-      <p class="section-desc">Bridging the gap between artificial intelligence and offensive security. Engineering
-        autonomous tools for threat hunting and defense.</p>
-    </div>
-    <div class="grid" style="grid-template-columns: 1fr 1fr;">
-      <div class="card">
-        <h3 class="card-title">LLM Prompt Injection Shield</h3>
-        <p class="card-text"><strong>The Problem:</strong> Enterprise AI agents are vulnerable to adversarial prompts
-          resulting in data leaks.<br><br><strong>Approach:</strong> Developed an intermediary neural filter trained on
-          50k adversarial payloads to classify and sanitize inputs instantly.<br><br><strong>Outcome:</strong> 99.4%
-          detection rate of sophisticated jailbreaks with under 15ms latency overhead.</p>
-      </div>
-      <div class="card">
-        <h3 class="card-title">Phishing Taxonomy Engine</h3>
-        <p class="card-text"><strong>The Problem:</strong> Polymorphic spear-phishing campaigns bypass static email
-          gateways.<br><br><strong>Approach:</strong> A computer-vision and NLP hybrid model evaluating domain
-          permutations, visual rendering similarity, and linguistic urgency.<br><br><strong>Outcome:</strong> Integrated
-          directly into mail relays, neutralizing targeted C-suite spoofing attacks.</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="tools" class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">Offensive <span class="highlight">Toolkit</span></h2>
-      <p class="section-desc">Custom utilities developed for rapid assessment, cryptanalysis, and payload generation.
-      </p>
-    </div>
-    <div class="grid" style="grid-template-columns: repeat(4, 1fr);">
-      <div class="card" style="padding: 24px; align-items: center; text-align: center;">
-        <span class="badge" style="margin-bottom: 8px;">Utility</span>
-        <h3 class="card-title" style="font-size: 16px;">JWT Decoder</h3>
-        <a href="#" class="btn-secondary" style="margin-top: auto; font-size: 11px; padding: 8px 12px;">Open Tool</a>
-      </div>
-      <div class="card" style="padding: 24px; align-items: center; text-align: center;">
-        <span class="badge" style="margin-bottom: 8px;">Crypto</span>
-        <h3 class="card-title" style="font-size: 16px;">Hash Analyzer</h3>
-        <a href="#" class="btn-secondary" style="margin-top: auto; font-size: 11px; padding: 8px 12px;">Open Tool</a>
-      </div>
-      <div class="card" style="padding: 24px; align-items: center; text-align: center;">
-        <span class="badge" style="margin-bottom: 8px;">Audit</span>
-        <h3 class="card-title" style="font-size: 16px;">Log Parser</h3>
-        <a href="#" class="btn-secondary" style="margin-top: auto; font-size: 11px; padding: 8px 12px;">Open Tool</a>
-      </div>
-      <div class="card" style="padding: 24px; align-items: center; text-align: center;">
-        <span class="badge" style="margin-bottom: 8px;">Auth</span>
-        <h3 class="card-title" style="font-size: 16px;">Pass Entropy</h3>
-        <a href="#" class="btn-secondary" style="margin-top: auto; font-size: 11px; padding: 8px 12px;">Open Tool</a>
-      </div>
-    </div>
-  </section>
-
-  <section id="case-studies" class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">Case <span class="highlight">Studies</span></h2>
-      <p class="section-desc">Declassified audits and post-mortem analysis of critical vulnerabilities.</p>
-    </div>
-    <div class="grid" style="grid-template-columns: 1fr;">
-      <div class="card" style="flex-direction: row; flex-wrap: wrap; gap: 32px; justify-content: space-between;">
-        <div style="flex: 1; min-width: 300px;">
-          <span class="badge" style="margin-bottom: 16px;">Financial Tech</span>
-          <h3 class="card-title" style="margin-bottom: 12px;">Bypassing 2FA via Race Condition</h3>
-          <p class="card-text"><strong>Analysis:</strong> Identified a severe multi-threading flaw in the OTP validation
-            microservice of a major payment gateway, allowing simultaneous parallel requests to exhaust and bypass
-            rate-limiting counters.</p>
-        </div>
-        <div style="flex: 1; min-width: 300px; border-left: 1px solid rgba(148, 163, 184, 0.1); padding-left: 32px;">
-          <p class="card-text"><strong>Solution:</strong> Implemented strict database row-level locking and atomic Redis
-            operations during the token lifecycle phase.</p>
-          <p class="card-text" style="margin-top: 12px; color: var(--blue-accent);"><strong>Result:</strong> $2M+ in
-            potential fraud prevented. Vulnerability patched globally.</p>
+        <div class="metric">
+          <span class="metric-value" data-scramble="99.7%">99.7%</span>
+          <span class="metric-label">Detection Rate</span>
         </div>
       </div>
     </div>
-  </section>
 
-  <section id="home-lab" class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">Home <span class="highlight">Lab</span></h2>
-      <p class="section-desc">Personal infrastructure for exploit development and threat simulation.</p>
-    </div>
-    <div class="grid" style="grid-template-columns: 1fr 1fr;">
-      <div class="card">
-        <span class="badge" style="width: fit-content;">Architecture</span>
-        <h3 class="card-title">Network Segmentation</h3>
-        <p class="card-text">Type 1 Hypervisor running 14 isolated VLANs. Full packet inspection pipeline logging to
-          Elasticsearch for SIEM analysis and alert tuning.</p>
-      </div>
-      <div class="card">
-        <span class="badge" style="width: fit-content;">Simulations</span>
-        <h3 class="card-title">Proxmox Range</h3>
-        <p class="card-text">Automated Active Directory lab generation via Terraform. Used to test lateral movement
-          techniques (Pass-the-Hash, Kerberoasting) and EDR evasion.</p>
-      </div>
+    <div class="hero-visual" aria-hidden="true">
+      <!-- Three.js sphere renders here in the canvas layer -->
     </div>
   </section>
 
-  <section id="osint" class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">OSINT & <span class="highlight">Research</span></h2>
-      <p class="section-desc">Deep-dive analysis spanning threat actor profiling, credential leaks, and domain
-        correlations.</p>
-    </div>
-    <div class="grid">
-      <div class="card">
-        <h3 class="card-title" style="font-size: 16px;">Phishing Domain Cartography</h3>
-        <p class="card-text">Mapping the infrastructure of the APT-29 clone campaigns targeting European NGOs.</p>
-        <span class="card-text" style="font-size: 11px; opacity: 0.6; margin-top: auto;">Updated: 2 days ago</span>
-      </div>
-      <div class="card">
-        <h3 class="card-title" style="font-size: 16px;">Breach Data Correlation</h3>
-        <p class="card-text">Analyzing password reuse patterns across the top 100 recent database leaks to calculate
-          enterprise risk metrics.</p>
-        <span class="card-text" style="font-size: 11px; opacity: 0.6; margin-top: auto;">Updated: 1 week ago</span>
-      </div>
-      <div class="card">
-        <h3 class="card-title" style="font-size: 16px;">Social Engineering Deconstruction</h3>
-        <p class="card-text">A breakdown of the spear-phishing pretext utilized in the recent multi-million dollar
-          supply chain attack.</p>
-        <span class="card-text" style="font-size: 11px; opacity: 0.6; margin-top: auto;">Updated: 3 weeks ago</span>
-      </div>
-    </div>
-  </section>
-
-  <section id="blog" class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">Technical <span class="highlight">Blog</span></h2>
-      <p class="section-desc">Advanced offensive techniques and modern defensive architectures.</p>
-    </div>
-    <div style="display: flex; flex-direction: column; gap: 16px;">
-      <div class="card"
-        style="padding: 24px; flex-direction: row; align-items: center; justify-content: space-between; cursor: pointer;">
-        <div>
-          <span class="badge" style="margin-bottom: 8px;">Exploit Dev</span>
-          <h3 class="card-title" style="font-size: 18px;">Weaponizing Deserialization in Java 17</h3>
-        </div>
-        <span style="color: var(--text-secondary);">&rarr;</span>
-      </div>
-      <div class="card"
-        style="padding: 24px; flex-direction: row; align-items: center; justify-content: space-between; cursor: pointer;">
-        <div>
-          <span class="badge" style="margin-bottom: 8px;">AI / ML</span>
-          <h3 class="card-title" style="font-size: 18px;">Adversarial Attacks on Intrusion Detection Systems</h3>
-        </div>
-        <span style="color: var(--text-secondary);">&rarr;</span>
-      </div>
-      <div class="card"
-        style="padding: 24px; flex-direction: row; align-items: center; justify-content: space-between; cursor: pointer;">
-        <div>
-          <span class="badge" style="margin-bottom: 8px;">Cloud Security</span>
-          <h3 class="card-title" style="font-size: 18px;">Escalating IAM Privileges via AWS Metadata Service v2</h3>
-        </div>
-        <span style="color: var(--text-secondary);">&rarr;</span>
-      </div>
-    </div>
-  </section>
-
-  <section id="gamification" class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">Hack <span class="highlight">Metrics</span></h2>
-      <p class="section-desc">Live performance stats from competitive platforms and bug bounty triages.</p>
-    </div>
-    <div class="grid" style="grid-template-columns: repeat(3, 1fr);">
-      <div class="card" style="align-items: center; text-align: center;">
-        <span class="stat-value" style="font-size: 48px; color: var(--blue-accent);">Top 1%</span>
-        <h3 class="card-title" style="font-size: 14px; color: var(--text-secondary);">HackTheBox Global Rank</h3>
-      </div>
-      <div class="card" style="align-items: center; text-align: center;">
-        <span class="stat-value" style="font-size: 48px; color: var(--blue-accent);">142</span>
-        <h3 class="card-title" style="font-size: 14px; color: var(--text-secondary);">Validated CVEs / Bugs</h3>
-      </div>
-      <div class="card" style="align-items: center; text-align: center;">
-        <span class="stat-value" style="font-size: 48px; color: var(--blue-accent);">$150k+</span>
-        <h3 class="card-title" style="font-size: 14px; color: var(--text-secondary);">Bounties Rewarded</h3>
-      </div>
-    </div>
-  </section>
-
-  <section id="talks" class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">Keynotes & <span class="highlight">Talks</span></h2>
-      <p class="section-desc">Conference presentations and public security briefings.</p>
-    </div>
-    <div class="grid" style="grid-template-columns: 1fr 1fr;">
-      <div class="card">
-        <div
-          style="width: 100%; height: 200px; background: rgba(0,0,0,0.5); border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: rgba(255,255,255,0.2);">
-          ▶</div>
-        <h3 class="card-title">DEF CON 32</h3>
-        <p class="card-text">"Poisoning the Well: AI Training Data Manipulation for Targeted Exfiltration"</p>
-      </div>
-      <div class="card">
-        <div
-          style="width: 100%; height: 200px; background: rgba(0,0,0,0.5); border-radius: 8px; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: rgba(255,255,255,0.2);">
-          ▶</div>
-        <h3 class="card-title">Black Hat USA 2025</h3>
-        <p class="card-text">"Automating the Purple Team: Next-Gen Simulation Tools"</p>
-      </div>
-    </div>
-  </section>
-
-  <section id="about" class="section-container">
-    <div class="section-header">
-      <h2 class="section-title">System <span class="highlight">Operator</span></h2>
-      <p class="section-desc">
-        Cybersecurity researcher and engineer based in the terminal. Always exploring the boundaries of security
-        automation.
-      </p>
-    </div>
-    <div class="card" style="max-width: 600px;">
-      <h3 class="card-title">Connect</h3>
-      <p class="card-text">Active operations, open-source projects, and security write-ups are available on my primary
-        endpoints.</p>
-      <div style="display: flex; gap: 16px; margin-top: 8px;">
-        <a href="#" class="btn-primary" style="padding: 10px 20px; font-size: 13px;">GitHub
-          <svg viewBox="0 0 16 16">
-            <path d="M3 8h10M9 4l4 4-4 4" />
-          </svg>
-        </a>
-        <a href="#" class="btn-secondary" style="padding: 10px 20px; font-size: 13px;">LinkedIn</a>
-      </div>
-    </div>
-  </section>
-
-  <div class="mouse-hint">
-    <div class="mouse-box"></div>
-    <span class="mouse-label">Scroll</span>
+  <!-- ═══ SCROLL INDICATOR ═══ -->
+  <div class="scroll-indicator">
+    <div class="scroll-pill"></div>
+    <span class="scroll-label">Scroll</span>
   </div>
 
-  <!-- THREE.JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-  <script>
-    (function () {
-      'use strict';
+  <!-- ═══ KINETIC MARQUEE ═══ -->
+  <div class="marquee-band">
+    <div class="marquee-track" id="marquee-track">
+      <span class="marquee-item"><span class="dot"></span>Threat Intelligence</span>
+      <span class="marquee-item"><span class="dot"></span>Zero-Day Analysis</span>
+      <span class="marquee-item"><span class="dot"></span>Neural Network Defense</span>
+      <span class="marquee-item"><span class="dot"></span>Exploit Development</span>
+      <span class="marquee-item"><span class="dot"></span>Red Team Operations</span>
+      <span class="marquee-item"><span class="dot"></span>Adversarial ML</span>
+      <span class="marquee-item"><span class="dot"></span>Autonomous SIEM</span>
+      <span class="marquee-item"><span class="dot"></span>Cryptographic Audit</span>
+      <span class="marquee-item"><span class="dot"></span>Incident Response</span>
+      <span class="marquee-item"><span class="dot"></span>Supply Chain Security</span>
+      <!-- Duplicated for seamless loop -->
+      <span class="marquee-item"><span class="dot"></span>Threat Intelligence</span>
+      <span class="marquee-item"><span class="dot"></span>Zero-Day Analysis</span>
+      <span class="marquee-item"><span class="dot"></span>Neural Network Defense</span>
+      <span class="marquee-item"><span class="dot"></span>Exploit Development</span>
+      <span class="marquee-item"><span class="dot"></span>Red Team Operations</span>
+      <span class="marquee-item"><span class="dot"></span>Adversarial ML</span>
+      <span class="marquee-item"><span class="dot"></span>Autonomous SIEM</span>
+      <span class="marquee-item"><span class="dot"></span>Cryptographic Audit</span>
+      <span class="marquee-item"><span class="dot"></span>Incident Response</span>
+      <span class="marquee-item"><span class="dot"></span>Supply Chain Security</span>
+    </div>
+  </div>
 
-      // ── SETUP ──────────────────────────────────────────────
+  <!-- ═══ CAPABILITIES — ASYMMETRIC ZIG-ZAG ═══ -->
+  <section id="capabilities" class="section">
+    <span class="section-label reveal">Capabilities</span>
+    <h2 class="section-heading reveal">Where Intelligence<br>Meets Architecture</h2>
+    <p class="section-subtext reveal">
+      We operate at the intersection of adversarial AI research and defensive security engineering.
+      Every system we build is forged in simulated hostility.
+    </p>
+
+    <div class="feature-row reveal">
+      <div class="feature-text">
+        <div class="card-badge">Architecture</div>
+        <h3 class="feature-heading">Autonomous Threat<br>Intelligence Pipeline</h3>
+        <p class="feature-body">
+          Massive-scale data ingestion processing billions of signals daily.
+          Our neural classifiers detect behavioral anomalies invisible to
+          traditional signature-based systems.
+        </p>
+        <ul class="feature-list">
+          <li>Real-time correlation across 2.8M+ data points</li>
+          <li>Sub-200ms detection-to-alert latency</li>
+          <li>Adaptive learning from adversarial feedback loops</li>
+        </ul>
+      </div>
+      <div class="feature-demo">
+        <div class="terminal-panel">
+          <div class="terminal-bar">
+            <span class="terminal-dot terminal-dot-r"></span>
+            <span class="terminal-dot terminal-dot-y"></span>
+            <span class="terminal-dot terminal-dot-g"></span>
+            <span class="terminal-title">threat-engine v4.2.1</span>
+          </div>
+          <div class="terminal-body">
+            <div><span class="prompt">$</span> <span class="comment">// Initializing neural threat classifier</span></div>
+            <div><span class="prompt">$</span> bsc init --model adversarial-v4</div>
+            <div><span class="output">[OK] Model loaded: 847M parameters</span></div>
+            <div><span class="output">[OK] Threat feeds connected: 14 sources</span></div>
+            <div><span class="prompt">$</span> bsc scan --scope enterprise --deep</div>
+            <div><span class="output">[SCAN] Processing 2,847,391 signals...</span></div>
+            <div><span class="output">[ALERT] Anomaly detected: lateral movement</span></div>
+            <div><span class="output">[ACTION] Auto-isolated node: us-east-2-c19</span></div>
+            <div><span class="prompt">$</span> <span class="terminal-cursor"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-row reverse reveal">
+      <div class="feature-text">
+        <div class="card-badge">Applied AI</div>
+        <h3 class="feature-heading">Neural Defense<br>Mesh Network</h3>
+        <p class="feature-body">
+          Specialized language models trained on 50,000+ adversarial payloads.
+          Our intermediary neural filter classifies and sanitizes inputs
+          with surgical precision.
+        </p>
+        <ul class="feature-list">
+          <li>99.4% detection rate on sophisticated jailbreaks</li>
+          <li>Under 15ms latency overhead per request</li>
+          <li>Self-healing model weights via continuous red-teaming</li>
+        </ul>
+      </div>
+      <div class="feature-demo">
+        <div class="metric-grid">
+          <div class="metric-block">
+            <div class="metric-block-value">2.8M</div>
+            <div class="metric-block-label">Signals Processed / Day</div>
+            <div class="metric-block-change change-up">+12.4% vs. prev. month</div>
+          </div>
+          <div class="metric-block">
+            <div class="metric-block-value">147ms</div>
+            <div class="metric-block-label">Avg Detection Latency</div>
+            <div class="metric-block-change change-up">-23ms improvement</div>
+          </div>
+          <div class="metric-block">
+            <div class="metric-block-value">99.4%</div>
+            <div class="metric-block-label">Jailbreak Detection Rate</div>
+            <div class="metric-block-change change-up">+0.8% vs. Q3</div>
+          </div>
+          <div class="metric-block">
+            <div class="metric-block-value">0</div>
+            <div class="metric-block-label">False Positive (7d)</div>
+            <div class="metric-block-change change-up">Clean streak: 18 days</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ REAL-TIME INTELLIGENCE DASHBOARD ═══ -->
+  <section id="intelligence" class="section">
+    <span class="section-label reveal">Live Intelligence</span>
+    <h2 class="section-heading reveal">Threat Environment<br>Analysis</h2>
+    <p class="section-subtext reveal">
+      Active monitoring of the global threat landscape. Real-time CVE feeds,
+      network anomalies, and autonomous response actions.
+    </p>
+
+    <div class="bento stagger-children">
+      <!-- Wide threat feed -->
+      <div class="panel bento-wide reveal">
+        <div class="panel-header">
+          <span class="panel-title">Active Threat Feed</span>
+          <span class="panel-status"><span class="live-dot"></span>LIVE</span>
+        </div>
+        <div class="shimmer-bar" style="margin-bottom: 20px;"></div>
+        <div>
+          <div class="threat-item">
+            <span class="threat-severity sev-critical"></span>
+            <div class="threat-info">
+              <div class="threat-id">CVE-2026-X892</div>
+              <div class="threat-desc">Zero-day RCE in enterprise IAM protocol. Active exploitation detected across 3 regions.</div>
+            </div>
+            <span class="threat-time">2m ago</span>
+          </div>
+          <div class="threat-item">
+            <span class="threat-severity sev-high"></span>
+            <div class="threat-info">
+              <div class="threat-id">BSC-ALERT-7291</div>
+              <div class="threat-desc">Credential stuffing attack: 12K distinct endpoints targeting gateway authentication nodes.</div>
+            </div>
+            <span class="threat-time">8m ago</span>
+          </div>
+          <div class="threat-item">
+            <span class="threat-severity sev-medium"></span>
+            <div class="threat-info">
+              <div class="threat-id">BSC-ALERT-7288</div>
+              <div class="threat-desc">Anomalous DNS exfiltration pattern. Encoded payloads detected in TXT record queries.</div>
+            </div>
+            <span class="threat-time">14m ago</span>
+          </div>
+          <div class="threat-item">
+            <span class="threat-severity sev-resolved"></span>
+            <div class="threat-info">
+              <div class="threat-id">BSC-INC-4012</div>
+              <div class="threat-desc">Data exfiltration attempt intercepted. Neural models dropped lateral movement in US-East-2.</div>
+            </div>
+            <span class="threat-time">31m ago</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metrics tall -->
+      <div class="panel bento-tall reveal">
+        <div class="panel-header">
+          <span class="panel-title">System Health</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div class="metric-block">
+            <div class="metric-block-value">847M</div>
+            <div class="metric-block-label">Model Parameters</div>
+          </div>
+          <div class="metric-block">
+            <div class="metric-block-value">14</div>
+            <div class="metric-block-label">Active VLANs</div>
+          </div>
+          <div class="metric-block">
+            <div class="metric-block-value" style="color: var(--accent);">NOMINAL</div>
+            <div class="metric-block-label">Core Status</div>
+          </div>
+          <div class="metric-block">
+            <div class="metric-block-value">3.2TB</div>
+            <div class="metric-block-label">Logs Ingested (24h)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wide bottom: network topology -->
+      <div class="panel bento-wide reveal">
+        <div class="panel-header">
+          <span class="panel-title">Network Topology Status</span>
+          <span class="panel-status"><span class="live-dot"></span>MONITORING</span>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;">
+          <div class="metric-block" style="text-align: center; padding: 12px 8px;">
+            <div class="metric-block-value" style="font-size: 14px; color: var(--accent);">OK</div>
+            <div class="metric-block-label" style="font-size: 9px;">US-EAST-1</div>
+          </div>
+          <div class="metric-block" style="text-align: center; padding: 12px 8px;">
+            <div class="metric-block-value" style="font-size: 14px; color: var(--accent);">OK</div>
+            <div class="metric-block-label" style="font-size: 9px;">US-EAST-2</div>
+          </div>
+          <div class="metric-block" style="text-align: center; padding: 12px 8px;">
+            <div class="metric-block-value" style="font-size: 14px; color: var(--accent);">OK</div>
+            <div class="metric-block-label" style="font-size: 9px;">US-WEST-1</div>
+          </div>
+          <div class="metric-block" style="text-align: center; padding: 12px 8px;">
+            <div class="metric-block-value" style="font-size: 14px; color: var(--accent);">OK</div>
+            <div class="metric-block-label" style="font-size: 9px;">EU-WEST-1</div>
+          </div>
+          <div class="metric-block" style="text-align: center; padding: 12px 8px;">
+            <div class="metric-block-value" style="font-size: 14px; color: #f59e0b;">WARN</div>
+            <div class="metric-block-label" style="font-size: 9px;">EU-CENTRAL</div>
+          </div>
+          <div class="metric-block" style="text-align: center; padding: 12px 8px;">
+            <div class="metric-block-value" style="font-size: 14px; color: var(--accent);">OK</div>
+            <div class="metric-block-label" style="font-size: 9px;">AP-SOUTH-1</div>
+          </div>
+          <div class="metric-block" style="text-align: center; padding: 12px 8px;">
+            <div class="metric-block-value" style="font-size: 14px; color: var(--accent);">OK</div>
+            <div class="metric-block-label" style="font-size: 9px;">AP-EAST-1</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Single bottom right -->
+      <div class="panel reveal">
+        <div class="panel-header">
+          <span class="panel-title">Threat Distribution</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+            <span style="color: var(--text-secondary);">Malware</span>
+            <span style="font-family: var(--mono); color: var(--text-primary);">34.2%</span>
+          </div>
+          <div style="height: 4px; background: var(--bg-elevated); border-radius: 2px; overflow: hidden;">
+            <div style="width: 34%; height: 100%; background: #f43f5e; border-radius: 2px;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+            <span style="color: var(--text-secondary);">Phishing</span>
+            <span style="font-family: var(--mono); color: var(--text-primary);">27.8%</span>
+          </div>
+          <div style="height: 4px; background: var(--bg-elevated); border-radius: 2px; overflow: hidden;">
+            <div style="width: 28%; height: 100%; background: #f59e0b; border-radius: 2px;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+            <span style="color: var(--text-secondary);">Injection</span>
+            <span style="font-family: var(--mono); color: var(--text-primary);">21.5%</span>
+          </div>
+          <div style="height: 4px; background: var(--bg-elevated); border-radius: 2px; overflow: hidden;">
+            <div style="width: 21%; height: 100%; background: #3b82f6; border-radius: 2px;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
+            <span style="color: var(--text-secondary);">Lateral Movement</span>
+            <span style="font-family: var(--mono); color: var(--text-primary);">16.5%</span>
+          </div>
+          <div style="height: 4px; background: var(--bg-elevated); border-radius: 2px; overflow: hidden;">
+            <div style="width: 16%; height: 100%; background: var(--accent); border-radius: 2px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ INTERACTIVE LABS ═══ -->
+  <section id="labs" class="section">
+    <span class="section-label reveal">Interactive Labs</span>
+    <h2 class="section-heading reveal">Attack Vector<br>Simulation</h2>
+    <p class="section-subtext reveal">
+      Controlled environments replicating real-world vulnerabilities.
+      Examine attack vectors, payload execution, and defensive countermeasures.
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px;" class="stagger-children">
+      <div class="spotlight-card reveal">
+        <div class="card-badge">Web Target</div>
+        <h3 class="card-heading">Cross-Site Scripting (XSS)</h3>
+        <p class="card-body">
+          <strong style="color: var(--text-primary);">Vector:</strong> Reflected DOM injection via unsanitized search parameters.<br>
+          <strong style="color: var(--text-primary);">Impact:</strong> Session hijacking, persistent cookie theft.<br>
+          <strong style="color: var(--text-primary);">Defense:</strong> Context-aware output encoding + Content Security Policy enforcement.
+        </p>
+        <a href="#" class="btn-ghost" style="margin-top: 16px; font-size: 12px; width: fit-content; padding: 10px 20px;">Launch Simulation</a>
+      </div>
+      <div class="spotlight-card reveal">
+        <div class="card-badge">Database</div>
+        <h3 class="card-heading">Blind SQL Injection</h3>
+        <p class="card-body">
+          <strong style="color: var(--text-primary);">Vector:</strong> Time-based boolean inference extracting backend schemas.<br>
+          <strong style="color: var(--text-primary);">Impact:</strong> Complete data extraction, privilege escalation.<br>
+          <strong style="color: var(--text-primary);">Defense:</strong> Prepared statements + strictly typed ORM layer.
+        </p>
+        <a href="#" class="btn-ghost" style="margin-top: 16px; font-size: 12px; width: fit-content; padding: 10px 20px;">Launch Simulation</a>
+      </div>
+      <div class="spotlight-card reveal">
+        <div class="card-badge">Access Control</div>
+        <h3 class="card-heading">Broken OAuth Flow</h3>
+        <p class="card-body">
+          <strong style="color: var(--text-primary);">Vector:</strong> State parameter omission enabling CSRF-forced authorization.<br>
+          <strong style="color: var(--text-primary);">Impact:</strong> Unauthorized account takeover chain.<br>
+          <strong style="color: var(--text-primary);">Defense:</strong> Enforced cryptographic nonces + PKCE validation.
+        </p>
+        <a href="#" class="btn-ghost" style="margin-top: 16px; font-size: 12px; width: fit-content; padding: 10px 20px;">Launch Simulation</a>
+      </div>
+      <div class="spotlight-card reveal">
+        <div class="card-badge">AI Adversarial</div>
+        <h3 class="card-heading">Prompt Injection Attack</h3>
+        <p class="card-body">
+          <strong style="color: var(--text-primary);">Vector:</strong> Multi-stage jailbreak exploiting system prompt boundaries.<br>
+          <strong style="color: var(--text-primary);">Impact:</strong> Data exfiltration through crafted LLM responses.<br>
+          <strong style="color: var(--text-primary);">Defense:</strong> Intermediary neural filter + output boundary validation.
+        </p>
+        <a href="#" class="btn-ghost" style="margin-top: 16px; font-size: 12px; width: fit-content; padding: 10px 20px;">Launch Simulation</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ RESEARCH / CASE STUDIES ═══ -->
+  <section id="research" class="section">
+    <span class="section-label reveal">Research</span>
+    <h2 class="section-heading reveal">Declassified<br>Operations</h2>
+    <p class="section-subtext reveal">
+      Post-mortem analysis of critical vulnerabilities. From discovery through
+      exploitation to remediation architecture.
+    </p>
+
+    <div class="reveal">
+      <div class="case-block">
+        <div class="case-left">
+          <div class="card-badge">Financial Services</div>
+          <h3 class="card-heading">Bypassing 2FA via Race Condition</h3>
+          <p class="card-body">
+            <strong style="color: var(--text-primary);">Analysis:</strong>
+            Identified a severe multi-threading flaw in the OTP validation microservice
+            of a major payment gateway. Simultaneous parallel requests exhausted and
+            bypassed rate-limiting counters during the token lifecycle phase.
+          </p>
+        </div>
+        <div class="case-right">
+          <p class="card-body">
+            <strong style="color: var(--text-primary);">Remediation:</strong>
+            Implemented strict database row-level locking and atomic Redis operations
+            during token validation. Deployed canary monitoring across all OTP endpoints.
+          </p>
+          <p class="case-outcome">$2.1M+ in potential fraud prevented. Patched globally within 72 hours.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top: 0;">
+      <div class="case-block">
+        <div class="case-left">
+          <div class="card-badge">Enterprise SaaS</div>
+          <h3 class="card-heading">LLM Prompt Injection Shield</h3>
+          <p class="card-body">
+            <strong style="color: var(--text-primary);">Problem:</strong>
+            Enterprise AI agents were vulnerable to adversarial prompts that could chain
+            tool-use permissions into unauthorized data access, resulting in customer PII leakage.
+          </p>
+        </div>
+        <div class="case-right">
+          <p class="card-body">
+            <strong style="color: var(--text-primary);">Solution:</strong>
+            Developed an intermediary neural filter trained on 50K+ adversarial payloads.
+            Deployed as an inline proxy with sub-15ms overhead. Self-healing via continuous
+            red-team feedback loop.
+          </p>
+          <p class="case-outcome">99.4% detection rate. Zero false positives in 18-day production run.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ OFFENSIVE TOOLKIT ═══ -->
+  <section id="toolkit" class="section">
+    <span class="section-label reveal">Offensive Toolkit</span>
+    <h2 class="section-heading reveal">Precision<br>Instruments</h2>
+    <p class="section-subtext reveal">
+      Custom utilities for rapid assessment, cryptanalysis, and payload generation.
+    </p>
+
+    <div class="toolkit-grid stagger-children">
+      <div class="tool-cell reveal">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24"><path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/></svg>
+        </div>
+        <span class="tool-name">JWT Decoder</span>
+        <span class="tool-tag">Token Analysis</span>
+      </div>
+      <div class="tool-cell reveal">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10h-10V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z" opacity="0.5"/></svg>
+        </div>
+        <span class="tool-name">Hash Analyzer</span>
+        <span class="tool-tag">Cryptographic</span>
+      </div>
+      <div class="tool-cell reveal">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <span class="tool-name">Log Parser</span>
+        <span class="tool-tag">SIEM Audit</span>
+      </div>
+      <div class="tool-cell reveal">
+        <div class="tool-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <span class="tool-name">Pass Entropy</span>
+        <span class="tool-tag">Auth Testing</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="footer-brand-name">BlackShield Core</span>
+        <p class="footer-brand-desc">
+          Adversarial AI research fused with offensive security engineering.
+          Autonomous systems that predict, intercept, and neutralize threats.
+        </p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Platform</div>
+        <a href="#">Threat Intelligence</a>
+        <a href="#">Neural Defense</a>
+        <a href="#">Interactive Labs</a>
+        <a href="#">API Access</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Research</div>
+        <a href="#">Published CVEs</a>
+        <a href="#">Case Studies</a>
+        <a href="#">White Papers</a>
+        <a href="#">Blog</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Company</div>
+        <a href="#">About</a>
+        <a href="#">Careers</a>
+        <a href="#">Contact</a>
+        <a href="#">Security Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2026 BlackShield Core. All rights reserved.</span>
+      <div class="footer-links-bottom">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Cookie Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════
+       SCRIPTS — Three.js + Scroll Reveals + Text Scramble
+       ═══════════════════════════════════════════ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // ═══ TEXT SCRAMBLE EFFECT ═══
+    class TextScramble {
+      constructor(el) {
+        this.el = el;
+        this.chars = '!<>-_\\/[]{}=+*^?#_';
+        this.update = this.update.bind(this);
+      }
+      setText(newText) {
+        const oldText = this.el.innerText;
+        const length = Math.max(oldText.length, newText.length);
+        const promise = new Promise(resolve => this.resolve = resolve);
+        this.queue = [];
+        for (let i = 0; i < length; i++) {
+          const from = oldText[i] || '';
+          const to = newText[i] || '';
+          const start = Math.floor(Math.random() * 20);
+          const end = start + Math.floor(Math.random() * 20);
+          this.queue.push({ from, to, start, end });
+        }
+        cancelAnimationFrame(this.frameRequest);
+        this.frame = 0;
+        this.update();
+        return promise;
+      }
+      update() {
+        let output = '';
+        let complete = 0;
+        for (let i = 0, n = this.queue.length; i < n; i++) {
+          let { from, to, start, end, char } = this.queue[i];
+          if (this.frame >= end) {
+            complete++;
+            output += to;
+          } else if (this.frame >= start) {
+            if (!char || Math.random() < 0.28) {
+              char = this.chars[Math.floor(Math.random() * this.chars.length)];
+              this.queue[i].char = char;
+            }
+            output += `<span style="color:var(--accent);opacity:0.7">${char}</span>`;
+          } else {
+            output += from;
+          }
+        }
+        this.el.innerHTML = output;
+        if (complete === this.queue.length) {
+          this.resolve();
+        } else {
+          this.frameRequest = requestAnimationFrame(this.update);
+          this.frame++;
+        }
+      }
+    }
+
+    // Apply scramble to metric values on load
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('[data-scramble]').forEach(el => {
+        const target = el.dataset.scramble;
+        const scrambler = new TextScramble(el);
+        setTimeout(() => scrambler.setText(target), 800 + Math.random() * 600);
+      });
+    });
+
+    // ═══ SCROLL REVEAL (Intersection Observer) ═══
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ═══ NAV SCROLL EFFECT ═══
+    let lastScroll = 0;
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      if (scrollY > 100) {
+        nav.style.background = 'rgba(9, 9, 11, 0.85)';
+        nav.style.borderBottomColor = 'rgba(63, 63, 70, 0.4)';
+      } else {
+        nav.style.background = 'rgba(9, 9, 11, 0.6)';
+        nav.style.borderBottomColor = 'rgba(63, 63, 70, 0.25)';
+      }
+      // Hide scroll indicator
+      const indicator = document.querySelector('.scroll-indicator');
+      if (indicator) {
+        indicator.style.opacity = scrollY > 200 ? '0' : '0.25';
+        indicator.style.pointerEvents = scrollY > 200 ? 'none' : 'auto';
+      }
+      lastScroll = scrollY;
+    }, { passive: true });
+
+    // ═══ SPOTLIGHT CARD BORDER EFFECT ═══
+    document.querySelectorAll('.spotlight-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        const angle = Math.atan2(y - cy, x - cx) * (180 / Math.PI) + 90;
+        card.style.setProperty('--spotlight-angle', `${angle}deg`);
+      });
+    });
+
+    // ═══ THREE.JS PARTICLE SPHERE ═══
+    (function initThreeJS() {
       const canvas = document.getElementById('webgl-canvas');
+      if (!canvas) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 5;
+
       const renderer = new THREE.WebGLRenderer({
         canvas,
         alpha: true,
-        antialias: false,
+        antialias: true,
         powerPreference: 'high-performance'
       });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-      camera.position.set(0, 0, 6);
+      // Sphere particle system
+      const particleCount = 4000;
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(particleCount * 3);
+      const scales = new Float32Array(particleCount);
+      const opacities = new Float32Array(particleCount);
 
-      // ── MOUSE TRACKING ─────────────────────────────────────
-      const mouse = { x: 0, y: 0, smoothX: 0, smoothY: 0 };
-      const mouseWorld = new THREE.Vector3();
+      // Core particles (dense inner sphere)
+      const coreCount = Math.floor(particleCount * 0.6);
+      for (let i = 0; i < coreCount; i++) {
+        const radius = 0.8 + Math.random() * 0.4;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+
+        positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+        positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+        positions[i * 3 + 2] = radius * Math.cos(phi);
+        scales[i] = 0.3 + Math.random() * 0.7;
+        opacities[i] = 0.3 + Math.random() * 0.7;
+      }
+
+      // Outer particles (sparse atmosphere)
+      for (let i = coreCount; i < particleCount; i++) {
+        const radius = 1.2 + Math.random() * 0.8;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+
+        positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+        positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+        positions[i * 3 + 2] = radius * Math.cos(phi);
+        scales[i] = 0.1 + Math.random() * 0.3;
+        opacities[i] = 0.1 + Math.random() * 0.3;
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
+
+      const material = new THREE.PointsMaterial({
+        color: new THREE.Color('#34d399'),
+        size: 0.018,
+        transparent: true,
+        opacity: 0.7,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        sizeAttenuation: true
+      });
+
+      const sphere = new THREE.Points(geometry, material);
+      sphere.position.set(2.0, 0, 0);
+      scene.add(sphere);
+
+      // Background floating particles
+      const bgCount = 800;
+      const bgGeometry = new THREE.BufferGeometry();
+      const bgPositions = new Float32Array(bgCount * 3);
+
+      for (let i = 0; i < bgCount; i++) {
+        bgPositions[i * 3] = (Math.random() - 0.5) * 16;
+        bgPositions[i * 3 + 1] = (Math.random() - 0.5) * 12;
+        bgPositions[i * 3 + 2] = (Math.random() - 0.5) * 8;
+      }
+
+      bgGeometry.setAttribute('position', new THREE.BufferAttribute(bgPositions, 3));
+
+      const bgMaterial = new THREE.PointsMaterial({
+        color: new THREE.Color('#34d399'),
+        size: 0.008,
+        transparent: true,
+        opacity: 0.15,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        sizeAttenuation: true
+      });
+
+      const bgParticles = new THREE.Points(bgGeometry, bgMaterial);
+      scene.add(bgParticles);
+
+      // Mouse tracking
+      let mouseX = 0, mouseY = 0;
+      let targetMouseX = 0, targetMouseY = 0;
 
       document.addEventListener('mousemove', (e) => {
-        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
-      });
+        targetMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        targetMouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+      }, { passive: true });
 
-      // ── PARTICLE SYSTEM ────────────────────────────────────
-      const PARTICLE_COUNT = 73500;
-      const positions = new Float32Array(PARTICLE_COUNT * 3);
-      const basePositions = new Float32Array(PARTICLE_COUNT * 3);
-      const velocities = new Float32Array(PARTICLE_COUNT * 3);
-      const colors = new Float32Array(PARTICLE_COUNT * 3);
-      const sizes = new Float32Array(PARTICLE_COUNT);
-      const phases = new Float32Array(PARTICLE_COUNT);
-      const layers = new Float32Array(PARTICLE_COUNT); // 0=core, 1=shell, 2=atmosphere
+      // Animation loop
+      let time = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+        time += 0.003;
 
-      // Color palette — muted, elegant
-      const colCore = new THREE.Color('#60a5fa');
-      const colMid = new THREE.Color('#3b82f6');
-      const colDim = new THREE.Color('#1e40af');
-      const colDark = new THREE.Color('#0f172a');
-      const colNucleus = new THREE.Color('#bfdbfe');  // bright white-blue for inner core
+        // Smooth mouse follow
+        mouseX += (targetMouseX - mouseX) * 0.05;
+        mouseY += (targetMouseY - mouseY) * 0.05;
 
-      // ── SHAPE GENERATION ───────────────────────────────────
-      // Complex topology: displaced torus-sphere hybrid with internal streams
-      function generateParticles() {
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-          let x, y, z, layer;
+        // Sphere rotation
+        sphere.rotation.y = time * 0.4 + mouseX * 0.15;
+        sphere.rotation.x = Math.sin(time * 0.3) * 0.1 + mouseY * 0.1;
 
-          if (i < 19250) {
-            // CORE: Layered energy core with visible internal architecture
-            layer = 0;
-            const phi = Math.acos(1 - 2 * Math.random());
-            const theta = Math.random() * Math.PI * 2;
-            const nx = Math.sin(phi) * Math.cos(theta);
-            const ny = Math.sin(phi) * Math.sin(theta);
-            const nz = Math.cos(phi);
-            let r;
-
-            if (i < 8000) {
-              // NUCLEUS — extremely dense center, near-zero displacement
-              // Mix: 70% volumetric fill + 30% lattice-aligned for structure
-              if (i < 5600) {
-                // Volumetric nucleus fill
-                r = Math.pow(Math.random(), 0.6) * 0.45;
-              } else {
-                // Lattice-like structured positions inside nucleus
-                const gridR = 0.1 + Math.random() * 0.35;
-                const snapAngle = Math.round(theta / (Math.PI / 6)) * (Math.PI / 6);
-                const blendT = 0.3;
-                r = gridR;
-                // Slight snap toward grid angles for engineered feel
-                const snx = Math.sin(phi) * Math.cos(snapAngle * blendT + theta * (1 - blendT));
-                const sny = Math.sin(phi) * Math.sin(snapAngle * blendT + theta * (1 - blendT));
-                x = r * snx;
-                y = r * sny;
-                z = r * nz;
-              }
-              if (i < 5600) {
-                x = r * nx;
-                y = r * ny;
-                z = r * nz;
-              }
-            } else if (i < 13000) {
-              // INNER SHELL BAND — concentrated on a shell at r≈0.7, with small spread
-              r = 0.65 + Math.random() * 0.12;
-              x = r * nx;
-              y = r * ny;
-              z = r * nz;
-            } else if (i < 16000) {
-              // MID SHELL BAND — shell at r≈0.95
-              r = 0.90 + Math.random() * 0.12;
-              x = r * nx;
-              y = r * ny;
-              z = r * nz;
-            } else {
-              // OUTER SHELL BAND — shell at r≈1.2, slight displacement
-              r = 1.15 + Math.random() * 0.12;
-              r += Math.sin(nx * 6 + ny * 5) * Math.cos(ny * 5 + nz * 4) * 0.03;
-              x = r * nx;
-              y = r * ny;
-              z = r * nz;
-            }
-
-          } else if (i < 27300) {
-            // CONTAINMENT — tight engineered rings around the core
-            layer = 1;
-            const ringIdx = Math.floor(Math.random() * 4);
-            const angle = Math.random() * Math.PI * 2;
-            let ringR, tiltX, tiltZ;
-
-            if (ringIdx === 0)      { ringR = 1.42; tiltX = 0.0;   tiltZ = 0.0;  }  // equatorial
-            else if (ringIdx === 1) { ringR = 1.42; tiltX = 1.57;  tiltZ = 0.0;  }  // polar (90°)
-            else if (ringIdx === 2) { ringR = 1.42; tiltX = 0.785; tiltZ = 0.0;  }  // 45° tilt
-            else                    { ringR = 1.42; tiltX = 0.785; tiltZ = 1.57; }  // 45° cross
-
-            x = Math.cos(angle) * ringR + (Math.random() - 0.5) * 0.06;
-            y = (Math.random() - 0.5) * 0.04;
-            z = Math.sin(angle) * ringR + (Math.random() - 0.5) * 0.06;
-
-            // Apply tilt rotation
-            const cy = Math.cos(tiltX), sy = Math.sin(tiltX);
-            const cz = Math.cos(tiltZ), sz = Math.sin(tiltZ);
-            const x1 = x * cz - y * sz;
-            const y1 = x * sz + y * cz;
-            const z1 = z;
-            const x2 = x1;
-            const y2 = y1 * cy - z1 * sy;
-            const z2 = y1 * sy + z1 * cy;
-            x = x2; y = y2; z = z2;
-
-          } else {
-            // ATMOSPHERE: Same particles, simply mapping width/height across background volume
-            // Z depth is strictly bounded to identical local z logic (-3 to +3) to ensure EXACT shader 
-            // distFade density sizing, brightness, and texture rules. No new particles invented.
-            layer = 2;
-            x = (Math.random() - 0.5) * 32 - 1.8;
-            y = (Math.random() - 0.5) * 18;
-            z = (Math.random() - 0.5) * 6;
-          }
-
+        // Internal particle circulation
+        const pos = geometry.attributes.position.array;
+        for (let i = 0; i < coreCount; i++) {
           const idx = i * 3;
-          positions[idx] = x;
-          positions[idx + 1] = y;
-          positions[idx + 2] = z;
-          basePositions[idx] = x;
-          basePositions[idx + 1] = y;
-          basePositions[idx + 2] = z;
-
-          velocities[idx] = 0;
-          velocities[idx + 1] = 0;
-          velocities[idx + 2] = 0;
-
-          layers[i] = layer;
-          phases[i] = Math.random() * Math.PI * 2;
-
-          // Size by layer
-          if (layer === 0) {
-            if (i < 8000) sizes[i] = 0.9 + Math.random() * 0.6;         // nucleus: dense, bright
-            else if (i < 13000) sizes[i] = 0.55 + Math.random() * 0.3;  // inner shell band
-            else if (i < 16000) sizes[i] = 0.45 + Math.random() * 0.25; // mid shell band
-            else sizes[i] = 0.4 + Math.random() * 0.2;                 // outer shell band
-          }
-          else if (layer === 1) sizes[i] = 0.35 + Math.random() * 0.2;  // containment: fine, precise
-          else sizes[i] = 0.3 + Math.random() * 0.3;
-
-          // Color by layer + randomness for variety
-          const dist = Math.sqrt(x * x + y * y + z * z);
-          const brightness = Math.random();
-          let col = new THREE.Color();
-
-          if (layer === 0) {
-            if (i < 8000) {
-              // Nucleus — intense white-blue energy center
-              if (brightness > 0.4) col.lerpColors(colCore, colNucleus, brightness * 0.9);
-              else col.lerpColors(colMid, colCore, brightness * 1.8);
-            } else if (i < 13000) {
-              // Inner shell band — bright blue
-              if (brightness > 0.5) col.copy(colCore);
-              else col.lerpColors(colMid, colCore, brightness * 1.3);
-            } else if (i < 16000) {
-              // Mid shell band — medium blue
-              if (brightness > 0.6) col.lerpColors(colMid, colCore, brightness);
-              else col.lerpColors(colDim, colMid, brightness * 1.1);
-            } else {
-              // Outer shell band — dimmer, edge fade
-              if (brightness > 0.7) col.copy(colMid);
-              else col.lerpColors(colDim, colMid, brightness * 0.9);
-            }
-          } else if (layer === 1) {
-            // Containment rings — structured, visible
-            col.lerpColors(colDim, colMid, 0.3 + brightness * 0.4);
-          } else {
-            col.lerpColors(colDark, colDim, brightness * 0.4);
-          }
-
-          colors[idx] = col.r;
-          colors[idx + 1] = col.g;
-          colors[idx + 2] = col.b;
+          const x = pos[idx], y = pos[idx + 1], z = pos[idx + 2];
+          const r = Math.sqrt(x * x + y * y + z * z);
+          const speed = 0.002 * (1.4 - r);
+          const angle = Math.atan2(z, x) + speed;
+          pos[idx] = r * Math.cos(angle) * Math.sin(Math.acos(y / r));
+          pos[idx + 2] = r * Math.sin(angle) * Math.sin(Math.acos(y / r));
         }
+        geometry.attributes.position.needsUpdate = true;
+
+        // Background particle drift
+        const bgPos = bgGeometry.attributes.position.array;
+        for (let i = 0; i < bgCount; i++) {
+          bgPos[i * 3 + 1] += Math.sin(time + i * 0.1) * 0.0003;
+          bgPos[i * 3] += Math.cos(time * 0.5 + i * 0.05) * 0.0002;
+        }
+        bgGeometry.attributes.position.needsUpdate = true;
+
+        bgParticles.rotation.y = time * 0.02;
+
+        renderer.render(scene, camera);
       }
+      animate();
 
-      generateParticles();
-
-      // ── GEOMETRY & MATERIAL ────────────────────────────────
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-      geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
-      const vertexShader = `
-    attribute float size;
-    varying vec3 vColor;
-    varying float vDist;
-    uniform float uTime;
-
-    void main() {
-      vColor = color;
-      vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-      vDist = -mvPosition.z;
-      gl_PointSize = size * (55.0 / vDist);
-      gl_PointSize = max(gl_PointSize, 0.5);
-      gl_Position = projectionMatrix * mvPosition;
-    }
-  `;
-
-      const fragmentShader = `
-    varying vec3 vColor;
-    varying float vDist;
-
-    void main() {
-      float d = length(gl_PointCoord - vec2(0.5));
-      if (d > 0.5) discard;
-
-      // Sharp circle with very subtle soft edge
-      float alpha = smoothstep(0.5, 0.38, d);
-
-      // Distance fade
-      float distFade = clamp(1.0 - (vDist - 4.0) / 8.0, 0.1, 1.0);
-      alpha *= distFade;
-
-      gl_FragColor = vec4(vColor, alpha * 0.85);
-    }
-  `;
-
-      const material = new THREE.ShaderMaterial({
-        vertexShader,
-        fragmentShader,
-        vertexColors: true,
-        transparent: true,
-        depthWrite: false,
-        blending: THREE.NormalBlending,
-        uniforms: {
-          uTime: { value: 0 }
-        }
-      });
-
-      // Separate atmosphere particles into their own non-rotating group
-      // so global sphere rotation doesn't change their perceived depth
-      const atmospherePositions = new Float32Array(PARTICLE_COUNT * 3);
-      const atmosphereColors = new Float32Array(PARTICLE_COUNT * 3);
-      const atmosphereSizes = new Float32Array(PARTICLE_COUNT);
-      const corePositions = new Float32Array(PARTICLE_COUNT * 3);
-      const coreColors = new Float32Array(PARTICLE_COUNT * 3);
-      const coreSizes = new Float32Array(PARTICLE_COUNT);
-      let coreCount = 0;
-      let atmoCount = 0;
-
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        const idx = i * 3;
-        if (layers[i] === 2) {
-          const ai = atmoCount * 3;
-          atmospherePositions[ai] = positions[idx];
-          atmospherePositions[ai + 1] = positions[idx + 1];
-          atmospherePositions[ai + 2] = positions[idx + 2];
-          atmosphereColors[ai] = colors[idx];
-          atmosphereColors[ai + 1] = colors[idx + 1];
-          atmosphereColors[ai + 2] = colors[idx + 2];
-          atmosphereSizes[atmoCount] = sizes[i];
-          atmoCount++;
-        } else {
-          const ci = coreCount * 3;
-          corePositions[ci] = positions[idx];
-          corePositions[ci + 1] = positions[idx + 1];
-          corePositions[ci + 2] = positions[idx + 2];
-          coreColors[ci] = colors[idx];
-          coreColors[ci + 1] = colors[idx + 1];
-          coreColors[ci + 2] = colors[idx + 2];
-          coreSizes[coreCount] = sizes[i];
-          coreCount++;
-        }
-      }
-
-      // Core+shell geometry (will rotate)
-      const coreGeometry = new THREE.BufferGeometry();
-      coreGeometry.setAttribute('position', new THREE.BufferAttribute(corePositions.slice(0, coreCount * 3), 3));
-      coreGeometry.setAttribute('color', new THREE.BufferAttribute(coreColors.slice(0, coreCount * 3), 3));
-      coreGeometry.setAttribute('size', new THREE.BufferAttribute(coreSizes.slice(0, coreCount), 1));
-
-      const particles = new THREE.Points(coreGeometry, material);
-      // Position the system exactly as reference to preserve target size scale
-      particles.position.set(1.8, 0.1, 0);
-      scene.add(particles);
-
-      // Atmosphere geometry (will NOT rotate — stays at fixed depth)
-      const atmoGeometry = new THREE.BufferGeometry();
-      atmoGeometry.setAttribute('position', new THREE.BufferAttribute(atmospherePositions.slice(0, atmoCount * 3), 3));
-      atmoGeometry.setAttribute('color', new THREE.BufferAttribute(atmosphereColors.slice(0, atmoCount * 3), 3));
-      atmoGeometry.setAttribute('size', new THREE.BufferAttribute(atmosphereSizes.slice(0, atmoCount), 1));
-
-      const atmosphereParticles = new THREE.Points(atmoGeometry, material);
-      atmosphereParticles.position.set(1.8, 0.1, 0);
-      scene.add(atmosphereParticles);
-
-      // ── PHYSICS UPDATE ─────────────────────────────────────
-      const DAMPING = 0.92;
-      const RETURN_FORCE = 0.008;
-      const CURSOR_RADIUS = 2.0;
-      const CURSOR_STRENGTH = 0.15;
-
-      // Build index maps for core/shell vs atmosphere so we can update the separated geometries
-      const coreIndices = [];
-      const atmoIndices = [];
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        if (layers[i] === 2) atmoIndices.push(i);
-        else coreIndices.push(i);
-      }
-
-      function updateParticles(time, dt) {
-        const corePosAttr = coreGeometry.attributes.position;
-        const corePosArray = corePosAttr.array;
-        const atmoPosAttr = atmoGeometry.attributes.position;
-        const atmoPosArray = atmoPosAttr.array;
-
-        // Get cursor position in world space (on a plane at z=0, relative to particles)
-        const cursorX = mouse.smoothX * 4 - particles.position.x;
-        const cursorY = mouse.smoothY * 2.5 - particles.position.y;
-        const cursorZ = 1.5;
-
-        // Update core + shell particles
-        for (let ci = 0; ci < coreIndices.length; ci++) {
-          const i = coreIndices[ci];
-          const srcIdx = i * 3;
-          const dstIdx = ci * 3;
-          const bx = basePositions[srcIdx];
-          const by = basePositions[srcIdx + 1];
-          const bz = basePositions[srcIdx + 2];
-          const layer = layers[i];
-          const phase = phases[i];
-
-          let targetX = bx;
-          let targetY = by;
-          let targetZ = bz;
-
-          if (layer === 0) {
-            const len = Math.sqrt(bx * bx + by * by + bz * bz);
-            if (i < 8000) {
-              // Nucleus: very tight, stable pulse — contained energy
-              const pulse = Math.sin(time * 0.5 + phase * 0.3) * 0.008;
-              if (len > 0) {
-                targetX += (bx / len) * pulse;
-                targetY += (by / len) * pulse;
-                targetZ += (bz / len) * pulse;
-              }
-            } else {
-              // Shell bands: minimal breathing — stable, engineered
-              const breathe = Math.sin(time * 0.35 + phase) * 0.012;
-              if (len > 0) {
-                targetX += (bx / len) * breathe;
-                targetY += (by / len) * breathe;
-                targetZ += (bz / len) * breathe;
-              }
-            }
-          } else if (layer === 1) {
-            // Containment rings: slow, steady, mechanical rotation
-            const ringGroup = i % 4;
-            const rotSpeed = 0.012 + ringGroup * 0.003;
-            const direction = (ringGroup % 2 === 0) ? 1 : -1;
-            const ca = Math.cos(time * rotSpeed * direction);
-            const sa = Math.sin(time * rotSpeed * direction);
-            targetX = bx * ca - bz * sa;
-            targetZ = bx * sa + bz * ca;
-            targetY = by;
-          }
-
-          // Spring return force
-          let fx = (targetX - corePosArray[dstIdx]) * RETURN_FORCE;
-          let fy = (targetY - corePosArray[dstIdx + 1]) * RETURN_FORCE;
-          let fz = (targetZ - corePosArray[dstIdx + 2]) * RETURN_FORCE;
-
-          // Cursor interaction — push away
-          const dx = corePosArray[dstIdx] - cursorX;
-          const dy = corePosArray[dstIdx + 1] - cursorY;
-          const dz = corePosArray[dstIdx + 2] - cursorZ;
-          const distSq = dx * dx + dy * dy + dz * dz;
-          const cursorRadSq = CURSOR_RADIUS * CURSOR_RADIUS;
-
-          if (distSq < cursorRadSq && distSq > 0.001) {
-            const dist = Math.sqrt(distSq);
-            const force = (1 - dist / CURSOR_RADIUS) * CURSOR_STRENGTH;
-            const invDist = 1 / dist;
-            fx += dx * invDist * force;
-            fy += dy * invDist * force;
-            fz += dz * invDist * force;
-          }
-
-          // Apply velocity
-          velocities[srcIdx] = (velocities[srcIdx] + fx) * DAMPING;
-          velocities[srcIdx + 1] = (velocities[srcIdx + 1] + fy) * DAMPING;
-          velocities[srcIdx + 2] = (velocities[srcIdx + 2] + fz) * DAMPING;
-
-          corePosArray[dstIdx] += velocities[srcIdx];
-          corePosArray[dstIdx + 1] += velocities[srcIdx + 1];
-          corePosArray[dstIdx + 2] += velocities[srcIdx + 2];
-        }
-        corePosAttr.needsUpdate = true;
-
-        // Update atmosphere particles — X/Y drift only, Z stays fixed
-        for (let ai = 0; ai < atmoIndices.length; ai++) {
-          const i = atmoIndices[ai];
-          const srcIdx = i * 3;
-          const dstIdx = ai * 3;
-          const bx = basePositions[srcIdx];
-          const by = basePositions[srcIdx + 1];
-          const bz = basePositions[srcIdx + 2];
-          const phase = phases[i];
-
-          // Gentle X/Y float only — NO Z movement
-          const targetX = bx + Math.sin(time * 0.15 + phase) * 0.06;
-          const targetY = by + Math.cos(time * 0.12 + phase * 1.3) * 0.06;
-          const targetZ = bz; // Z locked to base
-
-          const fx = (targetX - atmoPosArray[dstIdx]) * RETURN_FORCE;
-          const fy = (targetY - atmoPosArray[dstIdx + 1]) * RETURN_FORCE;
-          const fz = (targetZ - atmoPosArray[dstIdx + 2]) * RETURN_FORCE;
-
-          velocities[srcIdx] = (velocities[srcIdx] + fx) * DAMPING;
-          velocities[srcIdx + 1] = (velocities[srcIdx + 1] + fy) * DAMPING;
-          velocities[srcIdx + 2] = (velocities[srcIdx + 2] + fz) * DAMPING;
-
-          atmoPosArray[dstIdx] += velocities[srcIdx];
-          atmoPosArray[dstIdx + 1] += velocities[srcIdx + 1];
-          atmoPosArray[dstIdx + 2] += velocities[srcIdx + 2];
-        }
-        atmoPosAttr.needsUpdate = true;
-      }
-
-      // ── RESIZE ─────────────────────────────────────────────
+      // Resize handler
       window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
-      });
-
-      // ── ANIMATION LOOP ─────────────────────────────────────
-      let prevTime = 0;
-
-      function animate(timestamp) {
-        requestAnimationFrame(animate);
-
-        const time = timestamp * 0.001;
-        const dt = Math.min(time - prevTime, 0.05);
-        prevTime = time;
-
-        // Smooth mouse
-        mouse.smoothX += (mouse.x - mouse.smoothX) * 0.04;
-        mouse.smoothY += (mouse.y - mouse.smoothY) * 0.04;
-
-        // Very slow, stable rotation — engineered, not cosmic
-        particles.rotation.y = time * 0.02;
-        particles.rotation.x = 0;
-
-        // Update uniforms
-        material.uniforms.uTime.value = time;
-
-        // Physics
-        updateParticles(time, dt);
-
-        renderer.render(scene, camera);
-      }
-
-      animate(0);
+      }, { passive: true });
     })();
   </script>
 
 </body>
-
 </html>
