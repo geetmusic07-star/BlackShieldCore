@@ -14,7 +14,7 @@
     /* ═══════════════════════════════════════════
        DESIGN SYSTEM — TASTE-SKILL CALIBRATED
        DESIGN_VARIANCE: 8  |  MOTION_INTENSITY: 7  |  VISUAL_DENSITY: 4
-       Palette: Zinc/Slate base + singular Emerald accent
+       Palette: Zinc/Slate base + singular Cyber-Blue accent
        Font: Outfit (display) + JetBrains Mono (data)
        ═══════════════════════════════════════════ */
 
@@ -25,18 +25,18 @@
     }
 
     :root {
-      --bg-void: #09090b;
-      --bg-surface: #18181b;
-      --bg-elevated: #27272a;
-      --border-subtle: rgba(63, 63, 70, 0.5);
-      --border-dim: rgba(63, 63, 70, 0.25);
-      --accent: #34d399;
-      --accent-muted: #059669;
-      --accent-dim: rgba(52, 211, 153, 0.08);
-      --accent-glow: rgba(52, 211, 153, 0.15);
-      --text-primary: #fafafa;
-      --text-secondary: rgba(161, 161, 170, 0.85);
-      --text-tertiary: rgba(113, 113, 122, 0.7);
+      --bg-void: #020b18;
+      --bg-surface: #051525;
+      --bg-elevated: #0a1e35;
+      --border-subtle: rgba(37, 99, 235, 0.4);
+      --border-dim: rgba(37, 99, 235, 0.2);
+      --accent: #3b82f6;
+      --accent-muted: #1d4ed8;
+      --accent-dim: rgba(59, 130, 246, 0.1);
+      --accent-glow: rgba(59, 130, 246, 0.22);
+      --text-primary: #eef2ff;
+      --text-secondary: rgba(165, 190, 240, 0.88);
+      --text-tertiary: rgba(100, 140, 210, 0.72);
       --mono: 'JetBrains Mono', monospace;
       --sans: 'Outfit', system-ui, -apple-system, sans-serif;
       --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -84,9 +84,10 @@
       inset: 0;
       z-index: 0;
       background:
-        radial-gradient(ellipse 50% 40% at 75% 40%, rgba(52, 211, 153, 0.04) 0%, transparent 70%),
-        radial-gradient(ellipse 60% 50% at 25% 60%, rgba(52, 211, 153, 0.02) 0%, transparent 60%),
-        linear-gradient(180deg, #09090b 0%, #0f0f12 50%, #09090b 100%);
+        radial-gradient(ellipse 55% 45% at 75% 40%, rgba(59, 130, 246, 0.09) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 20% 70%, rgba(29, 78, 216, 0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 50% 10%, rgba(59, 130, 246, 0.05) 0%, transparent 60%),
+        linear-gradient(180deg, #020b18 0%, #030f1e 50%, #020b18 100%);
     }
 
     .bg-grid-lines {
@@ -94,8 +95,8 @@
       inset: 0;
       z-index: 0;
       background-image:
-        linear-gradient(rgba(52, 211, 153, 0.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(52, 211, 153, 0.015) 1px, transparent 1px);
+        linear-gradient(rgba(59, 130, 246, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.025) 1px, transparent 1px);
       background-size: 80px 80px;
       mask-image: radial-gradient(ellipse 50% 40% at 70% 45%, rgba(0,0,0,0.6) 0%, transparent 70%);
       -webkit-mask-image: radial-gradient(ellipse 50% 40% at 70% 45%, rgba(0,0,0,0.6) 0%, transparent 70%);
@@ -114,7 +115,7 @@
       justify-content: space-between;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      background: rgba(9, 9, 11, 0.6);
+      background: rgba(2, 11, 24, 0.6);
       border-bottom: 1px solid var(--border-dim);
       transition: all 0.4s var(--ease-out-expo);
     }
@@ -196,7 +197,7 @@
     .nav-cta-btn {
       padding: 10px 24px;
       background: transparent;
-      border: 1px solid rgba(52, 211, 153, 0.25);
+      border: 1px solid rgba(59, 130, 246, 0.25);
       border-radius: 8px;
       color: var(--accent) !important;
       font-weight: 500 !important;
@@ -207,9 +208,9 @@
 
     .nav-cta-btn:hover {
       background: var(--accent-dim) !important;
-      border-color: rgba(52, 211, 153, 0.45) !important;
+      border-color: rgba(59, 130, 246, 0.45) !important;
       transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(52, 211, 153, 0.12);
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
     }
 
     .nav-cta-btn::after {
@@ -244,7 +245,7 @@
       gap: 10px;
       padding: 7px 16px;
       background: var(--accent-dim);
-      border: 1px solid rgba(52, 211, 153, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.14);
       border-radius: 100px;
       margin-bottom: 36px;
       animation: fadeInUp 0.8s var(--ease-out-expo) 0.2s both;
@@ -339,7 +340,7 @@
 
     .btn-main:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(52, 211, 153, 0.3);
+      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.35);
     }
 
     .btn-main:hover::before {
@@ -494,7 +495,7 @@
       padding: 20px 0;
       border-top: 1px solid var(--border-dim);
       border-bottom: 1px solid var(--border-dim);
-      background: rgba(9, 9, 11, 0.5);
+      background: rgba(2, 11, 24, 0.5);
       backdrop-filter: blur(8px);
     }
 
@@ -636,9 +637,9 @@
     }
 
     .spotlight-card:hover {
-      border-color: rgba(52, 211, 153, 0.2);
+      border-color: rgba(59, 130, 246, 0.25);
       transform: translateY(-3px);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4), 0 0 30px rgba(59, 130, 246, 0.06);
     }
 
     /* Inner refraction border for glass effect */
@@ -658,7 +659,7 @@
       gap: 6px;
       padding: 5px 12px;
       background: var(--accent-dim);
-      border: 1px solid rgba(52, 211, 153, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.15);
       border-radius: 100px;
       font-family: var(--mono);
       font-size: 10px;
@@ -1033,9 +1034,9 @@
     }
 
     .case-block:hover {
-      border-color: rgba(52, 211, 153, 0.15);
+      border-color: rgba(59, 130, 246, 0.2);
       transform: translateY(-2px);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35), 0 0 40px rgba(59, 130, 246, 0.05);
     }
 
     .case-left {
@@ -1094,9 +1095,9 @@
     }
 
     .tool-cell:hover {
-      border-color: rgba(52, 211, 153, 0.2);
+      border-color: rgba(59, 130, 246, 0.25);
       transform: translateY(-3px);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 0 20px rgba(59, 130, 246, 0.06);
     }
 
     .tool-icon {
@@ -1104,7 +1105,7 @@
       height: 40px;
       border-radius: 10px;
       background: var(--accent-dim);
-      border: 1px solid rgba(52, 211, 153, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.15);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1377,6 +1378,161 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* ===== NEURAL MESH VISUALIZATION SECTION ===== */
+    .neural-mesh-wrapper {
+      position: relative;
+      z-index: 10;
+      height: 300vh; /* Scroll distance for the animation */
+    }
+
+    .neural-mesh-sticky {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #neural-mesh-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .neural-mesh-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      text-align: center;
+      padding: 0 48px;
+    }
+
+    .neural-mesh-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: all 0.8s var(--ease-out-expo);
+    }
+
+    .neural-mesh-label.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .neural-mesh-title {
+      font-family: var(--sans);
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: var(--text-primary);
+      line-height: 1.05;
+      max-width: 700px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: all 0.8s var(--ease-out-expo) 0.1s;
+    }
+
+    .neural-mesh-title.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .neural-mesh-title .accent-text {
+      color: var(--accent);
+    }
+
+    .neural-mesh-subtitle {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 480px;
+      margin-top: 20px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s var(--ease-out-expo) 0.2s;
+    }
+
+    .neural-mesh-subtitle.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Progress bar at bottom of neural mesh section */
+    .neural-mesh-progress {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      opacity: 0.4;
+    }
+
+    .neural-mesh-progress-bar {
+      width: 120px;
+      height: 2px;
+      background: var(--border-dim);
+      border-radius: 1px;
+      overflow: hidden;
+    }
+
+    .neural-mesh-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      border-radius: 1px;
+      transition: width 0.1s linear;
+    }
+
+    .neural-mesh-progress-text {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-tertiary);
+      letter-spacing: 1px;
+    }
+
+    /* Scan lines overlay for depth */
+    .neural-mesh-scanlines {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(59, 130, 246, 0.01) 3px,
+        rgba(59, 130, 246, 0.01) 4px
+      );
+      opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+      .neural-mesh-wrapper {
+        height: 200vh;
+      }
+
+      .neural-mesh-progress {
+        display: none;
+      }
+    }
   </style>
 </head>
 
@@ -1484,6 +1640,30 @@
       <span class="marquee-item"><span class="dot"></span>Cryptographic Audit</span>
       <span class="marquee-item"><span class="dot"></span>Incident Response</span>
       <span class="marquee-item"><span class="dot"></span>Supply Chain Security</span>
+    </div>
+  </div>
+
+  <!-- ═══ NEURAL MESH NETWORK — SCROLL-REACTIVE 3D VISUALIZATION ═══ -->
+  <div class="neural-mesh-wrapper" id="neural-mesh-wrapper">
+    <div class="neural-mesh-sticky">
+      <canvas id="neural-mesh-canvas"></canvas>
+      <div class="neural-mesh-scanlines"></div>
+      <div class="neural-mesh-overlay">
+        <span class="neural-mesh-label" id="nm-label">Neural Defense Architecture</span>
+        <h2 class="neural-mesh-title" id="nm-title">
+          Mapping the<br><span class="accent-text">Threat Surface</span>
+        </h2>
+        <p class="neural-mesh-subtitle" id="nm-subtitle">
+          Every node represents a defense layer. Every connection is a
+          monitored pathway. The mesh adapts, learns, and heals autonomously.
+        </p>
+      </div>
+      <div class="neural-mesh-progress">
+        <div class="neural-mesh-progress-bar">
+          <div class="neural-mesh-progress-fill" id="nm-progress-fill"></div>
+        </div>
+        <span class="neural-mesh-progress-text" id="nm-progress-text">0%</span>
+      </div>
     </div>
   </div>
 
@@ -2005,10 +2185,10 @@
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
       if (scrollY > 100) {
-        nav.style.background = 'rgba(9, 9, 11, 0.85)';
+        nav.style.background = 'rgba(2, 11, 24, 0.85)';
         nav.style.borderBottomColor = 'rgba(63, 63, 70, 0.4)';
       } else {
-        nav.style.background = 'rgba(9, 9, 11, 0.6)';
+        nav.style.background = 'rgba(2, 11, 24, 0.6)';
         nav.style.borderBottomColor = 'rgba(63, 63, 70, 0.25)';
       }
       // Hide scroll indicator
@@ -2089,10 +2269,10 @@
       geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
 
       const material = new THREE.PointsMaterial({
-        color: new THREE.Color('#34d399'),
+        color: new THREE.Color('#3b82f6'),
         size: 0.018,
         transparent: true,
-        opacity: 0.7,
+        opacity: 0.75,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         sizeAttenuation: true
@@ -2116,10 +2296,10 @@
       bgGeometry.setAttribute('position', new THREE.BufferAttribute(bgPositions, 3));
 
       const bgMaterial = new THREE.PointsMaterial({
-        color: new THREE.Color('#34d399'),
+        color: new THREE.Color('#3b82f6'),
         size: 0.008,
         transparent: true,
-        opacity: 0.15,
+        opacity: 0.18,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         sizeAttenuation: true
@@ -2177,6 +2357,309 @@
         renderer.render(scene, camera);
       }
       animate();
+
+      // Resize handler
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      }, { passive: true });
+    })();
+
+    // ═══ NEURAL MESH NETWORK — SCROLL-REACTIVE 3D VISUALIZATION ═══
+    (function initNeuralMesh() {
+      const canvas = document.getElementById('neural-mesh-canvas');
+      const wrapper = document.getElementById('neural-mesh-wrapper');
+      if (!canvas || !wrapper) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 0, 14);
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // ── NODE GENERATION ──
+      const nodeCount = 80;
+      const nodes = [];
+      const nodePositions = new Float32Array(nodeCount * 3);
+      const nodeScales = new Float32Array(nodeCount);
+      const nodeColors = new Float32Array(nodeCount * 3);
+
+      // Distribute nodes in a volumetric cloud shape
+      for (let i = 0; i < nodeCount; i++) {
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+        const r = 2.5 + Math.random() * 4.5;
+
+        const x = r * Math.sin(phi) * Math.cos(theta);
+        const y = (r * Math.sin(phi) * Math.sin(theta)) * 0.65; // Flatten Y
+        const z = r * Math.cos(phi) * 0.6;
+
+        nodePositions[i * 3] = x;
+        nodePositions[i * 3 + 1] = y;
+        nodePositions[i * 3 + 2] = z;
+
+        // Some nodes are "critical" (brighter, larger)
+        const isCritical = Math.random() < 0.15;
+        nodeScales[i] = isCritical ? 0.12 + Math.random() * 0.08 : 0.04 + Math.random() * 0.05;
+
+        // Color: mostly cyber-blue, some bright white-blue for critical
+        if (isCritical) {
+          nodeColors[i * 3] = 0.38; nodeColors[i * 3 + 1] = 0.65; nodeColors[i * 3 + 2] = 1.0;
+        } else {
+          nodeColors[i * 3] = 0.23; nodeColors[i * 3 + 1] = 0.51; nodeColors[i * 3 + 2] = 0.96;
+        }
+
+        nodes.push({
+          x, y, z,
+          origX: x, origY: y, origZ: z,
+          scale: nodeScales[i],
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.3 + Math.random() * 0.5,
+          critical: isCritical
+        });
+      }
+
+      // Node particles
+      const nodeGeo = new THREE.BufferGeometry();
+      nodeGeo.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
+
+      const nodeMat = new THREE.PointsMaterial({
+        color: new THREE.Color('#3b82f6'),
+        size: 0.12,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        sizeAttenuation: true
+      });
+
+      const nodePoints = new THREE.Points(nodeGeo, nodeMat);
+      scene.add(nodePoints);
+
+      // ── CONNECTIONS ──
+      const connections = [];
+      const maxDist = 4.2;
+
+      for (let i = 0; i < nodeCount; i++) {
+        for (let j = i + 1; j < nodeCount; j++) {
+          const dx = nodes[i].origX - nodes[j].origX;
+          const dy = nodes[i].origY - nodes[j].origY;
+          const dz = nodes[i].origZ - nodes[j].origZ;
+          const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+          if (dist < maxDist) {
+            connections.push({ i, j, dist });
+          }
+        }
+      }
+
+      // Line geometry for connections
+      const linePositions = new Float32Array(connections.length * 6);
+      const lineGeo = new THREE.BufferGeometry();
+      lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+
+      const lineMat = new THREE.LineBasicMaterial({
+        color: new THREE.Color('#3b82f6'),
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+
+      const lineSegments = new THREE.LineSegments(lineGeo, lineMat);
+      scene.add(lineSegments);
+
+      // ── DATA FLOW PARTICLES (along connections) ──
+      const flowCount = connections.length * 2;
+      const flowGeo = new THREE.BufferGeometry();
+      const flowPositions = new Float32Array(flowCount * 3);
+      const flowPhases = new Float32Array(flowCount);
+
+      for (let f = 0; f < flowCount; f++) {
+        flowPhases[f] = Math.random();
+      }
+
+      flowGeo.setAttribute('position', new THREE.BufferAttribute(flowPositions, 3));
+
+      const flowMat = new THREE.PointsMaterial({
+        color: new THREE.Color('#93c5fd'),
+        size: 0.04,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        sizeAttenuation: true
+      });
+
+      const flowPoints = new THREE.Points(flowGeo, flowMat);
+      scene.add(flowPoints);
+
+      // ── OUTER RING PARTICLES ──
+      const ringCount = 300;
+      const ringGeo = new THREE.BufferGeometry();
+      const ringPositions = new Float32Array(ringCount * 3);
+
+      for (let i = 0; i < ringCount; i++) {
+        const angle = (i / ringCount) * Math.PI * 2;
+        const r = 7 + Math.sin(angle * 5) * 0.3;
+        ringPositions[i * 3] = Math.cos(angle) * r;
+        ringPositions[i * 3 + 1] = (Math.random() - 0.5) * 0.4;
+        ringPositions[i * 3 + 2] = Math.sin(angle) * r * 0.3;
+      }
+
+      ringGeo.setAttribute('position', new THREE.BufferAttribute(ringPositions, 3));
+
+      const ringMat = new THREE.PointsMaterial({
+        color: new THREE.Color('#3b82f6'),
+        size: 0.025,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        sizeAttenuation: true
+      });
+
+      const ringParticles = new THREE.Points(ringGeo, ringMat);
+      scene.add(ringParticles);
+
+      // ── SCROLL TRACKING ──
+      let scrollProgress = 0;
+      let animTime = 0;
+      let meshRotY = 0;
+
+      function updateScroll() {
+        const rect = wrapper.getBoundingClientRect();
+        const wrapperH = wrapper.offsetHeight;
+        const viewH = window.innerHeight;
+
+        // Calculate how far through the scroll-wrapper we are
+        const scrolled = -rect.top;
+        const total = wrapperH - viewH;
+        scrollProgress = Math.max(0, Math.min(1, scrolled / total));
+
+        // Update progress bar
+        const progressFill = document.getElementById('nm-progress-fill');
+        const progressText = document.getElementById('nm-progress-text');
+        if (progressFill) progressFill.style.width = `${Math.round(scrollProgress * 100)}%`;
+        if (progressText) progressText.textContent = `${Math.round(scrollProgress * 100)}%`;
+
+        // Show/hide overlay text based on scroll
+        const nmLabel = document.getElementById('nm-label');
+        const nmTitle = document.getElementById('nm-title');
+        const nmSubtitle = document.getElementById('nm-subtitle');
+
+        if (scrollProgress > 0.05 && scrollProgress < 0.85) {
+          nmLabel && nmLabel.classList.add('show');
+          nmTitle && nmTitle.classList.add('show');
+          nmSubtitle && nmSubtitle.classList.add('show');
+        } else {
+          nmLabel && nmLabel.classList.remove('show');
+          nmTitle && nmTitle.classList.remove('show');
+          nmSubtitle && nmSubtitle.classList.remove('show');
+        }
+      }
+
+      window.addEventListener('scroll', updateScroll, { passive: true });
+
+      // ── ANIMATION LOOP ──
+      function animateMesh() {
+        requestAnimationFrame(animateMesh);
+        animTime += 0.005;
+
+        // Scroll-driven assembly: nodes spread out when progress=0, condense as progress increases
+        const assemblyFactor = Math.pow(scrollProgress, 0.7);
+        const disperseFactor = 1 - assemblyFactor;
+
+        // Opacity based on scroll (fade in as you enter, fade out as you leave)
+        const fadeIn = Math.min(1, scrollProgress * 5); // fades in over first 20%
+        const fadeOut = Math.min(1, (1 - scrollProgress) * 5); // fades out in last 20%
+        const masterOpacity = fadeIn * fadeOut;
+
+        nodeMat.opacity = masterOpacity * 0.9;
+        lineMat.opacity = masterOpacity * 0.12 * assemblyFactor;
+        flowMat.opacity = masterOpacity * 0.5 * assemblyFactor;
+        ringMat.opacity = masterOpacity * 0.2 * assemblyFactor;
+
+        // Rotate the whole mesh slowly
+        meshRotY += 0.002;
+        const meshGroup = nodePoints;
+
+        // Update node positions with breathing + scroll-driven dispersal
+        const pos = nodeGeo.attributes.position.array;
+        for (let i = 0; i < nodeCount; i++) {
+          const n = nodes[i];
+          const breathe = Math.sin(animTime * n.speed + n.phase) * 0.08;
+
+          // Disperse outward when scrollProgress is low
+          const disperseScale = 1 + disperseFactor * 2.5;
+
+          pos[i * 3] = n.origX * disperseScale + breathe;
+          pos[i * 3 + 1] = n.origY * disperseScale + breathe * 0.5;
+          pos[i * 3 + 2] = n.origZ * disperseScale;
+
+          // Store current pos for line connections
+          n.x = pos[i * 3];
+          n.y = pos[i * 3 + 1];
+          n.z = pos[i * 3 + 2];
+        }
+        nodeGeo.attributes.position.needsUpdate = true;
+
+        // Update connections
+        const lPos = lineGeo.attributes.position.array;
+        for (let c = 0; c < connections.length; c++) {
+          const conn = connections[c];
+          const a = nodes[conn.i];
+          const b = nodes[conn.j];
+          lPos[c * 6] = a.x;
+          lPos[c * 6 + 1] = a.y;
+          lPos[c * 6 + 2] = a.z;
+          lPos[c * 6 + 3] = b.x;
+          lPos[c * 6 + 4] = b.y;
+          lPos[c * 6 + 5] = b.z;
+        }
+        lineGeo.attributes.position.needsUpdate = true;
+
+        // Update flow particles along connections
+        const fPos = flowGeo.attributes.position.array;
+        for (let f = 0; f < flowCount; f++) {
+          const connIdx = f % connections.length;
+          const conn = connections[connIdx];
+          const a = nodes[conn.i];
+          const b = nodes[conn.j];
+
+          // Animate t along the connection
+          flowPhases[f] = (flowPhases[f] + 0.003 + Math.random() * 0.002) % 1;
+          const t = flowPhases[f];
+
+          fPos[f * 3] = a.x + (b.x - a.x) * t;
+          fPos[f * 3 + 1] = a.y + (b.y - a.y) * t;
+          fPos[f * 3 + 2] = a.z + (b.z - a.z) * t;
+        }
+        flowGeo.attributes.position.needsUpdate = true;
+
+        // Rotate ring
+        ringParticles.rotation.y = animTime * 0.3;
+        ringParticles.rotation.x = Math.sin(animTime * 0.15) * 0.1;
+
+        // Rotate all elements together
+        nodePoints.rotation.y = meshRotY;
+        lineSegments.rotation.y = meshRotY;
+        flowPoints.rotation.y = meshRotY;
+
+        // Camera z-position based on scroll (zoom in as we scroll)
+        camera.position.z = 14 - assemblyFactor * 4;
+        camera.position.y = Math.sin(animTime * 0.2) * 0.3;
+
+        renderer.render(scene, camera);
+      }
+      animateMesh();
 
       // Resize handler
       window.addEventListener('resize', () => {
