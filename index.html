@@ -2458,6 +2458,282 @@
       .nav-group { display: none; }
       .nav-rank-pill { display: none; }
     }
+
+    /* ===== SPACING TIGHTENING ===== */
+    .section { padding: 80px 48px; }
+    .section--tight { padding-top: 56px; padding-bottom: 56px; }
+
+    /* ===== TIGHTER REVEAL DISTANCE ===== */
+    .reveal { transform: translateY(18px); }
+    .reveal-left { transform: translateX(-22px); }
+    .reveal-right { transform: translateX(22px); }
+    .reveal-scale { transform: scale(0.96); }
+
+    /* ===== SECTION ENTRANCE CHOREOGRAPHY ===== */
+    [data-enter] {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+    }
+    [data-enter].in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      [data-enter] { opacity: 1 !important; transform: none !important; transition: none !important; }
+    }
+
+    /* ===== VISUAL MODE ZONES ===== */
+    .zone { position: relative; }
+
+    .zone--operational {
+      background: linear-gradient(180deg, transparent 0%, rgba(4,15,28,0.5) 6%, rgba(4,15,28,0.5) 94%, transparent 100%);
+      border-top: 1px solid var(--border-dim);
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .zone--operational section { border-top: none !important; }
+
+    .zone--sandbox {
+      border-top: 1px solid var(--border-dim);
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .zone--sandbox section { border-top: none !important; }
+
+    .zone-strip-header {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 10px 48px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .zone-strip-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+    .zone-strip-sep {
+      flex: 1;
+      height: 1px;
+      background: var(--border-dim);
+    }
+    .zone-strip-status {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+    @media (max-width: 768px) {
+      .zone-strip-header { padding: 10px 20px; }
+    }
+
+    /* ===== PLATFORM GATEWAY ROW ===== */
+    .platform-module-list {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-dim);
+    }
+    .platform-module-chip {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.25s var(--ease-out-expo);
+    }
+    .platform-module-chip:hover {
+      border-color: var(--border-subtle);
+      background: var(--accent-dim);
+    }
+    .platform-module-chip-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    .platform-module-chip:hover .platform-module-chip-name { color: var(--text-primary); }
+    .platform-gateway-cta {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+    .platform-gateway-link {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      color: var(--accent);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: gap 0.2s;
+    }
+    .platform-gateway-link:hover { gap: 9px; }
+
+    /* ===== TOOLKIT UTILITY STRIP ===== */
+    .toolkit-strip {
+      border: 1px solid var(--border-dim);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--bg-surface);
+    }
+    .toolkit-strip-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 24px;
+      border-bottom: 1px solid var(--border-dim);
+      background: rgba(5,21,37,0.5);
+    }
+    .toolkit-strip-title { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-tertiary); }
+    .toolkit-strip-count { font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); }
+    .tool-row {
+      display: grid;
+      grid-template-columns: 32px 160px 1fr 72px;
+      align-items: center;
+      gap: 20px;
+      padding: 13px 24px;
+      border-bottom: 1px solid var(--border-dim);
+      transition: background 0.2s var(--ease-out-expo);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .tool-row:last-child { border-bottom: none; }
+    .tool-row:hover { background: rgba(59,130,246,0.035); }
+    .tool-row-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(59,130,246,0.12);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .tool-row-icon svg { width: 12px; height: 12px; stroke: var(--accent); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+    .tool-row-name { font-size: 13px; font-weight: 500; color: var(--text-primary); letter-spacing: -0.01em; }
+    .tool-row-tag { font-family: var(--mono); font-size: 9px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-tertiary); display: block; margin-top: 2px; }
+    .tool-row-desc { font-size: 11px; color: var(--text-tertiary); line-height: 1.5; }
+    .tool-row-cta { font-family: var(--mono); font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); text-align: right; }
+    .tool-row:hover .tool-row-cta { text-decoration: underline; }
+    @media (max-width: 900px) {
+      .tool-row { grid-template-columns: 28px 1fr 52px; gap: 14px; padding: 12px 18px; }
+      .tool-row-desc { display: none; }
+    }
+    @media (max-width: 768px) {
+      .tool-row { grid-template-columns: 28px 1fr auto; gap: 12px; }
+      .tool-row-tag { display: none; }
+    }
+
+    /* ===== LAB CONSOLE HEADER ===== */
+    .lab-console-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 12px 12px 0 0;
+      border-bottom: 1px solid var(--border-dim);
+    }
+    .lab-tabs { display: flex; gap: 2px; }
+    .lab-tab {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-tertiary);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lab-tab:hover { color: var(--text-secondary); background: rgba(255,255,255,0.03); }
+    .lab-tab.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(59,130,246,0.2); }
+    .lab-console-status {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+    .lab-console-path {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.5px;
+    }
+    .lab-console-content {
+      border: 1px solid var(--border-dim);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      padding: 28px;
+    }
+    @media (max-width: 768px) {
+      .lab-console-bar { padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
+      .lab-console-content { padding: 20px; }
+    }
+
+    /* ===== EDITORIAL ZONE TREATMENT ===== */
+    #case-studies .section-label,
+    #blog .section-label {
+      color: var(--text-tertiary);
+    }
+    #case-studies .section-heading,
+    #blog .section-heading {
+      font-size: clamp(20px, 2.4vw, 32px);
+      font-weight: 500;
+    }
+    #case-studies .section-subtext,
+    #blog .section-subtext {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      line-height: 1.75;
+    }
+
+    /* ===== STANDARDIZED CARD HOVER ===== */
+    .case-block:hover {
+      border-color: rgba(59,130,246,0.2);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      transform: translateY(-2px);
+    }
+    .experiment-card:hover {
+      border-color: rgba(59,130,246,0.2);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      transform: translateY(-2px);
+    }
+
+    /* ===== LOWER SECTION LABEL COLORS ===== */
+    #home-lab .section-label,
+    #osint .section-label,
+    #challenges .section-label,
+    #talks .section-label,
+    #toolkit .section-label {
+      color: var(--text-tertiary);
+    }
+
+    /* ===== RESPONSIVE ADDITIONS ===== */
+    @media (max-width: 768px) {
+      .section { padding: 60px 20px; }
+      .section--tight { padding-top: 48px; padding-bottom: 48px; }
+      .platform-module-list { gap: 6px; }
+    }
   </style>
 </head>
 
@@ -2605,13 +2881,11 @@
   </div>
 
   <!-- ═══ PLATFORM OVERVIEW ═══ -->
-  <section id="platform" class="section">
-    <span class="section-label reveal">Ecosystem Architecture</span>
+  <section id="platform" class="section" data-enter>
+    <span class="section-label reveal">Platform Ecosystem</span>
     <h2 class="section-heading reveal">One Platform.<br>Every Attack Surface.</h2>
     <p class="section-subtext reveal">
-      Ten integrated modules — from live cyber ranges to AI red-team experiments,
-      real-time threat intelligence, and a full technical knowledge base.
-      Each module connects. The platform compounds.
+      Ten integrated modules — each purpose-built, each connected. The platform compounds as you go deeper.
     </p>
 
     <div class="platform-grid stagger-children">
@@ -2647,43 +2921,28 @@
       </a>
     </div>
 
-    <div class="platform-grid-row2 stagger-children" style="margin-top: 14px;">
-      <a href="#case-studies" class="module-card reveal">
-        <div class="module-card-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
-        <div class="module-card-name">Case Studies</div>
-        <div class="module-card-desc">Real-world incidents: root cause, exploitation, remediation.</div>
-        <div class="module-card-footer"><span class="status-badge status-live">Live</span><span class="module-connects">→ Blog, OSINT</span></div>
-      </a>
-      <a href="#home-lab" class="module-card reveal">
-        <div class="module-card-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-        <div class="module-card-name">Home Lab</div>
-        <div class="module-card-desc">Documented security environment, architecture, and setup scripts.</div>
-        <div class="module-card-footer"><span class="status-badge status-beta">Beta</span><span class="module-connects">→ Tools, Labs</span></div>
-      </a>
-      <a href="#osint" class="module-card reveal">
-        <div class="module-card-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-        <div class="module-card-name">OSINT Projects</div>
-        <div class="module-card-desc">Phishing campaign tracking, infrastructure mapping, actor analysis.</div>
-        <div class="module-card-footer"><span class="status-badge status-beta">Beta</span><span class="module-connects">→ Dashboard, Cases</span></div>
-      </a>
-      <a href="#challenges" class="module-card reveal">
-        <div class="module-card-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-        <div class="module-card-name">Gamification</div>
-        <div class="module-card-desc">XP system, achievement badges, challenge progression, leaderboard.</div>
-        <div class="module-card-footer"><span class="status-badge status-beta">Beta</span><span class="module-connects">→ Playground, Labs</span></div>
-      </a>
-      <a href="#talks" class="module-card reveal">
-        <div class="module-card-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-        <div class="module-card-name">Talks Hub</div>
-        <div class="module-card-desc">Conference presentations, recorded demos, and thought leadership.</div>
-        <div class="module-card-footer"><span class="status-badge status-dev">Upcoming</span><span class="module-connects">→ Blog, Labs</span></div>
-      </a>
+    <div class="platform-module-list reveal">
+      <a href="#case-studies" class="platform-module-chip"><span class="platform-module-chip-name">Case Studies</span><span class="status-badge status-live" style="padding:2px 7px;font-size:8px;">Live</span></a>
+      <a href="#home-lab" class="platform-module-chip"><span class="platform-module-chip-name">Home Lab</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Beta</span></a>
+      <a href="#osint" class="platform-module-chip"><span class="platform-module-chip-name">OSINT Projects</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Beta</span></a>
+      <a href="#challenges" class="platform-module-chip"><span class="platform-module-chip-name">Gamification</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Beta</span></a>
+      <a href="#talks" class="platform-module-chip"><span class="platform-module-chip-name">Talks Hub</span><span class="status-badge status-dev" style="padding:2px 7px;font-size:8px;">Soon</span></a>
+    </div>
+    <div class="platform-gateway-cta">
+      <a href="#" class="platform-gateway-link">Explore all 10 modules <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
     </div>
   </section>
 
-  <!-- ═══ NEURAL MESH NETWORK — SCROLL-REACTIVE 3D VISUALIZATION ═══ -->
+  <!-- ═══ ZONE: OPERATIONAL INTELLIGENCE ═══ -->
+  <div class="zone zone--operational">
+    <div class="zone-strip-header">
+      <span class="zone-strip-label">Operational Intelligence Surface</span>
+      <span class="zone-strip-sep"></span>
+      <span class="zone-strip-status"><span class="live-dot"></span>Systems Active</span>
+    </div>
+
   <!-- ═══ THREAT SURFACE — CONTAINED DASHBOARD ═══ -->
-  <section id="threat-surface" class="section ts-section">
+  <section id="threat-surface" class="section ts-section" data-enter>
     <div class="ts-grid">
 
       <!-- Left: text + stats + scan -->
@@ -2741,7 +3000,7 @@
   </section>
 
   <!-- ═══ CAPABILITIES — ASYMMETRIC ZIG-ZAG ═══ -->
-  <section id="capabilities" class="section">
+  <section id="capabilities" class="section" data-enter>
     <span class="section-label reveal">Capabilities</span>
     <h2 class="section-heading reveal">Where Intelligence<br>Meets Architecture</h2>
     <p class="section-subtext reveal">
@@ -2830,7 +3089,7 @@
   </section>
 
   <!-- ═══ REAL-TIME INTELLIGENCE DASHBOARD ═══ -->
-  <section id="intelligence" class="section">
+  <section id="intelligence" class="section" data-enter>
     <span class="section-label reveal">Live Intelligence</span>
     <h2 class="section-heading reveal">Threat Environment<br>Analysis</h2>
     <p class="section-subtext reveal">
@@ -2984,8 +3243,18 @@
     </div>
   </section>
 
+  </div><!-- /zone--operational -->
+
+  <!-- ═══ ZONE: SANDBOX & SIMULATION ═══ -->
+  <div class="zone zone--sandbox">
+    <div class="zone-strip-header">
+      <span class="zone-strip-label">Sandbox &amp; Simulation</span>
+      <span class="zone-strip-sep"></span>
+      <span class="zone-strip-status"><span class="live-dot"></span>Range Online</span>
+    </div>
+
   <!-- ═══ CYBERSECURITY PLAYGROUND ═══ -->
-  <section id="playground" class="section">
+  <section id="playground" class="section" data-enter>
     <span class="section-label reveal">Cyber Playground</span>
     <h2 class="section-heading reveal">Attack. Defend.<br>Understand.</h2>
     <p class="section-subtext reveal">
@@ -3013,17 +3282,23 @@
       </div>
     </div>
 
-    <div class="filter-tabs" id="playground-filters">
-      <button class="filter-tab active" data-filter="all">All</button>
-      <button class="filter-tab" data-filter="web">Web</button>
-      <button class="filter-tab" data-filter="network">Network</button>
-      <button class="filter-tab" data-filter="ai">AI / ML</button>
-      <button class="filter-tab" data-filter="crypto">Crypto</button>
-      <button class="filter-tab" data-filter="forensics">Forensics</button>
-      <button class="filter-tab" data-filter="ctf">CTF</button>
+    <div class="lab-console-bar reveal">
+      <div class="lab-tabs" id="playground-filters">
+        <button class="lab-tab active" data-filter="all">All Labs</button>
+        <button class="lab-tab" data-filter="web">Web</button>
+        <button class="lab-tab" data-filter="network">Network</button>
+        <button class="lab-tab" data-filter="ai">AI / ML</button>
+        <button class="lab-tab" data-filter="crypto">Crypto</button>
+        <button class="lab-tab" data-filter="forensics">Forensics</button>
+        <button class="lab-tab" data-filter="ctf">CTF</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span class="lab-console-path">bsc-range://cyber-playground</span>
+        <span class="lab-console-status"><span class="live-dot"></span>Range Online</span>
+      </div>
     </div>
 
-    <div class="challenge-featured reveal">
+    <div class="challenge-featured reveal" style="border-radius:0 0 12px 12px;border-top:none;">
       <div>
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:14px;">
           <span class="card-badge">Featured Lab</span>
@@ -3191,13 +3466,14 @@
     </div>
   </section>
 
+  </div><!-- /zone--sandbox -->
+
   <!-- ═══ RESEARCH / CASE STUDIES ═══ -->
-  <section id="case-studies" class="section">
+  <section id="case-studies" class="section" data-enter>
     <span class="section-label reveal">Case Studies</span>
     <h2 class="section-heading reveal">Declassified<br>Operations</h2>
     <p class="section-subtext reveal">
-      Post-mortem analysis on real incidents — root cause, exploitation path,
-      and remediation architecture. Not textbook theory. Actual judgment under pressure.
+      Post-mortem analysis on real incidents. Root cause, exploitation path, remediation — documented with precision.
     </p>
 
     <div class="reveal">
@@ -3255,62 +3531,67 @@
   </section>
 
   <!-- ═══ OFFENSIVE TOOLKIT ═══ -->
-  <section id="toolkit" class="section">
+  <section id="toolkit" class="section" data-enter>
     <span class="section-label reveal">Offensive Toolkit</span>
     <h2 class="section-heading reveal">Precision<br>Instruments</h2>
     <p class="section-subtext reveal">
-      Custom utilities for rapid assessment, cryptanalysis, and payload generation.
+      Eight custom utilities for rapid assessment, cryptanalysis, and payload generation.
+      Each tool purpose-built for offensive security workflows.
     </p>
 
-    <div class="toolkit-grid stagger-children">
-      <div class="tool-cell reveal-scale">
-        <div class="tool-icon">
-          <svg viewBox="0 0 24 24"><path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/></svg>
-        </div>
-        <span class="tool-name">JWT Decoder</span>
-        <span class="tool-tag">Token Analysis</span>
+    <div class="toolkit-strip reveal">
+      <div class="toolkit-strip-header">
+        <span class="toolkit-strip-title">Security Utilities</span>
+        <span class="toolkit-strip-count">8 Tools · All Live</span>
       </div>
-      <div class="tool-cell reveal-scale">
-        <div class="tool-icon">
-          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10h-10V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z" opacity="0.5"/></svg>
-        </div>
-        <span class="tool-name">Hash Analyzer</span>
-        <span class="tool-tag">Cryptographic</span>
-      </div>
-      <div class="tool-cell reveal-scale">
-        <div class="tool-icon">
-          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-        </div>
-        <span class="tool-name">Log Parser</span>
-        <span class="tool-tag">SIEM Audit</span>
-      </div>
-      <div class="tool-cell reveal-scale">
-        <div class="tool-icon">
-          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        </div>
-        <span class="tool-name">Pass Entropy</span>
-        <span class="tool-tag">Auth Testing</span>
-      </div>
-      <div class="tool-cell reveal-scale">
-        <div class="tool-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-        <span class="tool-name">Log Analyzer</span>
-        <span class="tool-tag">SIEM / SOC</span>
-      </div>
-      <div class="tool-cell reveal-scale">
-        <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-        <span class="tool-name">CVE Lookup</span>
-        <span class="tool-tag">Vulnerability DB</span>
-      </div>
-      <div class="tool-cell reveal-scale">
-        <div class="tool-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
-        <span class="tool-name">Port Scanner</span>
-        <span class="tool-tag">Recon</span>
-      </div>
-      <div class="tool-cell reveal-scale">
-        <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
-        <span class="tool-name">Payload Gen</span>
-        <span class="tool-tag">Offensive</span>
-      </div>
+      <a href="#" class="tool-row">
+        <div class="tool-row-icon"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/></svg></div>
+        <div><div class="tool-row-name">JWT Decoder</div><span class="tool-row-tag">Token Analysis</span></div>
+        <span class="tool-row-desc">Decode, inspect, and manipulate JSON Web Tokens. Detect algorithm confusion vulnerabilities.</span>
+        <span class="tool-row-cta">Launch →</span>
+      </a>
+      <a href="#" class="tool-row">
+        <div class="tool-row-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10h-10V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z" opacity="0.5"/></svg></div>
+        <div><div class="tool-row-name">Hash Analyzer</div><span class="tool-row-tag">Cryptographic</span></div>
+        <span class="tool-row-desc">Identify hash type, compute MD5/SHA variants, detect weak hashing patterns.</span>
+        <span class="tool-row-cta">Launch →</span>
+      </a>
+      <a href="#" class="tool-row">
+        <div class="tool-row-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></div>
+        <div><div class="tool-row-name">Log Parser</div><span class="tool-row-tag">SIEM Audit</span></div>
+        <span class="tool-row-desc">Structured log ingestion with IOC extraction, timeline correlation, and anomaly flagging.</span>
+        <span class="tool-row-cta">Launch →</span>
+      </a>
+      <a href="#" class="tool-row">
+        <div class="tool-row-icon"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div><div class="tool-row-name">Pass Entropy</div><span class="tool-row-tag">Auth Testing</span></div>
+        <span class="tool-row-desc">Calculate password entropy, detect patterns, and estimate crack-time across hashcat rules.</span>
+        <span class="tool-row-cta">Launch →</span>
+      </a>
+      <a href="#" class="tool-row">
+        <div class="tool-row-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div><div class="tool-row-name">Log Analyzer</div><span class="tool-row-tag">SIEM / SOC</span></div>
+        <span class="tool-row-desc">Behavioral baseline analysis and deviation scoring against SIEM event streams.</span>
+        <span class="tool-row-cta">Launch →</span>
+      </a>
+      <a href="#" class="tool-row">
+        <div class="tool-row-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div><div class="tool-row-name">CVE Lookup</div><span class="tool-row-tag">Vulnerability DB</span></div>
+        <span class="tool-row-desc">Search CVE database with CVSS scoring, affected versions, and patch tracking.</span>
+        <span class="tool-row-cta">Launch →</span>
+      </a>
+      <a href="#" class="tool-row">
+        <div class="tool-row-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
+        <div><div class="tool-row-name">Port Scanner</div><span class="tool-row-tag">Recon</span></div>
+        <span class="tool-row-desc">Service fingerprinting, banner grabbing, and OS detection across specified target ranges.</span>
+        <span class="tool-row-cta">Launch →</span>
+      </a>
+      <a href="#" class="tool-row">
+        <div class="tool-row-icon"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
+        <div><div class="tool-row-name">Payload Gen</div><span class="tool-row-tag">Offensive</span></div>
+        <span class="tool-row-desc">Generate and encode payloads for XSS, SQLi, command injection, and SSRF scenarios.</span>
+        <span class="tool-row-cta">Launch →</span>
+      </a>
     </div>
     <div class="module-connections-row">
       <span class="connections-label">Connected to</span>
@@ -3321,16 +3602,28 @@
   </section>
 
   <!-- ═══ AI SECURITY LAB ═══ -->
-  <section id="ai-lab" class="section">
+  <section id="ai-lab" class="section" data-enter>
     <span class="section-label reveal">AI Security Lab</span>
     <h2 class="section-heading reveal">Where LLMs<br>Get Red-Teamed.</h2>
     <p class="section-subtext reveal">
-      First-class AI adversarial research. Prompt injection demos, safe-vs-unsafe
-      behavior analysis, log anomaly detection, and automated phishing detection —
-      all built to demonstrate real attack surfaces, not theoretical risks.
+      First-class adversarial research. Prompt injection demos, safe-vs-unsafe
+      behavior analysis, anomaly detection, and automated threat classifiers —
+      all demonstrating real attack surfaces, not theoretical risks.
     </p>
 
-    <div class="ai-experiment-grid stagger-children">
+    <div class="lab-console-bar reveal" style="margin-bottom:0;">
+      <div class="lab-tabs">
+        <button class="lab-tab active">Experiments</button>
+        <button class="lab-tab">Research</button>
+        <button class="lab-tab">Models</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span class="lab-console-path">bsc-lab://ai-red-team</span>
+        <span class="lab-console-status"><span class="live-dot"></span>4 Models Active</span>
+      </div>
+    </div>
+
+    <div class="ai-experiment-grid stagger-children" style="border:1px solid var(--border-dim);border-top:none;border-radius:0 0 12px 12px;padding:20px;margin-bottom:16px;background:rgba(5,21,37,0.3);">
       <div class="experiment-card reveal">
         <div class="experiment-card-header">
           <div>
@@ -3442,7 +3735,7 @@
   </section>
 
   <!-- ═══ TECHNICAL BLOG ═══ -->
-  <section id="blog" class="section section--tight">
+  <section id="blog" class="section section--tight" data-enter>
     <span class="section-label reveal">Technical Blog</span>
     <h2 class="section-heading reveal">Insider-Level<br>Research.</h2>
     <p class="section-subtext reveal">
@@ -3541,7 +3834,7 @@
   </section>
 
   <!-- ═══ HOME LAB ═══ -->
-  <section id="home-lab" class="section section--tight">
+  <section id="home-lab" class="section section--tight" data-enter>
     <span class="section-label reveal">Home Lab</span>
     <h2 class="section-heading reveal">The Environment<br>Behind the Work.</h2>
     <p class="section-subtext reveal">
@@ -3649,7 +3942,7 @@
   </section>
 
   <!-- ═══ OSINT / INVESTIGATIONS ═══ -->
-  <section id="osint" class="section section--tight">
+  <section id="osint" class="section section--tight" data-enter>
     <span class="section-label reveal">OSINT &amp; Investigations</span>
     <h2 class="section-heading reveal">Open-Source<br>Field Work.</h2>
     <p class="section-subtext reveal">
@@ -3756,7 +4049,7 @@
   </section>
 
   <!-- ═══ GAMIFICATION / CHALLENGES ═══ -->
-  <section id="challenges" class="section section--tight">
+  <section id="challenges" class="section section--tight" data-enter>
     <span class="section-label reveal">Challenges &amp; XP</span>
     <h2 class="section-heading reveal">Rank Up.<br>Prove Your Level.</h2>
     <p class="section-subtext reveal">
@@ -3862,7 +4155,7 @@
   </section>
 
   <!-- ═══ TALKS HUB ═══ -->
-  <section id="talks" class="section section--tight">
+  <section id="talks" class="section section--tight" data-enter>
     <span class="section-label reveal">Talks &amp; Demos</span>
     <h2 class="section-heading reveal">Thought Leadership<br>in Practice.</h2>
     <p class="section-subtext reveal">
@@ -4483,11 +4776,20 @@
       menu.addEventListener('click', e => e.stopPropagation());
     });
 
-    // ═══ FILTER TABS (playground + blog) ═══
+    // ═══ FILTER TABS (blog: .filter-tab) ═══
     document.querySelectorAll('.filter-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         const parent = tab.closest('.filter-tabs');
         parent.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+
+    // ═══ LAB CONSOLE TABS (playground: .lab-tab) ═══
+    document.querySelectorAll('.lab-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const parent = tab.closest('.lab-tabs');
+        parent.querySelectorAll('.lab-tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
       });
     });
@@ -4556,6 +4858,21 @@
         }
       });
     });
+
+    // ═══ SECTION ENTRANCE CHOREOGRAPHY ═══
+    (function initSectionEntrance() {
+      const enterEls = document.querySelectorAll('[data-enter]');
+      if (!enterEls.length) return;
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.04, rootMargin: '0px 0px -24px 0px' });
+      enterEls.forEach(el => obs.observe(el));
+    })();
   </script>
 
 </body>
