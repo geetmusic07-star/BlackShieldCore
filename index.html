@@ -76,6 +76,7 @@
       height: 100vh;
       z-index: 1;
       pointer-events: none;
+      transition: opacity 0.4s ease;
     }
 
     /* ===== AMBIENT BACKGROUND ===== */
@@ -540,9 +541,28 @@
     .section {
       max-width: 1280px;
       margin: 0 auto;
-      padding: 120px 48px;
+      padding: 96px 48px;
       position: relative;
       z-index: 10;
+    }
+
+    /* Tighter for editorial / lower-page sections */
+    .section--tight {
+      padding-top: 72px;
+      padding-bottom: 72px;
+    }
+
+    /* Section zone: subtle radial accent to differentiate visual zones */
+    .section-zone--core::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-dim), transparent);
+      pointer-events: none;
     }
 
     .section-label {
@@ -572,7 +592,7 @@
       line-height: 1.7;
       color: var(--text-secondary);
       max-width: 520px;
-      margin-bottom: 56px;
+      margin-bottom: 44px;
     }
 
     /* ===== ASYMMETRIC 2-COL ZIG-ZAG ===== */
@@ -932,9 +952,9 @@
     .feature-row {
       display: grid;
       grid-template-columns: 1fr 1.1fr;
-      gap: 64px;
+      gap: 56px;
       align-items: center;
-      padding: 80px 0;
+      padding: 60px 0;
       border-bottom: 1px solid var(--border-dim);
     }
 
@@ -1229,8 +1249,8 @@
     /* ===== ANIMATED ELEMENTS ===== */
     .reveal {
       opacity: 0;
-      transform: translateY(32px);
-      transition: all 0.7s var(--ease-out-expo);
+      transform: translateY(24px);
+      transition: opacity 0.65s var(--ease-out-expo), transform 0.65s var(--ease-out-expo);
     }
 
     .reveal.visible {
@@ -1238,13 +1258,196 @@
       transform: translateY(0);
     }
 
-    /* Stagger children */
-    .stagger-children .reveal:nth-child(1) { transition-delay: 0ms; }
-    .stagger-children .reveal:nth-child(2) { transition-delay: 80ms; }
-    .stagger-children .reveal:nth-child(3) { transition-delay: 160ms; }
-    .stagger-children .reveal:nth-child(4) { transition-delay: 240ms; }
-    .stagger-children .reveal:nth-child(5) { transition-delay: 320ms; }
-    .stagger-children .reveal:nth-child(6) { transition-delay: 400ms; }
+    /* Directional reveal variants */
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-28px);
+      transition: opacity 0.65s var(--ease-out-expo), transform 0.65s var(--ease-out-expo);
+    }
+
+    .reveal-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(28px);
+      transition: opacity 0.65s var(--ease-out-expo), transform 0.65s var(--ease-out-expo);
+    }
+
+    .reveal-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.65s var(--ease-out-expo), transform 0.65s var(--ease-spring);
+    }
+
+    .reveal-scale.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Section header choreography — label first, then heading, then subtext */
+    .section-label.reveal          { transition-delay: 0ms; }
+    .section-heading.reveal        { transition-delay: 60ms; }
+    .section-subtext.reveal        { transition-delay: 120ms; }
+
+    /* Stagger children — tighter 60ms beat */
+    .stagger-children .reveal:nth-child(1)  { transition-delay: 0ms; }
+    .stagger-children .reveal:nth-child(2)  { transition-delay: 60ms; }
+    .stagger-children .reveal:nth-child(3)  { transition-delay: 120ms; }
+    .stagger-children .reveal:nth-child(4)  { transition-delay: 180ms; }
+    .stagger-children .reveal:nth-child(5)  { transition-delay: 240ms; }
+    .stagger-children .reveal:nth-child(6)  { transition-delay: 300ms; }
+    .stagger-children .reveal:nth-child(7)  { transition-delay: 360ms; }
+    .stagger-children .reveal:nth-child(8)  { transition-delay: 420ms; }
+    .stagger-children .reveal:nth-child(9)  { transition-delay: 480ms; }
+    .stagger-children .reveal:nth-child(10) { transition-delay: 540ms; }
+
+    /* Reduced motion — respect user preference */
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .reveal-left, .reveal-right, .reveal-scale {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
+
+    /* ===== SECTION ZONE VISUAL TREATMENTS ===== */
+    /* Subtle top-edge glow to create visual hierarchy between zones */
+    #platform { border-top: 1px solid var(--border-dim); }
+    #intelligence { background: linear-gradient(180deg, rgba(5,21,37,0.6) 0%, transparent 100%); }
+    #case-studies  { position: relative; }
+    #case-studies::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 5%, var(--border-dim) 40%, var(--border-dim) 60%, transparent 95%);
+      pointer-events: none;
+    }
+
+    /* Feature row reveal — apply directional hints */
+    .feature-row .feature-text  { transition: opacity 0.65s var(--ease-out-expo) 0.1s, transform 0.65s var(--ease-out-expo) 0.1s; }
+    .feature-row .feature-demo  { transition: opacity 0.65s var(--ease-out-expo) 0.22s, transform 0.65s var(--ease-out-expo) 0.22s; }
+    .feature-row.reveal.visible .feature-text,
+    .feature-row.reveal.visible .feature-demo {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== TYPOGRAPHY HIERARCHY — LESS "HERO" ENERGY BELOW THE FOLD ===== */
+
+    /* Core feature sections: full size (default 28–44px) */
+    /* Mid-page product sections: slightly reduced */
+    #toolkit .section-heading,
+    #ai-lab .section-heading,
+    #blog .section-heading {
+      font-size: clamp(22px, 2.8vw, 36px);
+    }
+
+    /* Lower editorial sections: calm, scan-friendly */
+    #home-lab .section-heading,
+    #osint .section-heading,
+    #challenges .section-heading,
+    #talks .section-heading {
+      font-size: clamp(20px, 2.4vw, 30px);
+      letter-spacing: -0.025em;
+    }
+
+    /* Lower section-subtext slightly smaller */
+    #home-lab .section-subtext,
+    #osint .section-subtext,
+    #challenges .section-subtext,
+    #talks .section-subtext {
+      font-size: 14px;
+      margin-bottom: 40px;
+    }
+
+    /* ===== SECTION-SPECIFIC VISUAL ENVIRONMENTS ===== */
+
+    /* Platform — clean top divider, no extra noise */
+    #platform { border-top: 1px solid var(--border-dim); }
+
+    /* Threat surface — dashboard-grade glow in corner */
+    #threat-surface {
+      position: relative;
+      overflow: hidden;
+    }
+    #threat-surface::before {
+      content: '';
+      position: absolute;
+      right: -100px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(59,130,246,0.045) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    #threat-surface > * { position: relative; z-index: 1; }
+
+    /* Intelligence / dashboard — subtle dot matrix overlay */
+    #intelligence {
+      position: relative;
+      overflow: hidden;
+    }
+    #intelligence::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(59,130,246,0.04) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 20%, rgba(0,0,0,0.6) 80%, transparent 100%);
+      -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 20%, rgba(0,0,0,0.6) 80%, transparent 100%);
+    }
+    #intelligence > * { position: relative; z-index: 1; }
+
+    /* Capabilities — clean: let the terminals and metric blocks carry the visual weight */
+
+    /* Playground — slightly elevated surface tone */
+    #playground {
+      position: relative;
+    }
+    #playground::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(5,21,37,0.25) 0%, transparent 40%, transparent 60%, rgba(5,21,37,0.25) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    #playground > * { position: relative; z-index: 1; }
+
+    /* Toolkit — utility-grade horizontal rule lines (horizontal grid) */
+    #toolkit {
+      position: relative;
+    }
+    #toolkit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(0deg, rgba(59,130,246,0.018) 1px, transparent 1px);
+      background-size: 100% 80px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.5) 20%, rgba(0,0,0,0.5) 80%, transparent 100%);
+      -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.5) 20%, rgba(0,0,0,0.5) 80%, transparent 100%);
+    }
+    #toolkit > * { position: relative; z-index: 1; }
+
+    /* Lower editorial sections — flat, clean, breathing room */
+    #blog, #home-lab, #osint, #challenges, #talks {
+      border-top: 1px solid var(--border-dim);
+    }
 
     /* ===== TEXT SCRAMBLE ===== */
     .scramble-text {
@@ -1306,7 +1509,7 @@
       }
 
       .section {
-        padding: 80px 20px;
+        padding: 72px 20px;
       }
 
       .bento {
@@ -1371,6 +1574,15 @@
       .scroll-indicator {
         display: none;
       }
+
+      /* Simplify motion on mobile — collapse directional reveals to simple fade-up */
+      .reveal-left, .reveal-right {
+        transform: translateY(16px);
+      }
+      .reveal, .reveal-left, .reveal-right, .reveal-scale {
+        transition-duration: 0.5s;
+      }
+      .section--tight { padding-top: 56px; padding-bottom: 56px; }
     }
 
     @media (max-width: 480px) {
@@ -1379,114 +1591,80 @@
       }
     }
 
-    /* ===== NEURAL MESH VISUALIZATION SECTION ===== */
-    .neural-mesh-wrapper {
-      position: relative;
-      z-index: 10;
-      height: 300vh; /* Scroll distance for the animation */
+    /* ===== THREAT SURFACE SECTION — CONTAINED DASHBOARD ===== */
+
+    .ts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.55fr;
+      gap: 52px;
+      align-items: center;
     }
 
-    .neural-mesh-sticky {
-      position: sticky;
-      top: 0;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    #neural-mesh-canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
-
-    .neural-mesh-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 2;
+    .ts-info {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      text-align: center;
-      padding: 0 48px;
     }
 
-    .neural-mesh-label {
-      font-family: var(--mono);
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--accent);
+    .ts-info .section-subtext { margin-bottom: 28px; }
+
+    .ts-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
       margin-bottom: 20px;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: all 0.8s var(--ease-out-expo);
     }
 
-    .neural-mesh-label.show {
-      opacity: 1;
-      transform: translateY(0);
+    .ts-stat {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 10px;
+      padding: 14px 12px;
+      transition: border-color 0.3s;
     }
 
-    .neural-mesh-title {
-      font-family: var(--sans);
-      font-size: clamp(32px, 5vw, 64px);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      color: var(--text-primary);
-      line-height: 1.05;
-      max-width: 700px;
-      opacity: 0;
-      transform: translateY(24px);
-      transition: all 0.8s var(--ease-out-expo) 0.1s;
-    }
+    .ts-stat:hover { border-color: var(--border-subtle); }
 
-    .neural-mesh-title.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .neural-mesh-title .accent-text {
+    .ts-stat-val {
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 600;
       color: var(--accent);
+      letter-spacing: -0.02em;
+      line-height: 1;
     }
 
-    .neural-mesh-subtitle {
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--text-secondary);
-      max-width: 480px;
-      margin-top: 20px;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.8s var(--ease-out-expo) 0.2s;
+    .ts-stat-label {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      margin-top: 5px;
+      letter-spacing: 0.2px;
     }
 
-    .neural-mesh-subtitle.show {
-      opacity: 1;
-      transform: translateY(0);
+    .ts-scan {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    /* Progress bar at bottom of neural mesh section */
-    .neural-mesh-progress {
-      position: absolute;
-      bottom: 48px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 3;
+    .ts-scan-header {
       display: flex;
       align-items: center;
-      gap: 16px;
-      opacity: 0.4;
+      justify-content: space-between;
+    }
+
+    .ts-scan-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
     }
 
     .neural-mesh-progress-bar {
-      width: 120px;
       height: 2px;
       background: var(--border-dim);
       border-radius: 1px;
@@ -1498,17 +1676,58 @@
       width: 0%;
       background: var(--accent);
       border-radius: 1px;
-      transition: width 0.1s linear;
+      transition: width 0.15s linear;
     }
 
-    .neural-mesh-progress-text {
+    .ts-scan-footer {
+      display: flex;
+      justify-content: space-between;
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 9px;
       color: var(--text-tertiary);
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
 
-    /* Scan lines overlay for depth */
+    .ts-scan-footer span:last-child { color: var(--accent); }
+
+    /* Canvas panel (right column) */
+    .ts-canvas-wrap {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
+    }
+
+    .ts-canvas-wrap:hover {
+      border-color: var(--border-subtle);
+      box-shadow: 0 0 40px rgba(59, 130, 246, 0.06);
+    }
+
+    .ts-panel-header {
+      padding: 11px 18px;
+      border-bottom: 1px solid var(--border-dim);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(5, 21, 37, 0.6);
+    }
+
+    .ts-canvas-inner {
+      position: relative;
+      height: 420px;
+    }
+
+    #neural-mesh-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Subtle scanlines overlay for depth */
     .neural-mesh-scanlines {
       position: absolute;
       inset: 0;
@@ -1518,20 +1737,17 @@
         0deg,
         transparent 0px,
         transparent 3px,
-        rgba(59, 130, 246, 0.01) 3px,
-        rgba(59, 130, 246, 0.01) 4px
+        rgba(59, 130, 246, 0.008) 3px,
+        rgba(59, 130, 246, 0.008) 4px
       );
-      opacity: 0.5;
     }
 
-    @media (max-width: 768px) {
-      .neural-mesh-wrapper {
-        height: 200vh;
+    @media (max-width: 900px) {
+      .ts-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
       }
-
-      .neural-mesh-progress {
-        display: none;
-      }
+      .ts-canvas-inner { height: 300px; }
     }
 
     /* ═══════════════════════════════════════════
@@ -1597,8 +1813,8 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-top: 56px;
-      padding-top: 24px;
+      margin-top: 40px;
+      padding-top: 20px;
       border-top: 1px solid var(--border-dim);
       flex-wrap: wrap;
     }
@@ -2012,7 +2228,7 @@
       overflow: hidden;
       transition: all 0.4s var(--ease-out-expo);
     }
-    .investigation-card:hover { border-color: var(--border-subtle); transform: translateY(-2px); }
+    .investigation-card:hover { border-color: var(--border-subtle); transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 16px rgba(59,130,246,0.05); }
     .investigation-card.featured { grid-row: span 2; }
     .inv-header { padding: 20px 20px 14px; border-bottom: 1px solid var(--border-dim); }
     .inv-header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
@@ -2389,7 +2605,7 @@
   </div>
 
   <!-- ═══ PLATFORM OVERVIEW ═══ -->
-  <section id="platform" class="section" style="padding-bottom: 80px;">
+  <section id="platform" class="section">
     <span class="section-label reveal">Ecosystem Architecture</span>
     <h2 class="section-heading reveal">One Platform.<br>Every Attack Surface.</h2>
     <p class="section-subtext reveal">
@@ -2466,28 +2682,63 @@
   </section>
 
   <!-- ═══ NEURAL MESH NETWORK — SCROLL-REACTIVE 3D VISUALIZATION ═══ -->
-  <div class="neural-mesh-wrapper" id="neural-mesh-wrapper">
-    <div class="neural-mesh-sticky">
-      <canvas id="neural-mesh-canvas"></canvas>
-      <div class="neural-mesh-scanlines"></div>
-      <div class="neural-mesh-overlay">
-        <span class="neural-mesh-label" id="nm-label">Neural Defense Architecture</span>
-        <h2 class="neural-mesh-title" id="nm-title">
-          Mapping the<br><span class="accent-text">Threat Surface</span>
-        </h2>
-        <p class="neural-mesh-subtitle" id="nm-subtitle">
-          Every node represents a defense layer. Every connection is a
-          monitored pathway. The mesh adapts, learns, and heals autonomously.
+  <!-- ═══ THREAT SURFACE — CONTAINED DASHBOARD ═══ -->
+  <section id="threat-surface" class="section ts-section">
+    <div class="ts-grid">
+
+      <!-- Left: text + stats + scan -->
+      <div class="ts-info">
+        <span class="section-label reveal">Neural Defense Architecture</span>
+        <h2 class="section-heading reveal">Mapping the<br><span class="accent-text">Threat Surface</span></h2>
+        <p class="section-subtext reveal">
+          Every node is a monitored defense layer. Every edge a verified
+          pathway. The mesh adapts, learns, and self-heals in real time.
         </p>
-      </div>
-      <div class="neural-mesh-progress">
-        <div class="neural-mesh-progress-bar">
-          <div class="neural-mesh-progress-fill" id="nm-progress-fill"></div>
+
+        <div class="ts-stats stagger-children">
+          <div class="ts-stat reveal">
+            <div class="ts-stat-val">80</div>
+            <div class="ts-stat-label">Active Nodes</div>
+          </div>
+          <div class="ts-stat reveal">
+            <div class="ts-stat-val" data-scramble="342">342</div>
+            <div class="ts-stat-label">Live Connections</div>
+          </div>
+          <div class="ts-stat reveal">
+            <div class="ts-stat-val">99.4%</div>
+            <div class="ts-stat-label">Mesh Integrity</div>
+          </div>
         </div>
-        <span class="neural-mesh-progress-text" id="nm-progress-text">0%</span>
+
+        <div class="ts-scan reveal">
+          <div class="ts-scan-header">
+            <span class="ts-scan-label">Topology Scan</span>
+            <span class="panel-status"><span class="live-dot"></span>LIVE</span>
+          </div>
+          <div class="neural-mesh-progress-bar">
+            <div class="neural-mesh-progress-fill" id="nm-progress-fill"></div>
+          </div>
+          <div class="ts-scan-footer">
+            <span>Scanning threat vectors</span>
+            <span id="nm-progress-text">0%</span>
+          </div>
+        </div>
       </div>
+
+      <!-- Right: canvas panel -->
+      <div class="ts-canvas-wrap reveal-scale">
+        <div class="ts-panel-header">
+          <span class="panel-title">Defense Topology — Live View</span>
+          <span class="panel-status"><span class="live-dot"></span>ACTIVE</span>
+        </div>
+        <div class="ts-canvas-inner">
+          <canvas id="neural-mesh-canvas"></canvas>
+          <div class="neural-mesh-scanlines"></div>
+        </div>
+      </div>
+
     </div>
-  </div>
+  </section>
 
   <!-- ═══ CAPABILITIES — ASYMMETRIC ZIG-ZAG ═══ -->
   <section id="capabilities" class="section">
@@ -2499,7 +2750,7 @@
     </p>
 
     <div class="feature-row reveal">
-      <div class="feature-text">
+      <div class="feature-text reveal-left">
         <div class="card-badge">Architecture</div>
         <h3 class="feature-heading">Autonomous Threat<br>Intelligence Pipeline</h3>
         <p class="feature-body">
@@ -2513,7 +2764,7 @@
           <li>Adaptive learning from adversarial feedback loops</li>
         </ul>
       </div>
-      <div class="feature-demo">
+      <div class="feature-demo reveal-right">
         <div class="terminal-panel">
           <div class="terminal-bar">
             <span class="terminal-dot terminal-dot-r"></span>
@@ -2537,7 +2788,7 @@
     </div>
 
     <div class="feature-row reverse reveal">
-      <div class="feature-text">
+      <div class="feature-text reveal-right">
         <div class="card-badge">Applied AI</div>
         <h3 class="feature-heading">Neural Defense<br>Mesh Network</h3>
         <p class="feature-body">
@@ -2589,7 +2840,7 @@
 
     <div class="bento stagger-children">
       <!-- Wide threat feed -->
-      <div class="panel bento-wide reveal">
+      <div class="panel bento-wide reveal-scale">
         <div class="panel-header">
           <span class="panel-title">Active Threat Feed</span>
           <span class="panel-status"><span class="live-dot"></span>LIVE</span>
@@ -3012,50 +3263,50 @@
     </p>
 
     <div class="toolkit-grid stagger-children">
-      <div class="tool-cell reveal">
+      <div class="tool-cell reveal-scale">
         <div class="tool-icon">
           <svg viewBox="0 0 24 24"><path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/></svg>
         </div>
         <span class="tool-name">JWT Decoder</span>
         <span class="tool-tag">Token Analysis</span>
       </div>
-      <div class="tool-cell reveal">
+      <div class="tool-cell reveal-scale">
         <div class="tool-icon">
           <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10h-10V2z"/><path d="M20 12a8 8 0 0 0-8-8v8h8z" opacity="0.5"/></svg>
         </div>
         <span class="tool-name">Hash Analyzer</span>
         <span class="tool-tag">Cryptographic</span>
       </div>
-      <div class="tool-cell reveal">
+      <div class="tool-cell reveal-scale">
         <div class="tool-icon">
           <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>
         <span class="tool-name">Log Parser</span>
         <span class="tool-tag">SIEM Audit</span>
       </div>
-      <div class="tool-cell reveal">
+      <div class="tool-cell reveal-scale">
         <div class="tool-icon">
           <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         </div>
         <span class="tool-name">Pass Entropy</span>
         <span class="tool-tag">Auth Testing</span>
       </div>
-      <div class="tool-cell reveal">
+      <div class="tool-cell reveal-scale">
         <div class="tool-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
         <span class="tool-name">Log Analyzer</span>
         <span class="tool-tag">SIEM / SOC</span>
       </div>
-      <div class="tool-cell reveal">
+      <div class="tool-cell reveal-scale">
         <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <span class="tool-name">CVE Lookup</span>
         <span class="tool-tag">Vulnerability DB</span>
       </div>
-      <div class="tool-cell reveal">
+      <div class="tool-cell reveal-scale">
         <div class="tool-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
         <span class="tool-name">Port Scanner</span>
         <span class="tool-tag">Recon</span>
       </div>
-      <div class="tool-cell reveal">
+      <div class="tool-cell reveal-scale">
         <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></div>
         <span class="tool-name">Payload Gen</span>
         <span class="tool-tag">Offensive</span>
@@ -3191,7 +3442,7 @@
   </section>
 
   <!-- ═══ TECHNICAL BLOG ═══ -->
-  <section id="blog" class="section">
+  <section id="blog" class="section section--tight">
     <span class="section-label reveal">Technical Blog</span>
     <h2 class="section-heading reveal">Insider-Level<br>Research.</h2>
     <p class="section-subtext reveal">
@@ -3290,7 +3541,7 @@
   </section>
 
   <!-- ═══ HOME LAB ═══ -->
-  <section id="home-lab" class="section">
+  <section id="home-lab" class="section section--tight">
     <span class="section-label reveal">Home Lab</span>
     <h2 class="section-heading reveal">The Environment<br>Behind the Work.</h2>
     <p class="section-subtext reveal">
@@ -3398,7 +3649,7 @@
   </section>
 
   <!-- ═══ OSINT / INVESTIGATIONS ═══ -->
-  <section id="osint" class="section">
+  <section id="osint" class="section section--tight">
     <span class="section-label reveal">OSINT &amp; Investigations</span>
     <h2 class="section-heading reveal">Open-Source<br>Field Work.</h2>
     <p class="section-subtext reveal">
@@ -3505,7 +3756,7 @@
   </section>
 
   <!-- ═══ GAMIFICATION / CHALLENGES ═══ -->
-  <section id="challenges" class="section">
+  <section id="challenges" class="section section--tight">
     <span class="section-label reveal">Challenges &amp; XP</span>
     <h2 class="section-heading reveal">Rank Up.<br>Prove Your Level.</h2>
     <p class="section-subtext reveal">
@@ -3611,7 +3862,7 @@
   </section>
 
   <!-- ═══ TALKS HUB ═══ -->
-  <section id="talks" class="section">
+  <section id="talks" class="section section--tight">
     <span class="section-label reveal">Talks &amp; Demos</span>
     <h2 class="section-heading reveal">Thought Leadership<br>in Practice.</h2>
     <p class="section-subtext reveal">
@@ -3837,22 +4088,40 @@
           entry.target.classList.add('visible');
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
 
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => revealObserver.observe(el));
 
     // ═══ NAV SCROLL EFFECT ═══
     let lastScroll = 0;
     const nav = document.getElementById('main-nav');
+    const webglCanvas = document.getElementById('webgl-canvas');
     window.addEventListener('scroll', () => {
       const scrollY = window.scrollY;
+      const vhUnit = window.innerHeight;
+
       if (scrollY > 100) {
-        nav.style.background = 'rgba(2, 11, 24, 0.85)';
-        nav.style.borderBottomColor = 'rgba(63, 63, 70, 0.4)';
+        nav.style.background = 'rgba(2, 11, 24, 0.88)';
+        nav.style.borderBottomColor = 'rgba(37, 99, 235, 0.18)';
       } else {
         nav.style.background = 'rgba(2, 11, 24, 0.6)';
-        nav.style.borderBottomColor = 'rgba(63, 63, 70, 0.25)';
+        nav.style.borderBottomColor = 'rgba(37, 99, 235, 0.12)';
       }
+
+      // Fade out WebGL hero canvas past 80% of the viewport height
+      if (webglCanvas) {
+        const fadeStart = vhUnit * 0.5;
+        const fadeEnd = vhUnit * 1.2;
+        if (scrollY <= fadeStart) {
+          webglCanvas.style.opacity = '1';
+        } else if (scrollY >= fadeEnd) {
+          webglCanvas.style.opacity = '0';
+        } else {
+          const t = (scrollY - fadeStart) / (fadeEnd - fadeStart);
+          webglCanvas.style.opacity = String(1 - t);
+        }
+      }
+
       // Hide scroll indicator
       const indicator = document.querySelector('.scroll-indicator');
       if (indicator) {
@@ -4028,15 +4297,21 @@
       }, { passive: true });
     })();
 
-    // ═══ NEURAL MESH NETWORK — SCROLL-REACTIVE 3D VISUALIZATION ═══
+    // ═══ NEURAL MESH — CONTAINED DASHBOARD VISUALIZATION ═══
     (function initNeuralMesh() {
       const canvas = document.getElementById('neural-mesh-canvas');
-      const wrapper = document.getElementById('neural-mesh-wrapper');
-      if (!canvas || !wrapper) return;
+      if (!canvas) return;
+      const container = canvas.parentElement; // .ts-canvas-inner
+
+      const getSize = () => ({
+        w: container.offsetWidth || 640,
+        h: container.offsetHeight || 420
+      });
+      const { w, h } = getSize();
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.set(0, 0, 14);
+      const camera = new THREE.PerspectiveCamera(55, w / h, 0.1, 1000);
+      camera.position.set(0, 0, 11);
 
       const renderer = new THREE.WebGLRenderer({
         canvas,
@@ -4044,290 +4319,150 @@
         antialias: true,
         powerPreference: 'high-performance'
       });
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(w, h);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-      // ── NODE GENERATION ──
+      // ── NODES ──
       const nodeCount = 80;
       const nodes = [];
       const nodePositions = new Float32Array(nodeCount * 3);
-      const nodeScales = new Float32Array(nodeCount);
-      const nodeColors = new Float32Array(nodeCount * 3);
 
-      // Distribute nodes in a volumetric cloud shape
       for (let i = 0; i < nodeCount; i++) {
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.acos(2 * Math.random() - 1);
         const r = 2.5 + Math.random() * 4.5;
-
         const x = r * Math.sin(phi) * Math.cos(theta);
-        const y = (r * Math.sin(phi) * Math.sin(theta)) * 0.65; // Flatten Y
+        const y = (r * Math.sin(phi) * Math.sin(theta)) * 0.65;
         const z = r * Math.cos(phi) * 0.6;
-
-        nodePositions[i * 3] = x;
-        nodePositions[i * 3 + 1] = y;
-        nodePositions[i * 3 + 2] = z;
-
-        // Some nodes are "critical" (brighter, larger)
-        const isCritical = Math.random() < 0.15;
-        nodeScales[i] = isCritical ? 0.12 + Math.random() * 0.08 : 0.04 + Math.random() * 0.05;
-
-        // Color: mostly cyber-blue, some bright white-blue for critical
-        if (isCritical) {
-          nodeColors[i * 3] = 0.38; nodeColors[i * 3 + 1] = 0.65; nodeColors[i * 3 + 2] = 1.0;
-        } else {
-          nodeColors[i * 3] = 0.23; nodeColors[i * 3 + 1] = 0.51; nodeColors[i * 3 + 2] = 0.96;
-        }
-
-        nodes.push({
-          x, y, z,
-          origX: x, origY: y, origZ: z,
-          scale: nodeScales[i],
-          phase: Math.random() * Math.PI * 2,
-          speed: 0.3 + Math.random() * 0.5,
-          critical: isCritical
-        });
+        nodePositions[i * 3] = x; nodePositions[i * 3 + 1] = y; nodePositions[i * 3 + 2] = z;
+        nodes.push({ x, y, z, origX: x, origY: y, origZ: z, phase: Math.random() * Math.PI * 2, speed: 0.3 + Math.random() * 0.5 });
       }
 
-      // Node particles
       const nodeGeo = new THREE.BufferGeometry();
       nodeGeo.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
-
-      const nodeMat = new THREE.PointsMaterial({
-        color: new THREE.Color('#3b82f6'),
-        size: 0.12,
-        transparent: true,
-        opacity: 0,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        sizeAttenuation: true
-      });
-
+      const nodeMat = new THREE.PointsMaterial({ color: new THREE.Color('#3b82f6'), size: 0.12, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const nodePoints = new THREE.Points(nodeGeo, nodeMat);
       scene.add(nodePoints);
 
       // ── CONNECTIONS ──
       const connections = [];
-      const maxDist = 4.2;
-
       for (let i = 0; i < nodeCount; i++) {
         for (let j = i + 1; j < nodeCount; j++) {
           const dx = nodes[i].origX - nodes[j].origX;
           const dy = nodes[i].origY - nodes[j].origY;
           const dz = nodes[i].origZ - nodes[j].origZ;
-          const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
-          if (dist < maxDist) {
-            connections.push({ i, j, dist });
-          }
+          if (dx*dx + dy*dy + dz*dz < 4.2 * 4.2) connections.push({ i, j });
         }
       }
-
-      // Line geometry for connections
       const linePositions = new Float32Array(connections.length * 6);
       const lineGeo = new THREE.BufferGeometry();
       lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
-
-      const lineMat = new THREE.LineBasicMaterial({
-        color: new THREE.Color('#3b82f6'),
-        transparent: true,
-        opacity: 0,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false
-      });
-
+      const lineMat = new THREE.LineBasicMaterial({ color: new THREE.Color('#3b82f6'), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const lineSegments = new THREE.LineSegments(lineGeo, lineMat);
       scene.add(lineSegments);
 
-      // ── DATA FLOW PARTICLES (along connections) ──
-      const flowCount = connections.length * 2;
-      const flowGeo = new THREE.BufferGeometry();
+      // ── DATA FLOW PARTICLES ──
+      const flowCount = Math.min(connections.length * 2, 320);
       const flowPositions = new Float32Array(flowCount * 3);
-      const flowPhases = new Float32Array(flowCount);
-
-      for (let f = 0; f < flowCount; f++) {
-        flowPhases[f] = Math.random();
-      }
-
+      const flowPhases = new Float32Array(flowCount).map(() => Math.random());
+      const flowGeo = new THREE.BufferGeometry();
       flowGeo.setAttribute('position', new THREE.BufferAttribute(flowPositions, 3));
-
-      const flowMat = new THREE.PointsMaterial({
-        color: new THREE.Color('#93c5fd'),
-        size: 0.04,
-        transparent: true,
-        opacity: 0,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        sizeAttenuation: true
-      });
-
+      const flowMat = new THREE.PointsMaterial({ color: new THREE.Color('#93c5fd'), size: 0.038, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const flowPoints = new THREE.Points(flowGeo, flowMat);
       scene.add(flowPoints);
 
-      // ── OUTER RING PARTICLES ──
-      const ringCount = 300;
-      const ringGeo = new THREE.BufferGeometry();
-      const ringPositions = new Float32Array(ringCount * 3);
-
-      for (let i = 0; i < ringCount; i++) {
-        const angle = (i / ringCount) * Math.PI * 2;
-        const r = 7 + Math.sin(angle * 5) * 0.3;
-        ringPositions[i * 3] = Math.cos(angle) * r;
-        ringPositions[i * 3 + 1] = (Math.random() - 0.5) * 0.4;
-        ringPositions[i * 3 + 2] = Math.sin(angle) * r * 0.3;
+      // ── VISIBILITY (IntersectionObserver) ──
+      let visible = false;
+      let masterOpacity = 0;
+      let scanProgress = 0;
+      const sectionEl = canvas.closest('section');
+      if (sectionEl) {
+        new IntersectionObserver(entries => {
+          visible = entries[0].isIntersecting;
+        }, { threshold: 0.15 }).observe(sectionEl);
       }
 
-      ringGeo.setAttribute('position', new THREE.BufferAttribute(ringPositions, 3));
+      // ── MOUSE PARALLAX ──
+      let mouseX = 0, mouseY = 0, tMX = 0, tMY = 0;
+      document.addEventListener('mousemove', e => {
+        tMX = (e.clientX / window.innerWidth - 0.5) * 2;
+        tMY = (e.clientY / window.innerHeight - 0.5) * 2;
+      }, { passive: true });
 
-      const ringMat = new THREE.PointsMaterial({
-        color: new THREE.Color('#3b82f6'),
-        size: 0.025,
-        transparent: true,
-        opacity: 0,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        sizeAttenuation: true
-      });
+      let animTime = 0, meshRotY = 0;
 
-      const ringParticles = new THREE.Points(ringGeo, ringMat);
-      scene.add(ringParticles);
-
-      // ── SCROLL TRACKING ──
-      let scrollProgress = 0;
-      let animTime = 0;
-      let meshRotY = 0;
-
-      function updateScroll() {
-        const rect = wrapper.getBoundingClientRect();
-        const wrapperH = wrapper.offsetHeight;
-        const viewH = window.innerHeight;
-
-        // Calculate how far through the scroll-wrapper we are
-        const scrolled = -rect.top;
-        const total = wrapperH - viewH;
-        scrollProgress = Math.max(0, Math.min(1, scrolled / total));
-
-        // Update progress bar
-        const progressFill = document.getElementById('nm-progress-fill');
-        const progressText = document.getElementById('nm-progress-text');
-        if (progressFill) progressFill.style.width = `${Math.round(scrollProgress * 100)}%`;
-        if (progressText) progressText.textContent = `${Math.round(scrollProgress * 100)}%`;
-
-        // Show/hide overlay text based on scroll
-        const nmLabel = document.getElementById('nm-label');
-        const nmTitle = document.getElementById('nm-title');
-        const nmSubtitle = document.getElementById('nm-subtitle');
-
-        if (scrollProgress > 0.05 && scrollProgress < 0.85) {
-          nmLabel && nmLabel.classList.add('show');
-          nmTitle && nmTitle.classList.add('show');
-          nmSubtitle && nmSubtitle.classList.add('show');
-        } else {
-          nmLabel && nmLabel.classList.remove('show');
-          nmTitle && nmTitle.classList.remove('show');
-          nmSubtitle && nmSubtitle.classList.remove('show');
-        }
-      }
-
-      window.addEventListener('scroll', updateScroll, { passive: true });
-
-      // ── ANIMATION LOOP ──
       function animateMesh() {
         requestAnimationFrame(animateMesh);
         animTime += 0.005;
 
-        // Scroll-driven assembly: nodes spread out when progress=0, condense as progress increases
-        const assemblyFactor = Math.pow(scrollProgress, 0.7);
-        const disperseFactor = 1 - assemblyFactor;
+        // Smooth opacity
+        masterOpacity += ((visible ? 1 : 0) - masterOpacity) * 0.025;
+        nodeMat.opacity = masterOpacity * 0.88;
+        lineMat.opacity = masterOpacity * 0.11;
+        flowMat.opacity = masterOpacity * 0.48;
 
-        // Opacity based on scroll (fade in as you enter, fade out as you leave)
-        const fadeIn = Math.min(1, scrollProgress * 5); // fades in over first 20%
-        const fadeOut = Math.min(1, (1 - scrollProgress) * 5); // fades out in last 20%
-        const masterOpacity = fadeIn * fadeOut;
+        // Time-based scan progress
+        if (visible && scanProgress < 1) scanProgress = Math.min(1, scanProgress + 0.0025);
+        const progressFill = document.getElementById('nm-progress-fill');
+        const progressText = document.getElementById('nm-progress-text');
+        if (progressFill) progressFill.style.width = `${Math.round(scanProgress * 100)}%`;
+        if (progressText) progressText.textContent = `${Math.round(scanProgress * 100)}%`;
 
-        nodeMat.opacity = masterOpacity * 0.9;
-        lineMat.opacity = masterOpacity * 0.12 * assemblyFactor;
-        flowMat.opacity = masterOpacity * 0.5 * assemblyFactor;
-        ringMat.opacity = masterOpacity * 0.2 * assemblyFactor;
+        // Mouse smooth
+        mouseX += (tMX - mouseX) * 0.05;
+        mouseY += (tMY - mouseY) * 0.05;
+        meshRotY += 0.0018;
 
-        // Rotate the whole mesh slowly
-        meshRotY += 0.002;
-        const meshGroup = nodePoints;
-
-        // Update node positions with breathing + scroll-driven dispersal
+        // Update node breathing
         const pos = nodeGeo.attributes.position.array;
         for (let i = 0; i < nodeCount; i++) {
           const n = nodes[i];
-          const breathe = Math.sin(animTime * n.speed + n.phase) * 0.08;
-
-          // Disperse outward when scrollProgress is low
-          const disperseScale = 1 + disperseFactor * 2.5;
-
-          pos[i * 3] = n.origX * disperseScale + breathe;
-          pos[i * 3 + 1] = n.origY * disperseScale + breathe * 0.5;
-          pos[i * 3 + 2] = n.origZ * disperseScale;
-
-          // Store current pos for line connections
-          n.x = pos[i * 3];
-          n.y = pos[i * 3 + 1];
-          n.z = pos[i * 3 + 2];
+          const b = Math.sin(animTime * n.speed + n.phase) * 0.06;
+          pos[i * 3]     = n.origX + b;
+          pos[i * 3 + 1] = n.origY + b * 0.5;
+          pos[i * 3 + 2] = n.origZ;
+          n.x = pos[i * 3]; n.y = pos[i * 3 + 1]; n.z = pos[i * 3 + 2];
         }
         nodeGeo.attributes.position.needsUpdate = true;
 
-        // Update connections
+        // Update connection lines
         const lPos = lineGeo.attributes.position.array;
         for (let c = 0; c < connections.length; c++) {
-          const conn = connections[c];
-          const a = nodes[conn.i];
-          const b = nodes[conn.j];
-          lPos[c * 6] = a.x;
-          lPos[c * 6 + 1] = a.y;
-          lPos[c * 6 + 2] = a.z;
-          lPos[c * 6 + 3] = b.x;
-          lPos[c * 6 + 4] = b.y;
-          lPos[c * 6 + 5] = b.z;
+          const { i, j } = connections[c];
+          lPos[c*6]=nodes[i].x; lPos[c*6+1]=nodes[i].y; lPos[c*6+2]=nodes[i].z;
+          lPos[c*6+3]=nodes[j].x; lPos[c*6+4]=nodes[j].y; lPos[c*6+5]=nodes[j].z;
         }
         lineGeo.attributes.position.needsUpdate = true;
 
-        // Update flow particles along connections
+        // Update data-flow particles
         const fPos = flowGeo.attributes.position.array;
         for (let f = 0; f < flowCount; f++) {
-          const connIdx = f % connections.length;
-          const conn = connections[connIdx];
-          const a = nodes[conn.i];
-          const b = nodes[conn.j];
-
-          // Animate t along the connection
-          flowPhases[f] = (flowPhases[f] + 0.003 + Math.random() * 0.002) % 1;
+          const { i, j } = connections[f % connections.length];
+          flowPhases[f] = (flowPhases[f] + 0.003) % 1;
           const t = flowPhases[f];
-
-          fPos[f * 3] = a.x + (b.x - a.x) * t;
-          fPos[f * 3 + 1] = a.y + (b.y - a.y) * t;
-          fPos[f * 3 + 2] = a.z + (b.z - a.z) * t;
+          fPos[f*3]   = nodes[i].x + (nodes[j].x - nodes[i].x) * t;
+          fPos[f*3+1] = nodes[i].y + (nodes[j].y - nodes[i].y) * t;
+          fPos[f*3+2] = nodes[i].z + (nodes[j].z - nodes[i].z) * t;
         }
         flowGeo.attributes.position.needsUpdate = true;
 
-        // Rotate ring
-        ringParticles.rotation.y = animTime * 0.3;
-        ringParticles.rotation.x = Math.sin(animTime * 0.15) * 0.1;
+        // Apply rotation + mouse parallax to all mesh objects
+        const ry = meshRotY + mouseX * 0.08;
+        const rx = mouseY * 0.04;
+        nodePoints.rotation.y = ry; nodePoints.rotation.x = rx;
+        lineSegments.rotation.y = ry; lineSegments.rotation.x = rx;
+        flowPoints.rotation.y = ry; flowPoints.rotation.x = rx;
 
-        // Rotate all elements together
-        nodePoints.rotation.y = meshRotY;
-        lineSegments.rotation.y = meshRotY;
-        flowPoints.rotation.y = meshRotY;
-
-        // Camera z-position based on scroll (zoom in as we scroll)
-        camera.position.z = 14 - assemblyFactor * 4;
-        camera.position.y = Math.sin(animTime * 0.2) * 0.3;
-
+        camera.position.y = Math.sin(animTime * 0.2) * 0.2;
         renderer.render(scene, camera);
       }
       animateMesh();
 
-      // Resize handler
       window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
+        const { w: nw, h: nh } = getSize();
+        camera.aspect = nw / nh;
         camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(nw, nh);
       }, { passive: true });
     })();
 
