@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BlackShield Core — AI-Driven Cybersecurity Intelligence</title>
+  <title>BlackShield Core — Cybersecurity & AI Research Platform</title>
   <meta name="description"
-    content="BlackShield Core fuses adversarial AI research with offensive security engineering. Autonomous threat hunting, exploit analysis, and neural defense systems.">
+    content="BlackShield Core is a cybersecurity and AI experimentation platform. Cyber range, LLM red-teaming, threat intelligence, offensive tools, and in-depth technical research.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -3045,6 +3045,280 @@
       border-radius: 8px 8px 0 0;
       border-bottom: none;
     }
+
+    /* ══ RESEARCH SECTION ══ */
+    .research-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .research-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 14px;
+      padding: 24px;
+      transition: border-color 0.25s;
+    }
+    .research-card:hover { border-color: var(--border-subtle); }
+    .research-card.featured {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .research-type {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 4px;
+      background: rgba(59,130,246,0.1);
+      color: var(--accent);
+      display: inline-block;
+      margin-bottom: 14px;
+    }
+    .research-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+    .research-title.large { font-size: 22px; }
+    .research-abstract {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .research-finding-list {
+      list-style: none;
+      margin-bottom: 16px;
+    }
+    .research-finding-list li {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      padding: 5px 0 5px 16px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .research-finding-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 6px;
+      height: 1px;
+      background: var(--accent);
+    }
+    .research-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 11px;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      padding-top: 14px;
+      border-top: 1px solid var(--border-hair);
+    }
+    .research-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .research-tag {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--bg-elevated);
+      color: var(--text-tertiary);
+      font-family: var(--mono);
+    }
+    .research-row2 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .research-note-block {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hair);
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+    .research-note-block p {
+      font-size: 12.5px;
+      color: var(--text-tertiary);
+      line-height: 1.7;
+    }
+    @media (max-width: 900px) {
+      .research-grid { grid-template-columns: 1fr; }
+      .research-card.featured { grid-template-columns: 1fr; }
+      .research-row2 { grid-template-columns: 1fr; }
+    }
+
+    /* ══ ABOUT SECTION ══ */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 48px;
+      margin-bottom: 40px;
+      align-items: start;
+    }
+    .about-intro {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.82;
+      margin-bottom: 24px;
+    }
+    .about-principles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .about-principle {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 10px;
+      padding: 18px;
+    }
+    .about-principle-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 7px;
+    }
+    .about-principle-body {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      line-height: 1.65;
+    }
+    .about-stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 32px;
+    }
+    .about-stat {
+      text-align: center;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .about-stat-val {
+      font-size: 28px;
+      font-weight: 700;
+      font-family: var(--mono);
+      color: var(--accent);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .about-stat-label {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .about-focus-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 0;
+    }
+    .about-focus-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 12px;
+      padding: 22px;
+    }
+    .about-focus-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--accent-dim);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    .about-focus-icon svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .about-focus-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 7px;
+    }
+    .about-focus-desc {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      line-height: 1.65;
+    }
+    @media (max-width: 900px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .about-stats-row { grid-template-columns: 1fr 1fr; }
+      .about-focus-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* ══ DASHBOARD PANEL EXTRAS ══ */
+    .dash-module-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .dash-module {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .dash-module-title {
+      font-size: 11px;
+      font-family: var(--mono);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+    }
+    .dash-kpi {
+      font-size: 26px;
+      font-weight: 700;
+      font-family: var(--mono);
+      color: var(--text-primary);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .dash-kpi-label {
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+    .dash-kpi-delta {
+      font-size: 11px;
+      font-family: var(--mono);
+      margin-top: 6px;
+    }
+    .dash-kpi-delta.up { color: #34d399; }
+    .dash-kpi-delta.warn { color: #f59e0b; }
+    @media (max-width: 900px) {
+      .dash-module-strip { grid-template-columns: 1fr 1fr; }
+    }
   </style>
 </head>
 
@@ -3068,7 +3342,7 @@
         <div class="nav-dropdown-menu">
           <a href="#playground"><span class="dd-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="dd-label"><span class="dd-name">Playground</span><span class="dd-hint">Cyber Range / CTF Labs</span></span></a>
           <a href="#ai-lab"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12l4-4m0 0h-3m3 0v3"/></svg></span><span class="dd-label"><span class="dd-name">AI Lab</span><span class="dd-hint">LLM Security Experiments</span></span></a>
-          <a href="#dashboard"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z"/></svg></span><span class="dd-label"><span class="dd-name">Dashboard</span><span class="dd-hint">Live Threat Intelligence</span></span></a>
+          <a href="#dashboard"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z"/></svg></span><span class="dd-label"><span class="dd-name">Dashboard</span><span class="dd-hint">CVE Feeds & Threat Data</span></span></a>
           <a href="#toolkit"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><span class="dd-label"><span class="dd-name">Tools</span><span class="dd-hint">Security Utilities</span></span></a>
         </div>
       </div>
@@ -3076,8 +3350,9 @@
       <div class="nav-group" id="ng-knowledge">
         <button class="nav-group-trigger">Knowledge<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
         <div class="nav-dropdown-menu">
-          <a href="#blog"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></span><span class="dd-label"><span class="dd-name">Blog</span><span class="dd-hint">Advanced Technical Research</span></span></a>
-          <a href="#case-studies"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span class="dd-label"><span class="dd-name">Case Studies</span><span class="dd-hint">Declassified Operations</span></span></a>
+          <a href="#blog"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></span><span class="dd-label"><span class="dd-name">Blog</span><span class="dd-hint">Deep-Dive Technical Posts</span></span></a>
+          <a href="#research"><span class="dd-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><span class="dd-label"><span class="dd-name">Research</span><span class="dd-hint">Analysis & Investigation Notes</span></span></a>
+          <a href="#case-studies"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span class="dd-label"><span class="dd-name">Case Studies</span><span class="dd-hint">Incident Analysis</span></span></a>
           <a href="#home-lab"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span><span class="dd-label"><span class="dd-name">Home Lab</span><span class="dd-hint">Architecture &amp; Stack</span></span></a>
         </div>
       </div>
@@ -3095,6 +3370,7 @@
         <div class="nav-dropdown-menu">
           <a href="#challenges"><span class="dd-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span><span class="dd-label"><span class="dd-name">Challenges</span><span class="dd-hint">XP &amp; Leaderboard</span></span></a>
           <a href="#talks"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="dd-label"><span class="dd-name">Talks</span><span class="dd-hint">Presentations &amp; Demos</span></span></a>
+          <a href="#about"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="dd-label"><span class="dd-name">About</span><span class="dd-hint">Platform &amp; Principles</span></span></a>
         </div>
       </div>
 
@@ -3108,7 +3384,7 @@
     <div class="hero-content">
       <div class="hero-tag">
         <span class="hero-tag-dot"></span>
-        <span class="hero-tag-label">Platform Online — 10 Modules Active</span>
+        <span class="hero-tag-label">Research Platform · 12 Modules</span>
       </div>
 
       <h1 class="hero-title">
@@ -3118,9 +3394,9 @@
       </h1>
 
       <p class="hero-desc">
-        A full-stack security ecosystem — cyber range, AI red-team lab,
-        threat intelligence surface, investigation toolkit, and
-        advanced technical knowledge base. One platform. Every layer.
+        A full-stack security platform — cyber range, AI red-team lab,
+        threat intelligence dashboard, offensive toolkit, and
+        in-depth technical research. Integrated across every layer.
       </p>
 
       <div class="hero-actions">
@@ -3143,11 +3419,11 @@
           <span class="metric-label">CVEs Published</span>
         </div>
         <div class="metric">
-          <span class="metric-value" data-scramble="99.4%">99.4%</span>
-          <span class="metric-label">Detection Rate</span>
+          <span class="metric-value" data-scramble="18">18</span>
+          <span class="metric-label">Research Papers</span>
         </div>
         <div class="metric">
-          <span class="metric-value" data-scramble="10">10</span>
+          <span class="metric-value" data-scramble="12">12</span>
           <span class="metric-label">Platform Modules</span>
         </div>
       </div>
@@ -3173,7 +3449,7 @@
       <span class="marquee-item"><span class="dot"></span>Exploit Development</span>
       <span class="marquee-item"><span class="dot"></span>Red Team Operations</span>
       <span class="marquee-item"><span class="dot"></span>Adversarial ML</span>
-      <span class="marquee-item"><span class="dot"></span>Autonomous SIEM</span>
+      <span class="marquee-item"><span class="dot"></span>SIEM Integration</span>
       <span class="marquee-item"><span class="dot"></span>Cryptographic Audit</span>
       <span class="marquee-item"><span class="dot"></span>Incident Response</span>
       <span class="marquee-item"><span class="dot"></span>Supply Chain Security</span>
@@ -3184,7 +3460,7 @@
       <span class="marquee-item"><span class="dot"></span>Exploit Development</span>
       <span class="marquee-item"><span class="dot"></span>Red Team Operations</span>
       <span class="marquee-item"><span class="dot"></span>Adversarial ML</span>
-      <span class="marquee-item"><span class="dot"></span>Autonomous SIEM</span>
+      <span class="marquee-item"><span class="dot"></span>SIEM Integration</span>
       <span class="marquee-item"><span class="dot"></span>Cryptographic Audit</span>
       <span class="marquee-item"><span class="dot"></span>Incident Response</span>
       <span class="marquee-item"><span class="dot"></span>Supply Chain Security</span>
@@ -3196,7 +3472,7 @@
     <span class="section-label reveal">Platform Ecosystem</span>
     <h2 class="section-heading reveal">One Platform.<br>Every Attack Surface.</h2>
     <p class="section-subtext reveal">
-      Ten integrated modules — each purpose-built, each connected. The platform compounds as you go deeper.
+      Twelve integrated modules — each purpose-built, each connected. Labs link to blog posts. Research links to tools. Case studies link back to labs. Everything compounds.
     </p>
 
     <div class="platform-grid stagger-children">
@@ -3234,22 +3510,24 @@
 
     <div class="platform-module-list reveal">
       <a href="#case-studies" class="platform-module-chip"><span class="platform-module-chip-name">Case Studies</span><span class="status-badge status-live" style="padding:2px 7px;font-size:8px;">Live</span></a>
+      <a href="#research" class="platform-module-chip"><span class="platform-module-chip-name">Research</span><span class="status-badge status-live" style="padding:2px 7px;font-size:8px;">Live</span></a>
       <a href="#home-lab" class="platform-module-chip"><span class="platform-module-chip-name">Home Lab</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Beta</span></a>
       <a href="#osint" class="platform-module-chip"><span class="platform-module-chip-name">OSINT Projects</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Beta</span></a>
-      <a href="#challenges" class="platform-module-chip"><span class="platform-module-chip-name">Gamification</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Beta</span></a>
-      <a href="#talks" class="platform-module-chip"><span class="platform-module-chip-name">Talks Hub</span><span class="status-badge status-dev" style="padding:2px 7px;font-size:8px;">Soon</span></a>
+      <a href="#challenges" class="platform-module-chip"><span class="platform-module-chip-name">Challenges</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Beta</span></a>
+      <a href="#talks" class="platform-module-chip"><span class="platform-module-chip-name">Talks</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Beta</span></a>
+      <a href="#about" class="platform-module-chip"><span class="platform-module-chip-name">About</span><span class="status-badge status-live" style="padding:2px 7px;font-size:8px;">Live</span></a>
     </div>
     <div class="platform-gateway-cta">
-      <a href="#" class="platform-gateway-link">Explore all 10 modules <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+      <a href="#about" class="platform-gateway-link">Learn more about BlackShield Core <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
     </div>
   </section>
 
   <!-- ═══ ZONE: OPERATIONAL INTELLIGENCE ═══ -->
   <div class="zone zone--operational">
     <div class="zone-strip-header">
-      <span class="zone-strip-label">Operational Intelligence Surface</span>
+      <span class="zone-strip-label">Intelligence & Analysis</span>
       <span class="zone-strip-sep"></span>
-      <span class="zone-strip-status"><span class="live-dot"></span>Systems Active</span>
+      <span class="zone-strip-status"><span class="live-dot"></span>Active</span>
     </div>
 
   <!-- ═══ THREAT SURFACE — CONTAINED DASHBOARD ═══ -->
@@ -3258,11 +3536,11 @@
 
       <!-- Left: text + stats + scan -->
       <div class="ts-info">
-        <span class="section-label reveal">Neural Defense Architecture</span>
+        <span class="section-label reveal">Defense Architecture</span>
         <h2 class="section-heading reveal">Mapping the<br><span class="accent-text">Threat Surface</span></h2>
         <p class="section-subtext reveal">
-          Every node is a monitored defense layer. Every edge a verified
-          pathway. The mesh adapts, learns, and self-heals in real time.
+          Each node represents a monitored defense layer. Each edge a tracked
+          communication pathway. The mesh is continuously analyzed and updated.
         </p>
 
         <div class="ts-stats stagger-children">
@@ -3275,21 +3553,21 @@
             <div class="ts-stat-label">Live Connections</div>
           </div>
           <div class="ts-stat reveal">
-            <div class="ts-stat-val">99.4%</div>
-            <div class="ts-stat-label">Mesh Integrity</div>
+            <div class="ts-stat-val">99.1%</div>
+            <div class="ts-stat-label">Mesh Coverage</div>
           </div>
         </div>
 
         <div class="ts-scan reveal">
           <div class="ts-scan-header">
-            <span class="ts-scan-label">Topology Scan</span>
-            <span class="panel-status"><span class="live-dot"></span>LIVE</span>
+            <span class="ts-scan-label">Topology Analysis</span>
+            <span class="panel-status"><span class="live-dot"></span>RUNNING</span>
           </div>
           <div class="neural-mesh-progress-bar">
             <div class="neural-mesh-progress-fill" id="nm-progress-fill"></div>
           </div>
           <div class="ts-scan-footer">
-            <span>Scanning threat vectors</span>
+            <span>Mapping network topology</span>
             <span id="nm-progress-text">0%</span>
           </div>
         </div>
@@ -3298,8 +3576,8 @@
       <!-- Right: canvas panel -->
       <div class="ts-canvas-wrap reveal-scale">
         <div class="ts-panel-header">
-          <span class="panel-title">Defense Topology — Live View</span>
-          <span class="panel-status"><span class="live-dot"></span>ACTIVE</span>
+          <span class="panel-title">Defense Topology</span>
+          <span class="panel-status"><span class="live-dot"></span>RUNNING</span>
         </div>
         <div class="ts-canvas-inner">
           <canvas id="neural-mesh-canvas"></canvas>
@@ -3315,23 +3593,23 @@
     <span class="section-label reveal">Capabilities</span>
     <h2 class="section-heading reveal">Where Intelligence<br>Meets Architecture</h2>
     <p class="section-subtext reveal">
-      We operate at the intersection of adversarial AI research and defensive security engineering.
-      Every system we build is forged in simulated hostility.
+      Built at the intersection of adversarial AI research and defensive security engineering.
+      Every system is tested against realistic attack scenarios before it ships.
     </p>
 
     <div class="feature-row reveal">
       <div class="feature-text reveal-left">
         <div class="card-badge">Architecture</div>
-        <h3 class="feature-heading">Autonomous Threat<br>Intelligence Pipeline</h3>
+        <h3 class="feature-heading">Threat Intelligence<br>Pipeline</h3>
         <p class="feature-body">
-          Massive-scale data ingestion processing billions of signals daily.
-          Our neural classifiers detect behavioral anomalies invisible to
-          traditional signature-based systems.
+          Multi-source data ingestion with behavioral analysis at scale.
+          Neural classifiers surface anomalies that rule-based systems
+          consistently miss.
         </p>
         <ul class="feature-list">
-          <li>Real-time correlation across 2.8M+ data points</li>
-          <li>Sub-200ms detection-to-alert latency</li>
-          <li>Adaptive learning from adversarial feedback loops</li>
+          <li>Cross-source event correlation across millions of signals</li>
+          <li>Low-latency detection-to-alert pipeline</li>
+          <li>Model improvement through adversarial feedback loops</li>
         </ul>
       </div>
       <div class="feature-demo reveal-right">
@@ -3340,17 +3618,17 @@
             <span class="terminal-dot terminal-dot-r"></span>
             <span class="terminal-dot terminal-dot-y"></span>
             <span class="terminal-dot terminal-dot-g"></span>
-            <span class="terminal-title">threat-engine v4.2.1</span>
+            <span class="terminal-title">bsc-engine v1.0</span>
           </div>
           <div class="terminal-body">
-            <div><span class="prompt">$</span> <span class="comment">// Initializing neural threat classifier</span></div>
-            <div><span class="prompt">$</span> bsc init --model adversarial-v4</div>
-            <div><span class="output">[OK] Model loaded: 847M parameters</span></div>
+            <div><span class="prompt">$</span> <span class="comment">// Initialize threat classifier</span></div>
+            <div><span class="prompt">$</span> bsc init --model classifier-v1</div>
+            <div><span class="output">[OK] Model loaded</span></div>
             <div><span class="output">[OK] Threat feeds connected: 14 sources</span></div>
-            <div><span class="prompt">$</span> bsc scan --scope enterprise --deep</div>
-            <div><span class="output">[SCAN] Processing 2,847,391 signals...</span></div>
-            <div><span class="output">[ALERT] Anomaly detected: lateral movement</span></div>
-            <div><span class="output">[ACTION] Auto-isolated node: us-east-2-c19</span></div>
+            <div><span class="prompt">$</span> bsc scan --scope network --deep</div>
+            <div><span class="output">[SCAN] Correlating event stream...</span></div>
+            <div><span class="output">[ALERT] Anomaly detected: lateral movement pattern</span></div>
+            <div><span class="output">[INFO] Event logged for review: host-19</span></div>
             <div><span class="prompt">$</span> <span class="terminal-cursor"></span></div>
           </div>
         </div>
@@ -3360,16 +3638,16 @@
     <div class="feature-row reverse reveal">
       <div class="feature-text reveal-right">
         <div class="card-badge">Applied AI</div>
-        <h3 class="feature-heading">Neural Defense<br>Mesh Network</h3>
+        <h3 class="feature-heading">LLM Input<br>Filtering Layer</h3>
         <p class="feature-body">
-          Specialized language models trained on 50,000+ adversarial payloads.
-          Our intermediary neural filter classifies and sanitizes inputs
-          with surgical precision.
+          Language models fine-tuned on adversarial payloads, deployed as
+          an inline filter between user input and model context.
+          Classifies injection attempts before they reach the system prompt.
         </p>
         <ul class="feature-list">
-          <li>99.4% detection rate on sophisticated jailbreaks</li>
-          <li>Under 15ms latency overhead per request</li>
-          <li>Self-healing model weights via continuous red-teaming</li>
+          <li>High detection rate across known jailbreak patterns</li>
+          <li>Minimal latency overhead per inference request</li>
+          <li>Continuously improved via red-team feedback cycles</li>
         </ul>
       </div>
       <div class="feature-demo">
@@ -3385,9 +3663,9 @@
             <div class="metric-block-change change-up">-23ms improvement</div>
           </div>
           <div class="metric-block">
-            <div class="metric-block-value">99.4%</div>
+            <div class="metric-block-value">~95%</div>
             <div class="metric-block-label">Jailbreak Detection Rate</div>
-            <div class="metric-block-change change-up">+0.8% vs. Q3</div>
+            <div class="metric-block-change change-up">Improving via red-team cycles</div>
           </div>
           <div class="metric-block">
             <div class="metric-block-value">0</div>
@@ -3400,13 +3678,35 @@
   </section>
 
   <!-- ═══ REAL-TIME INTELLIGENCE DASHBOARD ═══ -->
+  <span id="dashboard" style="display:block;position:relative;top:-80px;visibility:hidden;pointer-events:none;"></span>
   <section id="intelligence" class="section" data-enter>
-    <span class="section-label reveal">Live Intelligence</span>
+    <span class="section-label reveal">Intelligence Dashboard</span>
     <h2 class="section-heading reveal">Threat Environment<br>Analysis</h2>
     <p class="section-subtext reveal">
-      Active monitoring of the global threat landscape. Real-time CVE feeds,
-      network anomalies, and autonomous response actions.
+      Aggregated CVE feeds, network anomaly signals, and threat distribution
+      data — organized for rapid triage and deeper investigation.
     </p>
+
+    <div class="dash-module-strip stagger-children">
+      <div class="dash-module reveal">
+        <div class="dash-module-title">CVE Ingested (7d)</div>
+        <div class="dash-kpi">1,847</div>
+        <div class="dash-kpi-label">Across 4 monitored feeds</div>
+        <div class="dash-kpi-delta up">↑ 142 vs prior week</div>
+      </div>
+      <div class="dash-module reveal">
+        <div class="dash-module-title">Critical Severity</div>
+        <div class="dash-kpi">23</div>
+        <div class="dash-kpi-label">CVSS ≥ 9.0 this week</div>
+        <div class="dash-kpi-delta warn">↑ 4 vs prior week</div>
+      </div>
+      <div class="dash-module reveal">
+        <div class="dash-module-title">Monitored Segments</div>
+        <div class="dash-kpi">14</div>
+        <div class="dash-kpi-label">Active VLANs tracked</div>
+        <div class="dash-kpi-delta up">Stable</div>
+      </div>
+    </div>
 
     <div class="section-vis-strip reveal" style="max-width:200px;margin:0 auto 24px;">
       <div class="radar-vis-inner">
@@ -3420,8 +3720,8 @@
       <!-- Wide threat feed -->
       <div class="panel bento-wide reveal-scale">
         <div class="panel-header">
-          <span class="panel-title">Active Threat Feed</span>
-          <span class="panel-status"><span class="live-dot"></span>LIVE</span>
+          <span class="panel-title">CVE & Alert Feed</span>
+          <span class="panel-status"><span class="live-dot"></span>UPDATING</span>
         </div>
         <div class="shimmer-bar" style="margin-bottom: 20px;"></div>
         <div>
@@ -3453,7 +3753,7 @@
             <span class="threat-severity sev-resolved"></span>
             <div class="threat-info">
               <div class="threat-id">BSC-INC-4012</div>
-              <div class="threat-desc">Data exfiltration attempt intercepted. Neural models dropped lateral movement in US-East-2.</div>
+              <div class="threat-desc">Suspected data exfiltration attempt detected and flagged. Lateral movement pattern in US-East-2 under review.</div>
             </div>
             <span class="threat-time">31m ago</span>
           </div>
@@ -3475,7 +3775,7 @@
             <div class="metric-block-label">Active VLANs</div>
           </div>
           <div class="metric-block">
-            <div class="metric-block-value" style="color: var(--accent);">NOMINAL</div>
+            <div class="metric-block-value" style="color: var(--accent);">OK</div>
             <div class="metric-block-label">Core Status</div>
           </div>
           <div class="metric-block">
@@ -3488,8 +3788,8 @@
       <!-- Wide bottom: network topology -->
       <div class="panel bento-wide reveal">
         <div class="panel-header">
-          <span class="panel-title">Network Topology Status</span>
-          <span class="panel-status"><span class="live-dot"></span>MONITORING</span>
+          <span class="panel-title">Network Topology</span>
+          <span class="panel-status"><span class="live-dot"></span>ACTIVE</span>
         </div>
         <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px;">
           <div class="metric-block" style="text-align: center; padding: 12px 8px;">
@@ -3569,7 +3869,7 @@
     <div class="zone-strip-header">
       <span class="zone-strip-label">Sandbox &amp; Simulation</span>
       <span class="zone-strip-sep"></span>
-      <span class="zone-strip-status"><span class="live-dot"></span>Range Online</span>
+      <span class="zone-strip-status"><span class="live-dot"></span>Active</span>
     </div>
 
   <!-- ═══ CYBERSECURITY PLAYGROUND ═══ -->
@@ -3604,7 +3904,7 @@
     <div class="section-vis-strip strip-top reveal">
       <canvas id="attack-path-canvas" height="88"></canvas>
       <span class="section-vis-label">Attack Path Simulator</span>
-      <span class="section-vis-status">LIVE</span>
+      <span class="section-vis-status">RUNNING</span>
     </div>
 
     <div class="lab-console-bar reveal">
@@ -3619,7 +3919,49 @@
       </div>
       <div style="display:flex;align-items:center;gap:16px;">
         <span class="lab-console-path">bsc-range://cyber-playground</span>
-        <span class="lab-console-status"><span class="live-dot"></span>Range Online</span>
+        <span class="lab-console-status"><span class="live-dot"></span>Active</span>
+      </div>
+    </div>
+
+    <div class="reveal" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;">
+      <div style="background:var(--bg-surface);border:1px solid var(--border-dim);border-radius:10px;padding:16px;">
+        <div style="font-size:10px;font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;">Web Exploitation</div>
+        <div style="font-size:22px;font-weight:700;font-family:var(--mono);color:var(--text-primary);letter-spacing:-0.03em;margin-bottom:4px;">8</div>
+        <div style="font-size:11px;color:var(--text-tertiary);">XSS, SQLi, SSRF, file upload, CORS, auth bypass</div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="diff-badge diff-easy">2 Easy</span>
+          <span class="diff-badge diff-medium">4 Med</span>
+          <span class="diff-badge diff-hard">2 Hard</span>
+        </div>
+      </div>
+      <div style="background:var(--bg-surface);border:1px solid var(--border-dim);border-radius:10px;padding:16px;">
+        <div style="font-size:10px;font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;">Network / AD</div>
+        <div style="font-size:22px;font-weight:700;font-family:var(--mono);color:var(--text-primary);letter-spacing:-0.03em;margin-bottom:4px;">6</div>
+        <div style="font-size:11px;color:var(--text-tertiary);">Kerberoasting, Pass-the-Hash, DCSync, LDAP enum, SMB relay</div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="diff-badge diff-medium">2 Med</span>
+          <span class="diff-badge diff-hard">3 Hard</span>
+          <span class="diff-badge diff-expert">1 Expert</span>
+        </div>
+      </div>
+      <div style="background:var(--bg-surface);border:1px solid var(--border-dim);border-radius:10px;padding:16px;">
+        <div style="font-size:10px;font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;">AI / ML Security</div>
+        <div style="font-size:22px;font-weight:700;font-family:var(--mono);color:var(--text-primary);letter-spacing:-0.03em;margin-bottom:4px;">5</div>
+        <div style="font-size:11px;color:var(--text-tertiary);">Prompt injection, jailbreak chains, RAG poisoning, model extraction</div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="diff-badge diff-medium">1 Med</span>
+          <span class="diff-badge diff-hard">3 Hard</span>
+          <span class="diff-badge diff-expert">1 Expert</span>
+        </div>
+      </div>
+      <div style="background:var(--bg-surface);border:1px solid var(--border-dim);border-radius:10px;padding:16px;">
+        <div style="font-size:10px;font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;">CTF Scenarios</div>
+        <div style="font-size:22px;font-weight:700;font-family:var(--mono);color:var(--text-primary);letter-spacing:-0.03em;margin-bottom:4px;">5</div>
+        <div style="font-size:11px;color:var(--text-tertiary);">Full-chain scenarios: SSRF to RCE, IDOR chains, multi-stage intrusion</div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap;">
+          <span class="diff-badge diff-hard">2 Hard</span>
+          <span class="diff-badge diff-expert">3 Expert</span>
+        </div>
       </div>
     </div>
 
@@ -3796,9 +4138,9 @@
   <!-- ═══ RESEARCH / CASE STUDIES ═══ -->
   <section id="case-studies" class="section" data-enter>
     <span class="section-label reveal">Case Studies</span>
-    <h2 class="section-heading reveal">Declassified<br>Operations</h2>
+    <h2 class="section-heading reveal">Incident<br>Analysis</h2>
     <p class="section-subtext reveal">
-      Post-mortem analysis on real incidents. Root cause, exploitation path, remediation — documented with precision.
+      Post-mortem breakdowns of real security incidents. Root cause, exploitation path, and remediation — documented in full.
     </p>
 
     <div class="section-vis-strip reveal" style="margin-bottom:28px;">
@@ -3825,7 +4167,7 @@
             Implemented strict database row-level locking and atomic Redis operations
             during token validation. Deployed canary monitoring across all OTP endpoints.
           </p>
-          <p class="case-outcome">$2.1M+ in potential fraud prevented. Patched globally within 72 hours.</p>
+          <p class="case-outcome">Vulnerability escalated through responsible disclosure. Patched globally within 72 hours.</p>
         </div>
       </div>
     </div>
@@ -3844,11 +4186,85 @@
         <div class="case-right">
           <p class="card-body">
             <strong style="color: var(--text-primary);">Solution:</strong>
-            Developed an intermediary neural filter trained on 50K+ adversarial payloads.
-            Deployed as an inline proxy with sub-15ms overhead. Self-healing via continuous
-            red-team feedback loop.
+            Developed an intermediary neural filter trained on adversarial payloads.
+            Deployed as an inline proxy with minimal inference overhead. Continuously
+            improved via red-team feedback cycles.
           </p>
-          <p class="case-outcome">99.4% detection rate. Zero false positives in 18-day production run.</p>
+          <p class="case-outcome">Strong detection rate in testing. Low false positive rate across 18-day evaluation period.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top: 0;">
+      <div class="case-block">
+        <div class="case-left">
+          <div class="card-badge">Cloud / SaaS</div>
+          <h3 class="card-heading">API Rate Limit Bypass via Distributed Request Fragmentation</h3>
+          <p class="card-body">
+            <strong style="color: var(--text-primary);">Context:</strong>
+            A high-volume payment processing API enforced per-IP rate limiting on its authentication
+            endpoint. By distributing requests across multiple edge nodes and fragmenting
+            auth sequences, the limit was bypassed entirely without triggering any alert.
+          </p>
+        </div>
+        <div class="case-right">
+          <p class="card-body">
+            <strong style="color: var(--text-primary);">Fix:</strong>
+            Replaced IP-based limiting with account-level and session-level tracking.
+            Added velocity checks at the identity layer regardless of source IP.
+            Retry fingerprinting added to flag high-frequency partial-auth patterns.
+          </p>
+          <p class="case-outcome">Disclosed through coordinated disclosure. Rate limiting architecture redesigned within 30 days.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top: 0;">
+      <div class="case-block">
+        <div class="case-left">
+          <div class="card-badge">Web Application</div>
+          <h3 class="card-heading">Stored XSS via Unsanitized Rich Text in Admin Portal</h3>
+          <p class="card-body">
+            <strong style="color: var(--text-primary);">Issue:</strong>
+            An enterprise SaaS platform's internal admin portal allowed rich text input
+            in a user notes field. The field was sanitized client-side but the raw HTML
+            was stored and rendered for admin users — creating a stored XSS path with
+            admin session access.
+          </p>
+        </div>
+        <div class="case-right">
+          <p class="card-body">
+            <strong style="color: var(--text-primary);">Remediation:</strong>
+            Server-side sanitization using DOMPurify-equivalent processing added before storage.
+            Content Security Policy headers tightened to disallow inline script execution.
+            All existing stored records were re-sanitized in a one-time migration.
+          </p>
+          <p class="case-outcome">Exploitable admin session hijacking path closed. No evidence of prior exploitation found in audit logs.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top: 0;">
+      <div class="case-block">
+        <div class="case-left">
+          <div class="card-badge">Infrastructure</div>
+          <h3 class="card-heading">Container Escape via Privileged Docker Run in CI/CD Pipeline</h3>
+          <p class="card-body">
+            <strong style="color: var(--text-primary);">Discovery:</strong>
+            A CI/CD pipeline ran Docker build steps with <code style="font-family:var(--mono);font-size:12px;color:var(--accent);">--privileged</code> flag
+            set by default. A compromised build script could mount the host filesystem,
+            read secrets from other containers, and modify systemd unit files on the host.
+          </p>
+        </div>
+        <div class="case-right">
+          <p class="card-body">
+            <strong style="color: var(--text-primary);">Resolution:</strong>
+            Privileged mode removed from all pipeline containers. Replaced with specific
+            capability grants via <code style="font-family:var(--mono);font-size:12px;color:var(--accent);">--cap-add</code> only where required.
+            Build environments migrated to rootless Podman. Secrets scanning added to
+            pipeline pre-commit hooks.
+          </p>
+          <p class="case-outcome">Complete host-escape path closed. CI/CD hardening guide published internally as part of the remediation.</p>
         </div>
       </div>
     </div>
@@ -3856,6 +4272,8 @@
     <div class="module-connections-row">
       <span class="connections-label">Connected to</span>
       <a href="#blog" class="connection-link">Technical Blog</a>
+      <a href="#research" class="connection-link">Research</a>
+      <a href="#toolkit" class="connection-link">Security Tools</a>
       <a href="#osint" class="connection-link">OSINT Projects</a>
       <a href="#dashboard" class="connection-link">Threat Dashboard</a>
     </div>
@@ -3863,11 +4281,11 @@
 
   <!-- ═══ OFFENSIVE TOOLKIT ═══ -->
   <section id="toolkit" class="section" data-enter>
-    <span class="section-label reveal">Offensive Toolkit</span>
-    <h2 class="section-heading reveal">Precision<br>Instruments</h2>
+    <span class="section-label reveal">Security Toolkit</span>
+    <h2 class="section-heading reveal">Purpose-Built<br>Utilities</h2>
     <p class="section-subtext reveal">
-      Eight custom utilities for rapid assessment, cryptanalysis, and payload generation.
-      Each tool purpose-built for offensive security workflows.
+      Eight utilities for security assessment, cryptanalysis, log analysis, and payload testing.
+      Each tool built for a specific task in the security workflow.
     </p>
 
     <div class="section-vis-strip strip-top reveal">
@@ -3876,10 +4294,128 @@
       <span class="section-vis-status">8 STREAMS</span>
     </div>
 
+    <!-- Featured tools — full detail -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;" class="stagger-children">
+
+      <div class="panel reveal" style="padding:0;overflow:hidden;">
+        <div class="panel-header" style="padding:16px 20px;">
+          <span class="panel-title">JWT Decoder</span>
+          <span class="card-badge" style="margin:0;">Token Analysis</span>
+        </div>
+        <div style="padding:0 20px 18px;">
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px;">
+            Decode and inspect JSON Web Tokens without a library. Parses header, payload, and signature components. Flags algorithm confusion risks (e.g. <code style="font-family:var(--mono);color:var(--accent);font-size:12px;">alg:none</code>), weak signing keys, and expired claims. Useful for auth testing and OAuth flow analysis.
+          </p>
+          <div style="background:var(--bg-elevated);border:1px solid var(--border-hair);border-radius:8px;padding:14px;margin-bottom:14px;font-family:var(--mono);font-size:11px;">
+            <div style="color:var(--text-dim);margin-bottom:6px;letter-spacing:0.06em;font-size:10px;">EXAMPLE INPUT</div>
+            <div style="color:var(--text-tertiary);word-break:break-all;">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyXzQ0MiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNDAwMDAwMH0.XxXx...</div>
+            <div style="color:var(--text-dim);margin:10px 0 6px;letter-spacing:0.06em;font-size:10px;">DECODED OUTPUT</div>
+            <div style="color:#34d399;">{"sub": "user_442", "role": "admin", "iat": 1714000000}</div>
+            <div style="color:#f59e0b;margin-top:4px;">[WARN] Algorithm: HS256 — verify with strong secret</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+            <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-elevated);padding:4px 10px;border-radius:4px;font-family:var(--mono);">Auth testing</span>
+            <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-elevated);padding:4px 10px;border-radius:4px;font-family:var(--mono);">OAuth flows</span>
+            <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-elevated);padding:4px 10px;border-radius:4px;font-family:var(--mono);">API security</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <a href="#blog" style="font-size:12px;color:var(--text-dim);text-decoration:none;">Related: JWT Attacks →</a>
+            <a href="#" class="btn-main" style="font-size:12px;padding:9px 18px;">Open Tool<svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel reveal" style="padding:0;overflow:hidden;">
+        <div class="panel-header" style="padding:16px 20px;">
+          <span class="panel-title">Password Entropy Checker</span>
+          <span class="card-badge" style="margin:0;">Auth Testing</span>
+        </div>
+        <div style="padding:0 20px 18px;">
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px;">
+            Calculates Shannon entropy for any password or token. Detects dictionary words, common patterns, repeated character sequences, and keyboard walks. Estimates crack time across bruteforce, dictionary, and hybrid attack modes — useful for policy review and password audit work.
+          </p>
+          <div style="background:var(--bg-elevated);border:1px solid var(--border-hair);border-radius:8px;padding:14px;margin-bottom:14px;font-family:var(--mono);font-size:11px;">
+            <div style="color:var(--text-dim);margin-bottom:6px;letter-spacing:0.06em;font-size:10px;">EXAMPLE ANALYSIS</div>
+            <div style="color:var(--text-tertiary);">Input: <span style="color:var(--text-primary);">Passw0rd!corp2024</span></div>
+            <div style="color:#f59e0b;margin-top:4px;">[WARN] Entropy: 38.2 bits — below recommended threshold</div>
+            <div style="color:#f43f5e;margin-top:4px;">[WEAK] Dictionary base + leet substitution + year suffix detected</div>
+            <div style="color:var(--text-tertiary);margin-top:4px;">Est. crack time (hashcat rules): ~4 minutes</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+            <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-elevated);padding:4px 10px;border-radius:4px;font-family:var(--mono);">Password policy</span>
+            <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-elevated);padding:4px 10px;border-radius:4px;font-family:var(--mono);">Credential audit</span>
+            <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-elevated);padding:4px 10px;border-radius:4px;font-family:var(--mono);">Red team prep</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <a href="#case-studies" style="font-size:12px;color:var(--text-dim);text-decoration:none;">Related: Auth Case Studies →</a>
+            <a href="#" class="btn-main" style="font-size:12px;padding:9px 18px;">Open Tool<svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel reveal" style="padding:0;overflow:hidden;">
+        <div class="panel-header" style="padding:16px 20px;">
+          <span class="panel-title">Hash Analyzer</span>
+          <span class="card-badge" style="margin:0;">Cryptographic</span>
+        </div>
+        <div style="padding:0 20px 18px;">
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px;">
+            Identifies hash type from format and length. Supports MD5, SHA-1/256/512, bcrypt, NTLM, LM, Argon2, and 40+ other formats. Computes hashes from input, checks against known weak hash lists, and generates cracking command suggestions for hashcat and john.
+          </p>
+          <div style="background:var(--bg-elevated);border:1px solid var(--border-hair);border-radius:8px;padding:14px;margin-bottom:14px;font-family:var(--mono);font-size:11px;">
+            <div style="color:var(--text-dim);margin-bottom:6px;letter-spacing:0.06em;font-size:10px;">EXAMPLE INPUT</div>
+            <div style="color:var(--text-tertiary);">aad3b435b51404eeaad3b435b51404ee</div>
+            <div style="color:var(--text-dim);margin:10px 0 6px;letter-spacing:0.06em;font-size:10px;">IDENTIFIED</div>
+            <div style="color:#34d399;">Type: NTLM (LM empty hash) — Windows credential</div>
+            <div style="color:#f43f5e;margin-top:4px;">[CRITICAL] Empty LM hash — indicates no LM storage but NTLM present</div>
+            <div style="color:var(--text-tertiary);margin-top:4px;">Suggested: hashcat -m 1000 hash.txt rockyou.txt</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+            <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-elevated);padding:4px 10px;border-radius:4px;font-family:var(--mono);">Hash identification</span>
+            <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-elevated);padding:4px 10px;border-radius:4px;font-family:var(--mono);">NTLM analysis</span>
+            <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-elevated);padding:4px 10px;border-radius:4px;font-family:var(--mono);">Crack prep</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <a href="#playground" style="font-size:12px;color:var(--text-dim);text-decoration:none;">Related: Pass-the-Hash Lab →</a>
+            <a href="#" class="btn-main" style="font-size:12px;padding:9px 18px;">Open Tool<svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel reveal" style="padding:0;overflow:hidden;">
+        <div class="panel-header" style="padding:16px 20px;">
+          <span class="panel-title">Log Parser</span>
+          <span class="card-badge" style="margin:0;">SIEM Audit</span>
+        </div>
+        <div style="padding:0 20px 18px;">
+          <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px;">
+            Structured log ingestion for Windows Event, Syslog, Apache/Nginx access logs, and custom formats. Extracts IOC patterns (IPs, hashes, paths, user agents), correlates events by timeline, and flags statistical anomalies. Outputs to timeline view or structured JSON for SIEM import.
+          </p>
+          <div style="background:var(--bg-elevated);border:1px solid var(--border-hair);border-radius:8px;padding:14px;margin-bottom:14px;font-family:var(--mono);font-size:11px;">
+            <div style="color:var(--text-dim);margin-bottom:6px;letter-spacing:0.06em;font-size:10px;">EXAMPLE OUTPUT</div>
+            <div style="color:var(--text-tertiary);">Parsed: 14,823 events · 3 source types</div>
+            <div style="color:#f59e0b;margin-top:4px;">[ANOMALY] EventID 4769 · 847 occurrences in 4min window</div>
+            <div style="color:#f59e0b;margin-top:4px;">[ANOMALY] User svc_backup · auth from 3 distinct IPs</div>
+            <div style="color:#34d399;margin-top:4px;">[IOC] 3 IPs matched threat intel feed</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+            <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-elevated);padding:4px 10px;border-radius:4px;font-family:var(--mono);">SIEM triage</span>
+            <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-elevated);padding:4px 10px;border-radius:4px;font-family:var(--mono);">Incident response</span>
+            <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-elevated);padding:4px 10px;border-radius:4px;font-family:var(--mono);">Detection dev</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <a href="#research" style="font-size:12px;color:var(--text-dim);text-decoration:none;">Related: Telemetry Coverage Research →</a>
+            <a href="#" class="btn-main" style="font-size:12px;padding:9px 18px;">Open Tool<svg viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4"/></svg></a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
     <div class="toolkit-strip reveal">
       <div class="toolkit-strip-header">
         <span class="toolkit-strip-title">Security Utilities</span>
-        <span class="toolkit-strip-count">8 Tools · All Live</span>
+        <span class="toolkit-strip-count">8 Tools · Available</span>
       </div>
       <a href="#" class="tool-row">
         <div class="tool-row-icon"><svg viewBox="0 0 24 24"><path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/></svg></div>
@@ -3941,17 +4477,17 @@
   <!-- ═══ AI SECURITY LAB ═══ -->
   <section id="ai-lab" class="section" data-enter>
     <span class="section-label reveal">AI Security Lab</span>
-    <h2 class="section-heading reveal">Where LLMs<br>Get Red-Teamed.</h2>
+    <h2 class="section-heading reveal">LLM Security<br>Research Lab.</h2>
     <p class="section-subtext reveal">
-      First-class adversarial research. Prompt injection demos, safe-vs-unsafe
-      behavior analysis, anomaly detection, and automated threat classifiers —
-      all demonstrating real attack surfaces, not theoretical risks.
+      Hands-on adversarial AI research. Prompt injection demos, behavioral analysis,
+      anomaly detection experiments, and ML-based threat classifiers —
+      all grounded in documented attack patterns and real model behavior.
     </p>
 
     <div class="section-vis-strip strip-top reveal">
       <canvas id="inference-canvas" height="80"></canvas>
       <span class="section-vis-label">Inference Graph</span>
-      <span class="section-vis-status">4 MODELS ACTIVE</span>
+      <span class="section-vis-status">4 EXPERIMENTS</span>
     </div>
 
     <div class="lab-console-bar reveal" style="margin-bottom:0;">
@@ -3962,7 +4498,7 @@
       </div>
       <div style="display:flex;align-items:center;gap:16px;">
         <span class="lab-console-path">bsc-lab://ai-red-team</span>
-        <span class="lab-console-status"><span class="live-dot"></span>4 Models Active</span>
+        <span class="lab-console-status"><span class="live-dot"></span>4 Active</span>
       </div>
     </div>
 
@@ -3985,8 +4521,8 @@
 <span class="exp-safe">[BLOCKED] Injection pattern detected. Request flagged.</span>
           </div>
           <div class="experiment-metrics">
-            <div class="exp-metric"><div class="exp-metric-val">99.4%</div><div class="exp-metric-label">Detection Rate</div></div>
-            <div class="exp-metric"><div class="exp-metric-val">&lt;15ms</div><div class="exp-metric-label">Filter Latency</div></div>
+            <div class="exp-metric"><div class="exp-metric-val">~95%</div><div class="exp-metric-label">Detection Rate</div></div>
+            <div class="exp-metric"><div class="exp-metric-val">&lt;20ms</div><div class="exp-metric-label">Filter Latency</div></div>
             <div class="exp-metric"><div class="exp-metric-val">0</div><div class="exp-metric-label">False Positives (7d)</div></div>
           </div>
           <a href="#" class="btn-ghost" style="font-size:12px;width:fit-content;padding:10px 20px;">Run Experiment</a>
@@ -4167,11 +4703,66 @@
       </div>
     </div>
 
+    <div class="blog-row2 stagger-children" style="margin-top:14px;">
+      <div class="post-card reveal">
+        <div class="post-card-body">
+          <div class="post-tags"><span class="post-tag tag-amber">Web Security</span></div>
+          <h3 class="post-title">Reflected XSS in Modern React SPAs: The Patterns Still Getting Missed</h3>
+          <p class="post-excerpt">React's default JSX escaping prevents most classic XSS, but dangerouslySetInnerHTML, template literals in href attributes, and third-party component props still leave exploitable surfaces. We walk through four real patterns with working PoCs and the linting rules that catch them.</p>
+        </div>
+        <div class="post-meta-row"><span class="post-date">Apr 20, 2026</span><span class="post-read-time">16 min read</span></div>
+      </div>
+      <div class="post-card reveal">
+        <div class="post-card-body">
+          <div class="post-tags"><span class="post-tag tag-violet">AI Security</span></div>
+          <h3 class="post-title">Designing Useful Threat Dashboards: What Most Get Wrong</h3>
+          <p class="post-excerpt">Most threat dashboards are built for aesthetics, not analysis. High-cardinality feeds without filtering, graphs without baselines, and counts without context. We break down the design decisions that make dashboards actionable versus decorative.</p>
+        </div>
+        <div class="post-meta-row"><span class="post-date">Apr 4, 2026</span><span class="post-read-time">12 min read</span></div>
+      </div>
+      <div class="post-card reveal">
+        <div class="post-card-body">
+          <div class="post-tags"><span class="post-tag">Auth Security</span></div>
+          <h3 class="post-title">MFA Bypass in Practice: SIM Swapping, AiTM Proxies, and OTP Race Conditions</h3>
+          <p class="post-excerpt">MFA is not a silver bullet. This post maps the realistic attack surface against each MFA method — TOTP, push notifications, hardware tokens — and the conditions under which each one fails. Practical, not theoretical.</p>
+        </div>
+        <div class="post-meta-row"><span class="post-date">Mar 25, 2026</span><span class="post-read-time">21 min read</span></div>
+      </div>
+    </div>
+
+    <div class="blog-row2 stagger-children" style="margin-top:14px;">
+      <div class="post-card reveal">
+        <div class="post-card-body">
+          <div class="post-tags"><span class="post-tag">Detection Eng</span><span class="post-tag tag-amber">Red Team</span></div>
+          <h3 class="post-title">Why Detection Engineering Needs Adversarial Context, Not More Rules</h3>
+          <p class="post-excerpt">The problem with most detection pipelines is not a lack of rules — it's rules written without understanding what the attacker can change to evade them. We explore a red-team-informed approach to writing detections that remain effective after tuning.</p>
+        </div>
+        <div class="post-meta-row"><span class="post-date">Mar 8, 2026</span><span class="post-read-time">17 min read</span></div>
+      </div>
+      <div class="post-card reveal">
+        <div class="post-card-body">
+          <div class="post-tags"><span class="post-tag tag-violet">LLM Security</span></div>
+          <h3 class="post-title">Tool-Use Abuse in LLM Agents: When Capabilities Become the Attack Surface</h3>
+          <p class="post-excerpt">Giving a language model access to tools — file I/O, web browsing, code execution — fundamentally changes its threat model. We analyze five tool-use patterns and the injection chains that exploit them, with reference implementations for each defense.</p>
+        </div>
+        <div class="post-meta-row"><span class="post-date">Feb 19, 2026</span><span class="post-read-time">26 min read</span></div>
+      </div>
+      <div class="post-card reveal">
+        <div class="post-card-body">
+          <div class="post-tags"><span class="post-tag tag-red">Active Directory</span></div>
+          <h3 class="post-title">BloodHound Attack Paths: Reading the Graph Before the Attacker Does</h3>
+          <p class="post-excerpt">BloodHound is typically thought of as a red team tool. It shouldn't be. Understanding how to read privilege escalation paths from a defender's perspective — before an attacker exploits them — is one of the highest-ROI activities in AD security.</p>
+        </div>
+        <div class="post-meta-row"><span class="post-date">Feb 5, 2026</span><span class="post-read-time">20 min read</span></div>
+      </div>
+    </div>
+
     <div class="module-connections-row">
       <span class="connections-label">Connected to</span>
       <a href="#playground" class="connection-link">Labs</a>
       <a href="#ai-lab" class="connection-link">AI Lab</a>
       <a href="#case-studies" class="connection-link">Case Studies</a>
+      <a href="#research" class="connection-link">Research</a>
       <a href="#talks" class="connection-link">Talks</a>
     </div>
   </section>
@@ -4396,9 +4987,9 @@
     <span class="section-label reveal">Challenges &amp; XP</span>
     <h2 class="section-heading reveal">Rank Up.<br>Prove Your Level.</h2>
     <p class="section-subtext reveal">
-      Every lab completed, investigation documented, and tool built earns BSC Points.
-      Progress through ranked tiers — from Analyst to Elite Operator.
-      The leaderboard is live. The gap is visible.
+      Labs, investigations, and published work each earn BSC Points.
+      Progress through six ranked tiers — from Analyst to Elite Operator.
+      Track your progress by category and see how you compare on the global leaderboard.
     </p>
 
     <div class="gamification-hero stagger-children">
@@ -4582,8 +5173,304 @@
     <div class="module-connections-row">
       <span class="connections-label">Connected to</span>
       <a href="#blog" class="connection-link">Technical Blog</a>
+      <a href="#research" class="connection-link">Research</a>
       <a href="#playground" class="connection-link">Labs</a>
       <a href="#ai-lab" class="connection-link">AI Lab</a>
+    </div>
+  </section>
+
+  <!-- ═══ RESEARCH & ANALYSIS ═══ -->
+  <section id="research" class="section section--tight" data-enter>
+    <span class="section-label reveal">Research & Analysis</span>
+    <h2 class="section-heading reveal">Structured<br>Thinking.</h2>
+    <p class="section-subtext reveal">
+      Technical notes, structured analyses, and investigative deep dives.
+      More detailed than blog posts. Less formal than papers. Built for practitioners
+      who want the reasoning, not just the conclusion.
+    </p>
+
+    <div class="research-grid stagger-children">
+      <div class="research-card featured reveal">
+        <div>
+          <span class="research-type">Deep Analysis</span>
+          <div class="research-tags">
+            <span class="research-tag">Attack Paths</span>
+            <span class="research-tag">Active Directory</span>
+            <span class="research-tag">Graph Analysis</span>
+          </div>
+          <h3 class="research-title large">Attack Path Modeling in Segmented Enterprise Networks</h3>
+          <p class="research-abstract">
+            This analysis maps how attackers traverse segmented network environments
+            using legitimate credentials, trusted tools, and protocol abuse. Rather than
+            exploiting perimeter weaknesses, modern lateral movement relies on
+            BloodHound-visible privilege relationships that defenders rarely audit proactively.
+          </p>
+          <ul class="research-finding-list">
+            <li>Tier-0 asset exposure through transitive group membership in 6 of 8 lab simulations</li>
+            <li>AS-REP Roasting effective against default configurations in all tested environments</li>
+            <li>Constrained delegation abuse consistently underdetected across Elastic and Splunk baselines</li>
+            <li>GenericWrite permissions mapped to 3+ privilege escalation paths in each AD structure analyzed</li>
+          </ul>
+          <a href="#blog" class="btn-ghost" style="font-size:12px;width:fit-content;padding:10px 20px;">Read Related Post →</a>
+        </div>
+        <div>
+          <div class="research-note-block" style="margin-bottom:12px;">
+            <p style="font-size:11px;font-family:var(--mono);color:var(--accent);margin-bottom:8px;letter-spacing:0.06em;">KEY FINDING</p>
+            <p>In segmented environments, the most reliable lateral movement paths are not firewall bypasses — they are misconfigured delegation settings and over-provisioned service accounts that exist in nearly every production AD deployment.</p>
+          </div>
+          <div class="research-note-block">
+            <p style="font-size:11px;font-family:var(--mono);color:var(--text-dim);margin-bottom:8px;letter-spacing:0.06em;">METHODOLOGY</p>
+            <p>Lab recreations of 4 enterprise AD topologies. Each environment built from real architectural patterns, then analyzed using BloodHound CE, manual enumeration, and custom detection evaluation scripts.</p>
+          </div>
+          <div class="research-meta" style="margin-top:12px;">
+            <span>Apr 2026</span>
+            <span>·</span>
+            <span>Research Note</span>
+            <span>·</span>
+            <span>35 min read</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="research-row2 stagger-children">
+      <div class="research-card reveal">
+        <span class="research-type">AI Security</span>
+        <div class="research-tags">
+          <span class="research-tag">Prompt Injection</span>
+          <span class="research-tag">Behavioral Analysis</span>
+        </div>
+        <h3 class="research-title">Adversarial Prompt Behavior Across Multi-Turn Sessions</h3>
+        <p class="research-abstract">An analysis of how injection attempts evolve across conversation turns. Single-turn defenses often fail because they evaluate each message in isolation, missing injection chains that build context gradually over multiple interactions.</p>
+        <ul class="research-finding-list">
+          <li>Context-building injections succeeded in 4 of 6 tested models</li>
+          <li>Persona priming effective when established 3+ turns before payload</li>
+          <li>Instruction-following tendency creates exploitable state</li>
+        </ul>
+        <div class="research-meta">
+          <span>Mar 2026</span><span>·</span><span>Experiment Notes</span><span>·</span><span>22 min</span>
+        </div>
+      </div>
+
+      <div class="research-card reveal">
+        <span class="research-type">Detection Engineering</span>
+        <div class="research-tags">
+          <span class="research-tag">SIEM</span>
+          <span class="research-tag">Telemetry</span>
+          <span class="research-tag">Coverage Gaps</span>
+        </div>
+        <h3 class="research-title">Telemetry Coverage Gaps in Modern SIEM Deployments</h3>
+        <p class="research-abstract">An analysis of what typical Elastic and Splunk SIEM deployments actually capture versus what they're assumed to cover. The gaps between theoretical coverage and what's actually indexed — and queryable at alert time — are larger than most teams realize.</p>
+        <ul class="research-finding-list">
+          <li>Windows event forwarding latency creates detection blind windows</li>
+          <li>Sysmon configuration drift common within 60 days of deployment</li>
+          <li>Network-level telemetry consistently missing lateral movement evidence</li>
+        </ul>
+        <div class="research-meta">
+          <span>Feb 2026</span><span>·</span><span>Analysis</span><span>·</span><span>18 min</span>
+        </div>
+      </div>
+
+      <div class="research-card reveal">
+        <span class="research-type">AI Security</span>
+        <div class="research-tags">
+          <span class="research-tag">Guardrails</span>
+          <span class="research-tag">Model Architecture</span>
+        </div>
+        <h3 class="research-title">Security Model Boundaries in Agentic AI Systems</h3>
+        <p class="research-abstract">As LLMs gain tool access and memory, the threat model shifts significantly. This note explores where guardrails break down in agentic architectures — specifically around tool-call chaining, memory retrieval, and cross-session context contamination.</p>
+        <ul class="research-finding-list">
+          <li>Tool-call guardrails rarely validated at the execution layer</li>
+          <li>Memory retrieval can surface context from prior sessions if not scoped</li>
+          <li>Sandboxing at the orchestration layer more effective than model-level prompting</li>
+        </ul>
+        <div class="research-meta">
+          <span>Jan 2026</span><span>·</span><span>Research Note</span><span>·</span><span>20 min</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="research-grid stagger-children">
+      <div class="research-card reveal">
+        <span class="research-type">Lab Design</span>
+        <div class="research-tags">
+          <span class="research-tag">Red Team</span>
+          <span class="research-tag">Lab Architecture</span>
+          <span class="research-tag">Simulation</span>
+        </div>
+        <h3 class="research-title">Offensive / Defensive Tradeoffs in Security Lab Design</h3>
+        <p class="research-abstract">
+          Designing a lab that's useful for both red and blue team work requires deliberate architectural decisions. Environments optimized for attack simulation tend to be too simplified for meaningful detection work, and vice versa. This note documents the tradeoffs encountered building the BSC home lab and the compromises that held up in practice.
+        </p>
+        <ul class="research-finding-list">
+          <li>Full AD replication introduces detection noise that masks real anomaly signals</li>
+          <li>Minimal viable enterprise simulation requires at least 3 network segments</li>
+          <li>Shared infrastructure between red and blue teams creates subtle attacker advantages in timing</li>
+        </ul>
+        <div class="research-meta">
+          <span>Dec 2025</span><span>·</span><span>Architecture Note</span><span>·</span><span>15 min</span>
+        </div>
+      </div>
+
+      <div class="research-card reveal">
+        <span class="research-type">Web Security</span>
+        <div class="research-tags">
+          <span class="research-tag">OAuth 2.0</span>
+          <span class="research-tag">Auth Flows</span>
+          <span class="research-tag">Pattern Analysis</span>
+        </div>
+        <h3 class="research-title">OAuth 2.0 Implementation Flaws: A Pattern Analysis</h3>
+        <p class="research-abstract">
+          OAuth 2.0 is well-specified but frequently misimplemented. This note catalogs recurring implementation patterns — state parameter omission, implicit flow misuse, PKCE bypass, and open redirect abuse — observed across real-world applications, with reproduction steps and detection guidance.
+        </p>
+        <ul class="research-finding-list">
+          <li>State parameter absent or static in ~40% of tested integrations</li>
+          <li>Redirect URI validation commonly implemented client-side only</li>
+          <li>Token leakage via Referer header in legacy fragment-based flows</li>
+          <li>PKCE frequently implemented but not enforced server-side</li>
+        </ul>
+        <div class="research-meta">
+          <span>Nov 2025</span><span>·</span><span>Pattern Analysis</span><span>·</span><span>24 min</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="module-connections-row">
+      <span class="connections-label">Connected to</span>
+      <a href="#blog" class="connection-link">Technical Blog</a>
+      <a href="#case-studies" class="connection-link">Case Studies</a>
+      <a href="#ai-lab" class="connection-link">AI Lab</a>
+      <a href="#playground" class="connection-link">Labs</a>
+    </div>
+  </section>
+
+  <!-- ═══ ABOUT ═══ -->
+  <section id="about" class="section section--tight" data-enter>
+    <span class="section-label reveal">About</span>
+    <h2 class="section-heading reveal">What BlackShield<br>Core Is.</h2>
+    <p class="section-subtext reveal">
+      A personal cybersecurity and AI research platform — not a product, not a company.
+      A structured environment for learning, building, and documenting work
+      across offensive security, defensive tooling, and applied AI research.
+    </p>
+
+    <div class="about-stats-row stagger-children">
+      <div class="about-stat reveal">
+        <div class="about-stat-val">24</div>
+        <div class="about-stat-label">Active Labs</div>
+      </div>
+      <div class="about-stat reveal">
+        <div class="about-stat-val">142</div>
+        <div class="about-stat-label">CVEs Reviewed</div>
+      </div>
+      <div class="about-stat reveal">
+        <div class="about-stat-val">12</div>
+        <div class="about-stat-label">Platform Modules</div>
+      </div>
+      <div class="about-stat reveal">
+        <div class="about-stat-val">2024</div>
+        <div class="about-stat-label">Year Started</div>
+      </div>
+    </div>
+
+    <div class="about-grid reveal">
+      <div>
+        <p class="about-intro">
+          BlackShield Core is built as a structured research and learning environment
+          covering the full breadth of modern cybersecurity — from offensive techniques
+          and detection engineering to AI security and open-source intelligence.
+        </p>
+        <p class="about-intro" style="margin-top:0;">
+          Everything here is built to be useful, documented, and reproducible.
+          The labs are grounded in real attack patterns. The research reflects
+          genuine investigation, not manufactured content. The tools are built
+          because they were needed, not because they look good on a portfolio.
+        </p>
+        <p class="about-intro" style="margin-top:0;">
+          The platform is actively expanding. Content is added as work progresses —
+          not on a schedule, but when there's something worth documenting.
+        </p>
+      </div>
+      <div class="about-principles">
+        <div class="about-principle">
+          <div class="about-principle-title">Build for understanding</div>
+          <div class="about-principle-body">Every lab, tool, and analysis exists to deepen technical understanding — not to generate content volume.</div>
+        </div>
+        <div class="about-principle">
+          <div class="about-principle-title">Document the reasoning</div>
+          <div class="about-principle-body">Results matter, but so does the methodology. How you got there is as important as what you found.</div>
+        </div>
+        <div class="about-principle">
+          <div class="about-principle-title">Stay adversarial</div>
+          <div class="about-principle-body">Defensive work that hasn't been tested against realistic attack techniques isn't reliable. Red team thinking informs everything here.</div>
+        </div>
+        <div class="about-principle">
+          <div class="about-principle-title">No overclaiming</div>
+          <div class="about-principle-body">Exact detection rates, guaranteed latencies, and zero false positives are marketing language. This platform avoids them deliberately.</div>
+        </div>
+        <div class="about-principle">
+          <div class="about-principle-title">Responsible disclosure</div>
+          <div class="about-principle-body">All vulnerability research follows coordinated disclosure practices. Nothing is published before affected parties have had time to respond.</div>
+        </div>
+        <div class="about-principle">
+          <div class="about-principle-title">Open by default</div>
+          <div class="about-principle-body">Lab configs, detection rules, and tool code are shared publicly where possible. Security improves when knowledge is accessible.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="about-focus-grid stagger-children">
+      <div class="about-focus-card reveal">
+        <div class="about-focus-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <div class="about-focus-title">Security Labs</div>
+        <div class="about-focus-desc">Hands-on simulations covering web exploitation, network attacks, active directory, and adversarial AI scenarios. Lab-first learning.</div>
+      </div>
+      <div class="about-focus-card reveal">
+        <div class="about-focus-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+        </div>
+        <div class="about-focus-title">Applied AI Security</div>
+        <div class="about-focus-desc">Prompt injection research, guardrail evaluation, LLM behavioral analysis, and ML-based detection tooling — applied, not theoretical.</div>
+      </div>
+      <div class="about-focus-card reveal">
+        <div class="about-focus-icon">
+          <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="about-focus-title">Security Tooling</div>
+        <div class="about-focus-desc">Custom utilities built for specific analysis workflows. JWT inspection, entropy analysis, log correlation, and payload testing.</div>
+      </div>
+      <div class="about-focus-card reveal">
+        <div class="about-focus-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z"/></svg>
+        </div>
+        <div class="about-focus-title">Threat Intelligence</div>
+        <div class="about-focus-desc">CVE feed aggregation, threat actor tracking, and OSINT-based investigation. Research dashboards built for analysis, not decoration.</div>
+      </div>
+      <div class="about-focus-card reveal">
+        <div class="about-focus-icon">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="about-focus-title">Technical Writing</div>
+        <div class="about-focus-desc">Deep-dive blog posts, structured research notes, and case study breakdowns. Written for practitioners who can read between the lines.</div>
+      </div>
+      <div class="about-focus-card reveal">
+        <div class="about-focus-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div class="about-focus-title">OSINT & Investigations</div>
+        <div class="about-focus-desc">Ethical open-source intelligence work. Phishing infrastructure mapping, domain squatting campaigns, and threat actor attribution research.</div>
+      </div>
+    </div>
+
+    <div class="module-connections-row">
+      <span class="connections-label">Explore the platform</span>
+      <a href="#playground" class="connection-link">Labs</a>
+      <a href="#ai-lab" class="connection-link">AI Security</a>
+      <a href="#blog" class="connection-link">Blog</a>
+      <a href="#research" class="connection-link">Research</a>
+      <a href="#toolkit" class="connection-link">Tools</a>
     </div>
   </section>
 
@@ -4596,13 +5483,12 @@
           <span class="footer-brand-name">BlackShield Core</span>
         </div>
         <p class="footer-brand-desc">
-          A full-stack cybersecurity + AI ecosystem. Cyber range, AI red-team lab,
-          threat intelligence, tooling, investigations, and technical research.
-          One platform. Every layer.
+          A cybersecurity and AI experimentation platform. Cyber range,
+          LLM red-team lab, threat intelligence, offensive tools,
+          and in-depth technical research.
         </p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;">
-          <span class="status-badge status-live">Platform Live</span>
-          <span class="status-badge status-beta">10 Modules</span>
+          <span class="status-badge status-beta">12 Modules</span>
         </div>
       </div>
       <div class="footer-col">
@@ -4614,10 +5500,10 @@
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Knowledge</div>
-        <a href="#blog">Blog</a>
+        <a href="#blog">Technical Blog</a>
+        <a href="#research">Research</a>
         <a href="#case-studies">Case Studies</a>
         <a href="#home-lab">Home Lab</a>
-        <a href="#capabilities">Capabilities</a>
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Investigate</div>
@@ -4627,17 +5513,17 @@
         <a href="#">Published CVEs</a>
       </div>
       <div class="footer-col">
-        <div class="footer-col-title">Research</div>
-        <a href="#">White Papers</a>
-        <a href="#">CVE Database</a>
+        <div class="footer-col-title">Resources</div>
         <a href="#">Sigma Rules</a>
+        <a href="#">Lab Configs</a>
         <a href="#">GitHub</a>
+        <a href="#">CVE Reference</a>
       </div>
       <div class="footer-col">
-        <div class="footer-col-title">Platform</div>
-        <a href="#">API Access</a>
-        <a href="#">About</a>
+        <div class="footer-col-title">About</div>
+        <a href="#about">About BSC</a>
         <a href="#">Contact</a>
+        <a href="#">Responsible Disclosure</a>
         <a href="#">Security Policy</a>
       </div>
     </div>
