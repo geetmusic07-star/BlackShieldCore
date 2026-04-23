@@ -9,7 +9,7 @@
     content="BlackShield Core fuses adversarial AI research with offensive security engineering. Autonomous threat hunting, exploit analysis, and neural defense systems.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     /* ═══════════════════════════════════════════
        DESIGN SYSTEM — TASTE-SKILL CALIBRATED
@@ -25,27 +25,48 @@
     }
 
     :root {
-      --bg-void: #020b18;
-      --bg-surface: #051525;
-      --bg-elevated: #0a1e35;
-      --border-subtle: rgba(37, 99, 235, 0.4);
-      --border-dim: rgba(37, 99, 235, 0.2);
+      /* ── Background depth layers ── */
+      --bg-void: #02091a;
+      --bg-surface: #050f1e;
+      --bg-elevated: #091829;
+      --bg-glass: rgba(9, 24, 41, 0.68);
+
+      /* ── Border system — more restrained ── */
+      --border-subtle: rgba(59, 130, 246, 0.28);
+      --border-dim: rgba(59, 130, 246, 0.12);
+      --border-hair: rgba(255, 255, 255, 0.05);
+
+      /* ── Accent hierarchy ── */
       --accent: #3b82f6;
-      --accent-muted: #1d4ed8;
-      --accent-dim: rgba(59, 130, 246, 0.1);
-      --accent-glow: rgba(59, 130, 246, 0.22);
+      --accent-muted: #2563eb;
+      --accent-bright: #93c5fd;
+      --accent-dim: rgba(59, 130, 246, 0.08);
+      --accent-glow: rgba(59, 130, 246, 0.15);
+
+      /* ── Text — more elegant, less tinted ── */
       --text-primary: #eef2ff;
-      --text-secondary: rgba(165, 190, 240, 0.88);
-      --text-tertiary: rgba(100, 140, 210, 0.72);
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'Outfit', system-ui, -apple-system, sans-serif;
+      --text-secondary: rgba(160, 186, 232, 0.82);
+      --text-tertiary: rgba(95, 132, 196, 0.64);
+      --text-dim: rgba(60, 100, 162, 0.42);
+
+      /* ── Typography ── */
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+      /* ── Shadows ── */
+      --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      --shadow-elevated: 0 8px 40px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(255, 255, 255, 0.03);
+      --shadow-glow: 0 0 32px rgba(59, 130, 246, 0.1);
+
+      /* ── Easing ── */
       --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     html {
       overflow-x: hidden;
-      scroll-behavior: smooth;
+      scroll-behavior: auto; /* Lenis handles smooth scroll */
     }
 
     body {
@@ -257,12 +278,13 @@
       height: 6px;
       background: var(--accent);
       border-radius: 50%;
-      animation: breathe 2.5s ease-in-out infinite;
+      animation: breathe 2.8s ease-in-out infinite;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
     }
 
     @keyframes breathe {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+      50% { opacity: 0.45; transform: scale(0.82); }
     }
 
     .hero-tag-label {
@@ -276,13 +298,14 @@
 
     .hero-title {
       font-family: var(--sans);
-      font-size: clamp(42px, 5.5vw, 72px);
-      font-weight: 700;
-      line-height: 1.02;
-      letter-spacing: -0.045em;
+      font-size: clamp(44px, 6vw, 80px);
+      font-weight: 800;
+      font-variation-settings: 'wght' 800;
+      line-height: 1.0;
+      letter-spacing: -0.052em;
       color: var(--text-primary);
       margin-bottom: 28px;
-      animation: fadeInUp 0.8s var(--ease-out-expo) 0.35s both;
+      animation: fadeInUp 0.9s var(--ease-cinematic) 0.3s both;
     }
 
     .hero-title .accent-text {
@@ -291,24 +314,25 @@
 
     .hero-desc {
       font-size: 16px;
-      font-weight: 300;
-      line-height: 1.75;
+      font-weight: 340;
+      font-variation-settings: 'wght' 340;
+      line-height: 1.78;
       color: var(--text-secondary);
       max-width: 460px;
       margin-bottom: 44px;
-      animation: fadeInUp 0.8s var(--ease-out-expo) 0.5s both;
+      animation: fadeInUp 0.9s var(--ease-cinematic) 0.48s both;
     }
 
     .hero-actions {
       display: flex;
       align-items: center;
       gap: 16px;
-      animation: fadeInUp 0.8s var(--ease-out-expo) 0.65s both;
+      animation: fadeInUp 0.9s var(--ease-cinematic) 0.62s both;
     }
 
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(28px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .btn-main {
@@ -400,8 +424,8 @@
       gap: 48px;
       margin-top: 72px;
       padding-top: 32px;
-      border-top: 1px solid var(--border-dim);
-      animation: fadeInUp 0.8s var(--ease-out-expo) 0.8s both;
+      border-top: 1px solid rgba(59, 130, 246, 0.1);
+      animation: fadeInUp 0.9s var(--ease-cinematic) 0.78s both;
     }
 
     .metric {
@@ -567,22 +591,24 @@
 
     .section-label {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 500;
-      letter-spacing: 2.5px;
+      letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--accent);
       margin-bottom: 16px;
       display: block;
+      opacity: 0.9;
     }
 
     .section-heading {
       font-family: var(--sans);
-      font-size: clamp(28px, 3.5vw, 44px);
-      font-weight: 600;
+      font-size: clamp(28px, 3.5vw, 46px);
+      font-weight: 700;
+      font-variation-settings: 'wght' 700;
       color: var(--text-primary);
-      letter-spacing: -0.03em;
-      line-height: 1.1;
+      letter-spacing: -0.035em;
+      line-height: 1.08;
       margin-bottom: 16px;
       max-width: 600px;
     }
@@ -2734,6 +2760,230 @@
       .section--tight { padding-top: 48px; padding-bottom: 48px; }
       .platform-module-list { gap: 6px; }
     }
+
+    /* ═══════════════════════════════════════════
+       PREMIUM WEB STACK UPGRADE
+       Variable fonts · Refined palette · Shadow system
+       Premium micro-interactions · Cinematic feel
+       ═══════════════════════════════════════════ */
+
+    /* ── Selection ── */
+    ::selection {
+      background: rgba(59, 130, 246, 0.22);
+      color: var(--text-primary);
+    }
+
+    /* ── Tap highlight ── */
+    a, button { -webkit-tap-highlight-color: transparent; }
+
+    /* ── Focus rings ── */
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid rgba(59, 130, 246, 0.55);
+      outline-offset: 3px;
+      border-radius: 5px;
+    }
+
+    /* ── Premium nav glassmorphism ── */
+    .nav {
+      backdrop-filter: blur(24px) saturate(1.6);
+      -webkit-backdrop-filter: blur(24px) saturate(1.6);
+      border-bottom-color: rgba(255, 255, 255, 0.045);
+      box-shadow: 0 1px 0 rgba(59, 130, 246, 0.07), 0 4px 32px rgba(0, 0, 0, 0.28);
+    }
+
+    /* ── Hero tag glass pill ── */
+    .hero-tag {
+      backdrop-filter: blur(12px);
+      background: rgba(59, 130, 246, 0.065);
+      border-color: rgba(59, 130, 246, 0.16);
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    /* ── Marquee enhancement ── */
+    .marquee-band {
+      background: rgba(2, 9, 24, 0.68);
+      backdrop-filter: blur(14px);
+    }
+
+    /* ── Button upgrades ── */
+    .btn-main {
+      box-shadow: 0 2px 12px rgba(59, 130, 246, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      font-variation-settings: 'wght' 650;
+    }
+    .btn-main:hover {
+      box-shadow: 0 6px 28px rgba(59, 130, 246, 0.35), 0 0 0 1px rgba(59, 130, 246, 0.2);
+    }
+
+    /* ── Variable weight on key text nodes ── */
+    .nav-logo-text { font-variation-settings: 'wght' 650; }
+    .hero-desc { font-variation-settings: 'wght' 340; }
+    .card-heading { font-variation-settings: 'wght' 650; }
+    .feature-heading { font-variation-settings: 'wght' 700; }
+    .module-card-name { font-variation-settings: 'wght' 650; }
+    .experiment-title { font-variation-settings: 'wght' 660; }
+    .post-title { font-variation-settings: 'wght' 660; }
+    .talk-title { font-variation-settings: 'wght' 660; }
+    .challenge-card-title { font-variation-settings: 'wght' 660; }
+
+    /* ── Tabular nums for data/metric surfaces ── */
+    .metric-value,
+    .ts-stat-val,
+    .metric-block-value,
+    .exp-metric-val,
+    .rank-title,
+    .pg-stat-value,
+    .lab-stat-val,
+    .rank-stat-val {
+      font-feature-settings: 'tnum', 'zero';
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── Premium card shadow system ── */
+    .spotlight-card,
+    .panel,
+    .case-block,
+    .experiment-card,
+    .challenge-card,
+    .module-card,
+    .post-card,
+    .talk-card,
+    .investigation-card,
+    .arch-diagram,
+    .terminal-panel {
+      box-shadow: var(--shadow-card);
+    }
+
+    /* ── Richer card hover states ── */
+    .module-card:hover,
+    .challenge-card:hover,
+    .experiment-card:hover,
+    .post-card:hover,
+    .talk-card:hover,
+    .investigation-card:hover {
+      box-shadow: var(--shadow-elevated), var(--shadow-glow);
+    }
+    .case-block:hover {
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 32px rgba(59, 130, 246, 0.07);
+    }
+    .spotlight-card:hover {
+      box-shadow: var(--shadow-elevated), 0 0 40px rgba(59, 130, 246, 0.08);
+    }
+
+    /* ── Toolkit strip shadow ── */
+    .toolkit-strip {
+      box-shadow: var(--shadow-card);
+    }
+
+    /* ── Platform module chip depth ── */
+    .platform-module-chip {
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.28);
+      transition: all 0.28s var(--ease-cinematic);
+    }
+    .platform-module-chip:hover {
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(59, 130, 246, 0.18);
+      transform: translateY(-1px);
+    }
+
+    /* ── Zone strip header refinement ── */
+    .zone-strip-header {
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+
+    /* ── Scroll indicator glass ── */
+    .scroll-pill {
+      border-color: rgba(100, 140, 200, 0.28);
+      backdrop-filter: blur(4px);
+    }
+
+    /* ── Threat canvas panel glass ── */
+    .ts-canvas-wrap {
+      box-shadow: var(--shadow-card), 0 0 0 1px rgba(59, 130, 246, 0.06);
+    }
+
+    /* ── Lab console bar glass ── */
+    .lab-console-bar {
+      backdrop-filter: blur(8px);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    /* ── Rank card depth ── */
+    .rank-card {
+      box-shadow: var(--shadow-elevated);
+    }
+
+    /* ── Dropdown menu depth ── */
+    .nav-dropdown-menu {
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      border-color: rgba(59, 130, 246, 0.1);
+    }
+
+    /* ── Canonical transition speed ── */
+    .module-card,
+    .challenge-card,
+    .experiment-card,
+    .post-card,
+    .talk-card,
+    .investigation-card,
+    .case-block,
+    .spotlight-card {
+      transition: border-color 0.32s var(--ease-cinematic),
+                  transform 0.32s var(--ease-cinematic),
+                  box-shadow 0.32s var(--ease-cinematic);
+    }
+
+    /* ── Hero metrics border with gradient ── */
+    .hero-metrics {
+      border-top-color: rgba(59, 130, 246, 0.1);
+    }
+
+    /* ── Nav rank pill refinement ── */
+    .nav-rank-pill {
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+      font-variation-settings: 'wght' 500;
+    }
+
+    /* ── Ambient BG subtle animation ── */
+    .bg-ambient {
+      will-change: transform;
+    }
+
+    /* ── Cinematic section-zone transitions ── */
+    [data-enter] {
+      transition: opacity 0.9s var(--ease-cinematic), transform 0.9s var(--ease-cinematic);
+    }
+
+    /* ── Hero title accent word highlight ── */
+    .hero-title .accent-text {
+      background: linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Section subtext weight ── */
+    .section-subtext {
+      font-variation-settings: 'wght' 350;
+      line-height: 1.78;
+    }
+
+    /* ── GSAP reveal pre-state (GSAP will animate from these) ── */
+    .gsap-reveal {
+      opacity: 0;
+      transform: translateY(22px);
+    }
+
+    /* ── Smooth all `color` and `background` on interactive ── */
+    .nav-links a, .footer-col a, .challenge-cta, .platform-gateway-link {
+      transition: color 0.25s var(--ease-cinematic),
+                  opacity 0.25s var(--ease-cinematic),
+                  gap 0.2s var(--ease-cinematic);
+    }
+
+    @media (max-width: 768px) {
+      .hero-title { letter-spacing: -0.04em; }
+      .btn-main, .btn-ghost { width: 100%; justify-content: center; }
+    }
   </style>
 </head>
 
@@ -4312,6 +4562,9 @@
        SCRIPTS — Three.js + Scroll Reveals + Text Scramble
        ═══════════════════════════════════════════ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script>
     // ═══ TEXT SCRAMBLE EFFECT ═══
     class TextScramble {
@@ -4374,55 +4627,155 @@
       });
     });
 
-    // ═══ SCROLL REVEAL (Intersection Observer) ═══
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+    // ═══ LENIS SMOOTH SCROLL ═══
+    const lenis = new Lenis({
+      duration: 1.15,
+      easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      wheelMultiplier: 0.88,
+      touchMultiplier: 1.6,
+      infinite: false,
+    });
 
-    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => revealObserver.observe(el));
+    // ═══ GSAP + SCROLLTRIGGER SETUP ═══
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Bridge Lenis → ScrollTrigger so scroll position stays in sync
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(time => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+
+    // ── Cinematic batch reveals — replace IntersectionObserver for .reveal ──
+    ScrollTrigger.batch('.reveal', {
+      interval: 0.08,
+      batchMax: 9,
+      onEnter: batch => batch.forEach((el, i) =>
+        setTimeout(() => el.classList.add('visible'), i * 58)
+      ),
+      start: 'top 91%',
+      once: true,
+    });
+    ScrollTrigger.batch('.reveal-left', {
+      interval: 0.08,
+      batchMax: 6,
+      onEnter: batch => batch.forEach((el, i) =>
+        setTimeout(() => el.classList.add('visible'), i * 58)
+      ),
+      start: 'top 91%',
+      once: true,
+    });
+    ScrollTrigger.batch('.reveal-right', {
+      interval: 0.08,
+      batchMax: 6,
+      onEnter: batch => batch.forEach((el, i) =>
+        setTimeout(() => el.classList.add('visible'), i * 58)
+      ),
+      start: 'top 91%',
+      once: true,
+    });
+    ScrollTrigger.batch('.reveal-scale', {
+      interval: 0.08,
+      batchMax: 6,
+      onEnter: batch => batch.forEach((el, i) =>
+        setTimeout(() => el.classList.add('visible'), i * 52)
+      ),
+      start: 'top 91%',
+      once: true,
+    });
+
+    // ── Ambient background subtle parallax ──
+    gsap.to('.bg-ambient', {
+      scrollTrigger: {
+        trigger: 'body',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1.5,
+      },
+      y: '6%',
+      ease: 'none',
+    });
+
+    // ── Zone strip headers slide in from top ──
+    document.querySelectorAll('.zone-strip-header').forEach(el => {
+      gsap.fromTo(el,
+        { opacity: 0, y: -8 },
+        {
+          opacity: 1, y: 0, duration: 0.7, ease: 'expo.out',
+          scrollTrigger: { trigger: el, start: 'top 96%', once: true },
+        }
+      );
+    });
+
+    // ── Section header choreography — label → heading → subtext ──
+    document.querySelectorAll('.section').forEach(section => {
+      const label = section.querySelector('.section-label.reveal');
+      const heading = section.querySelector('.section-heading.reveal');
+      const subtext = section.querySelector('.section-subtext.reveal');
+
+      // These are handled by ScrollTrigger.batch above, but we stagger them
+      // relative to each other using the CSS delay system (already in place)
+      // GSAP adds an additional cinematic entrance per section
+      if (heading) {
+        gsap.fromTo(heading, { letterSpacing: '-0.055em' }, {
+          letterSpacing: '-0.035em',
+          duration: 1.4,
+          ease: 'expo.out',
+          scrollTrigger: { trigger: heading, start: 'top 90%', once: true },
+        });
+      }
+    });
+
+    // ═══ SCROLL REVEAL — handled by GSAP ScrollTrigger.batch above ═══
+    // Fallback for any elements added after GSAP init
+    if (!window.ScrollTrigger) {
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+      }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+      document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => revealObserver.observe(el));
+    }
 
     // ═══ NAV SCROLL EFFECT ═══
-    let lastScroll = 0;
     const nav = document.getElementById('main-nav');
     const webglCanvas = document.getElementById('webgl-canvas');
-    window.addEventListener('scroll', () => {
-      const scrollY = window.scrollY;
+
+    lenis.on('scroll', ({ scroll }) => {
+      const scrollY = scroll;
       const vhUnit = window.innerHeight;
 
-      if (scrollY > 100) {
-        nav.style.background = 'rgba(2, 11, 24, 0.88)';
-        nav.style.borderBottomColor = 'rgba(37, 99, 235, 0.18)';
+      if (scrollY > 80) {
+        nav.classList.add('scrolled');
+        nav.style.background = 'rgba(2, 9, 24, 0.92)';
+        nav.style.borderBottomColor = 'rgba(255, 255, 255, 0.042)';
+        nav.style.boxShadow = '0 1px 0 rgba(59,130,246,0.07), 0 4px 32px rgba(0,0,0,0.4)';
       } else {
-        nav.style.background = 'rgba(2, 11, 24, 0.6)';
-        nav.style.borderBottomColor = 'rgba(37, 99, 235, 0.12)';
+        nav.classList.remove('scrolled');
+        nav.style.background = 'rgba(2, 9, 24, 0.6)';
+        nav.style.borderBottomColor = 'rgba(255, 255, 255, 0.04)';
+        nav.style.boxShadow = '0 1px 0 rgba(59,130,246,0.06), 0 4px 24px rgba(0,0,0,0.25)';
       }
 
-      // Fade out WebGL hero canvas past 80% of the viewport height
+      // Fade hero sphere — cinematic with GSAP ease feel (manual lerp)
       if (webglCanvas) {
-        const fadeStart = vhUnit * 0.5;
-        const fadeEnd = vhUnit * 1.2;
+        const fadeStart = vhUnit * 0.45;
+        const fadeEnd = vhUnit * 1.15;
         if (scrollY <= fadeStart) {
           webglCanvas.style.opacity = '1';
         } else if (scrollY >= fadeEnd) {
           webglCanvas.style.opacity = '0';
         } else {
           const t = (scrollY - fadeStart) / (fadeEnd - fadeStart);
-          webglCanvas.style.opacity = String(1 - t);
+          // Ease out — smooth fade
+          webglCanvas.style.opacity = String(1 - (t * t));
         }
       }
 
       // Hide scroll indicator
       const indicator = document.querySelector('.scroll-indicator');
       if (indicator) {
-        indicator.style.opacity = scrollY > 200 ? '0' : '0.25';
-        indicator.style.pointerEvents = scrollY > 200 ? 'none' : 'auto';
+        indicator.style.opacity = scrollY > 180 ? '0' : '0.25';
+        indicator.style.pointerEvents = scrollY > 180 ? 'none' : 'auto';
       }
-      lastScroll = scrollY;
-    }, { passive: true });
+    });
 
     // ═══ SPOTLIGHT CARD BORDER EFFECT ═══
     document.querySelectorAll('.spotlight-card').forEach(card => {
@@ -4456,7 +4809,7 @@
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
       // Sphere particle system
-      const particleCount = 4000;
+      const particleCount = 5200;
       const geometry = new THREE.BufferGeometry();
       const positions = new Float32Array(particleCount * 3);
       const scales = new Float32Array(particleCount);
@@ -4493,18 +4846,30 @@
       geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
 
       const material = new THREE.PointsMaterial({
-        color: new THREE.Color('#3b82f6'),
-        size: 0.018,
+        color: new THREE.Color('#60a5fa'),
+        size: 0.016,
         transparent: true,
-        opacity: 0.75,
+        opacity: 0.7,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
-        sizeAttenuation: true
+        sizeAttenuation: true,
       });
 
       const sphere = new THREE.Points(geometry, material);
       sphere.position.set(2.0, 0, 0);
       scene.add(sphere);
+
+      // ── Core glow halo — depth behind sphere ──
+      const haloGeo = new THREE.SphereGeometry(1.05, 32, 32);
+      const haloMat = new THREE.MeshBasicMaterial({
+        color: new THREE.Color('#1d4ed8'),
+        transparent: true,
+        opacity: 0.04,
+        side: THREE.BackSide,
+      });
+      const halo = new THREE.Mesh(haloGeo, haloMat);
+      halo.position.set(2.0, 0, 0);
+      scene.add(halo);
 
       // Background floating particles
       const bgCount = 800;
@@ -4531,6 +4896,27 @@
 
       const bgParticles = new THREE.Points(bgGeometry, bgMaterial);
       scene.add(bgParticles);
+
+      // ── ORBITAL RINGS — cinematic signature ──
+      const rings = [];
+      const ringConfigs = [
+        { radius: 1.9, tube: 0.005, opacity: 0.2, tilt: { x: Math.PI / 2, y: 0, z: 0 }, speed: 0.0012 },
+        { radius: 1.62, tube: 0.003, opacity: 0.13, tilt: { x: 1.1, y: 0.35, z: 0.65 }, speed: -0.0019 },
+        { radius: 2.15, tube: 0.002, opacity: 0.08, tilt: { x: 0.3, y: 0, z: 1.2 }, speed: 0.0008 },
+      ];
+      ringConfigs.forEach(cfg => {
+        const geo = new THREE.TorusGeometry(cfg.radius, cfg.tube, 3, 140);
+        const mat = new THREE.MeshBasicMaterial({
+          color: new THREE.Color('#3b82f6'),
+          transparent: true,
+          opacity: cfg.opacity,
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(2.0, 0, 0);
+        mesh.rotation.set(cfg.tilt.x, cfg.tilt.y, cfg.tilt.z);
+        scene.add(mesh);
+        rings.push({ mesh, speed: cfg.speed, axis: 'z' });
+      });
 
       // Mouse tracking
       let mouseX = 0, mouseY = 0;
@@ -4577,6 +4963,12 @@
         bgGeometry.attributes.position.needsUpdate = true;
 
         bgParticles.rotation.y = time * 0.02;
+
+        // Orbital ring rotation
+        rings.forEach(r => {
+          r.mesh.rotation.y += r.speed;
+          r.mesh.rotation.x += r.speed * 0.4;
+        });
 
         renderer.render(scene, camera);
       }
@@ -4633,7 +5025,7 @@
 
       const nodeGeo = new THREE.BufferGeometry();
       nodeGeo.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
-      const nodeMat = new THREE.PointsMaterial({ color: new THREE.Color('#3b82f6'), size: 0.12, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const nodeMat = new THREE.PointsMaterial({ color: new THREE.Color('#60a5fa'), size: 0.11, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const nodePoints = new THREE.Points(nodeGeo, nodeMat);
       scene.add(nodePoints);
 
@@ -4650,7 +5042,7 @@
       const linePositions = new Float32Array(connections.length * 6);
       const lineGeo = new THREE.BufferGeometry();
       lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
-      const lineMat = new THREE.LineBasicMaterial({ color: new THREE.Color('#3b82f6'), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const lineMat = new THREE.LineBasicMaterial({ color: new THREE.Color('#3b82f6'), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, linewidth: 1 });
       const lineSegments = new THREE.LineSegments(lineGeo, lineMat);
       scene.add(lineSegments);
 
@@ -4660,7 +5052,7 @@
       const flowPhases = new Float32Array(flowCount).map(() => Math.random());
       const flowGeo = new THREE.BufferGeometry();
       flowGeo.setAttribute('position', new THREE.BufferAttribute(flowPositions, 3));
-      const flowMat = new THREE.PointsMaterial({ color: new THREE.Color('#93c5fd'), size: 0.038, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const flowMat = new THREE.PointsMaterial({ color: new THREE.Color('#bfdbfe'), size: 0.034, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const flowPoints = new THREE.Points(flowGeo, flowMat);
       scene.add(flowPoints);
 
@@ -4873,6 +5265,56 @@
       }, { threshold: 0.04, rootMargin: '0px 0px -24px 0px' });
       enterEls.forEach(el => obs.observe(el));
     })();
+
+    // ═══ PREMIUM MICRO-INTERACTIONS ═══
+
+    // Magnetic button effect — subtle pull toward cursor
+    document.querySelectorAll('.btn-main, .btn-ghost, .nav-cta-btn').forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const rect = btn.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = (e.clientX - cx) / rect.width;
+        const dy = (e.clientY - cy) / rect.height;
+        btn.style.transform = `translate(${dx * 4}px, ${dy * 3 - 2}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+    });
+
+    // Card micro-lift — module cards subtle tilt on hover
+    document.querySelectorAll('.module-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const dx = ((e.clientX - rect.left) / rect.width - 0.5) * 6;
+        const dy = ((e.clientY - rect.top) / rect.height - 0.5) * 4;
+        card.style.transform = `translateY(-3px) rotateX(${-dy}deg) rotateY(${dx}deg)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+        card.style.transition = 'transform 0.6s var(--ease-cinematic), border-color 0.32s var(--ease-cinematic), box-shadow 0.32s var(--ease-cinematic)';
+      });
+      card.addEventListener('mouseenter', () => {
+        card.style.transition = 'transform 0.1s linear, border-color 0.32s var(--ease-cinematic), box-shadow 0.32s var(--ease-cinematic)';
+      });
+    });
+
+    // Live dots pulse — stagger start time so they don't all beat in sync
+    document.querySelectorAll('.live-dot, .rank-dot').forEach((dot, i) => {
+      dot.style.animationDelay = `${(i * 0.37) % 2.5}s`;
+    });
+
+    // Nav anchor smooth scroll — Lenis handles it
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', e => {
+        const target = document.querySelector(anchor.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          lenis.scrollTo(target, { offset: -80, duration: 1.4, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        }
+      });
+    });
   </script>
 
 </body>
