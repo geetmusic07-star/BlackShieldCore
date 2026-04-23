@@ -2984,6 +2984,67 @@
       .hero-title { letter-spacing: -0.04em; }
       .btn-main, .btn-ghost { width: 100%; justify-content: center; }
     }
+
+    /* ══ SECTION VISUAL ANCHORS ══ */
+    .section-vis-strip {
+      position: relative;
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      background: rgba(5, 15, 30, 0.6);
+      border: 1px solid var(--border-dim);
+      margin-bottom: 24px;
+    }
+    .section-vis-strip canvas {
+      display: block;
+      width: 100%;
+    }
+    .section-vis-label {
+      position: absolute;
+      bottom: 8px;
+      left: 12px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    .section-vis-status {
+      position: absolute;
+      bottom: 8px;
+      right: 12px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.06em;
+      color: var(--text-tertiary);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .section-vis-status::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: live-pulse 2s ease-in-out infinite;
+    }
+    /* Radar specific — centered in strip */
+    .radar-vis-inner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 0 8px;
+    }
+    #radar-canvas { display: block; }
+    /* Strip connectors — attach to adjacent elements */
+    .section-vis-strip.strip-top {
+      margin-bottom: 0;
+      border-radius: 8px 8px 0 0;
+      border-bottom: none;
+    }
   </style>
 </head>
 
@@ -3347,6 +3408,14 @@
       network anomalies, and autonomous response actions.
     </p>
 
+    <div class="section-vis-strip reveal" style="max-width:200px;margin:0 auto 24px;">
+      <div class="radar-vis-inner">
+        <canvas id="radar-canvas" width="160" height="160"></canvas>
+      </div>
+      <span class="section-vis-label">Signal Sweep</span>
+      <span class="section-vis-status">SCANNING</span>
+    </div>
+
     <div class="bento stagger-children">
       <!-- Wide threat feed -->
       <div class="panel bento-wide reveal-scale">
@@ -3530,6 +3599,12 @@
         <div class="pg-stat-value" data-scramble="4,200">4,200</div>
         <div class="pg-stat-label">BSC Points Available</div>
       </div>
+    </div>
+
+    <div class="section-vis-strip strip-top reveal">
+      <canvas id="attack-path-canvas" height="88"></canvas>
+      <span class="section-vis-label">Attack Path Simulator</span>
+      <span class="section-vis-status">LIVE</span>
     </div>
 
     <div class="lab-console-bar reveal">
@@ -3726,6 +3801,12 @@
       Post-mortem analysis on real incidents. Root cause, exploitation path, remediation — documented with precision.
     </p>
 
+    <div class="section-vis-strip reveal" style="margin-bottom:28px;">
+      <canvas id="forensic-canvas" height="64"></canvas>
+      <span class="section-vis-label">Forensic Timeline</span>
+      <span class="section-vis-status">EVIDENCE SCAN</span>
+    </div>
+
     <div class="reveal">
       <div class="case-block">
         <div class="case-left">
@@ -3788,6 +3869,12 @@
       Eight custom utilities for rapid assessment, cryptanalysis, and payload generation.
       Each tool purpose-built for offensive security workflows.
     </p>
+
+    <div class="section-vis-strip strip-top reveal">
+      <canvas id="entropy-canvas" height="56"></canvas>
+      <span class="section-vis-label">Entropy Analysis</span>
+      <span class="section-vis-status">8 STREAMS</span>
+    </div>
 
     <div class="toolkit-strip reveal">
       <div class="toolkit-strip-header">
@@ -3860,6 +3947,12 @@
       behavior analysis, anomaly detection, and automated threat classifiers —
       all demonstrating real attack surfaces, not theoretical risks.
     </p>
+
+    <div class="section-vis-strip strip-top reveal">
+      <canvas id="inference-canvas" height="80"></canvas>
+      <span class="section-vis-label">Inference Graph</span>
+      <span class="section-vis-status">4 MODELS ACTIVE</span>
+    </div>
 
     <div class="lab-console-bar reveal" style="margin-bottom:0;">
       <div class="lab-tabs">
@@ -5315,6 +5408,381 @@
         }
       });
     });
+
+    // ═══════════════════════════════════════════════════
+    // SECTION VISUAL ANCHORS — distinct per-section identity
+    // ═══════════════════════════════════════════════════
+    (function initSectionVisuals() {
+
+      // ── 1. RADAR SWEEP — Intelligence / Threat surface ──
+      const radarCanvas = document.getElementById('radar-canvas');
+      if (radarCanvas) {
+        const ctx = radarCanvas.getContext('2d');
+        const W = radarCanvas.width, H = radarCanvas.height;
+        const cx = W / 2, cy = H / 2, R = Math.min(W, H) * 0.42;
+        let sweep = 0;
+        const blips = Array.from({length: 11}, () => ({
+          a: Math.random() * Math.PI * 2,
+          r: R * (0.22 + Math.random() * 0.72),
+          sz: 1.5 + Math.random() * 1.5,
+        }));
+        function drawRadar() {
+          ctx.clearRect(0, 0, W, H);
+          for (let i = 1; i <= 4; i++) {
+            ctx.beginPath();
+            ctx.arc(cx, cy, R * i / 4, 0, Math.PI * 2);
+            ctx.strokeStyle = `rgba(59,130,246,${0.07 + i * 0.02})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+          ctx.beginPath();
+          ctx.moveTo(cx - R - 4, cy); ctx.lineTo(cx + R + 4, cy);
+          ctx.moveTo(cx, cy - R - 4); ctx.lineTo(cx, cy + R + 4);
+          ctx.strokeStyle = 'rgba(59,130,246,0.05)';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+          // Sweep wedge
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          ctx.arc(cx, cy, R, sweep - 1.5, sweep);
+          ctx.closePath();
+          ctx.clip();
+          const g = ctx.createLinearGradient(cx, cy, cx + Math.cos(sweep) * R, cy + Math.sin(sweep) * R);
+          g.addColorStop(0, 'rgba(59,130,246,0)');
+          g.addColorStop(0.7, 'rgba(59,130,246,0.04)');
+          g.addColorStop(1, 'rgba(59,130,246,0.15)');
+          ctx.fillStyle = g;
+          ctx.fillRect(0, 0, W, H);
+          ctx.restore();
+          // Sweep line
+          const lg = ctx.createLinearGradient(cx, cy, cx + Math.cos(sweep) * R, cy + Math.sin(sweep) * R);
+          lg.addColorStop(0, 'rgba(59,130,246,0)');
+          lg.addColorStop(1, 'rgba(59,130,246,0.85)');
+          ctx.beginPath();
+          ctx.moveTo(cx, cy);
+          ctx.lineTo(cx + Math.cos(sweep) * R, cy + Math.sin(sweep) * R);
+          ctx.strokeStyle = lg;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          // Blips
+          blips.forEach(b => {
+            let d = ((sweep - b.a) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+            const fade = Math.max(0, 1 - d / (Math.PI * 1.6));
+            if (fade > 0.03) {
+              const bx = cx + Math.cos(b.a) * b.r, by = cy + Math.sin(b.a) * b.r;
+              if (fade > 0.4) {
+                ctx.beginPath();
+                ctx.arc(bx, by, b.sz * 2.8, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(59,130,246,${fade * 0.11})`;
+                ctx.fill();
+              }
+              ctx.beginPath();
+              ctx.arc(bx, by, b.sz, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(96,165,250,${fade * 0.9})`;
+              ctx.fill();
+            }
+          });
+          ctx.beginPath();
+          ctx.arc(cx, cy, 2, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(59,130,246,0.7)';
+          ctx.fill();
+          sweep += 0.016;
+          if (sweep > Math.PI * 2) sweep -= Math.PI * 2;
+          requestAnimationFrame(drawRadar);
+        }
+        drawRadar();
+      }
+
+      // ── 2. ATTACK PATH FLOW — Playground section ──────
+      const attackCanvas = document.getElementById('attack-path-canvas');
+      if (attackCanvas) {
+        attackCanvas.width = attackCanvas.parentElement.offsetWidth || 900;
+        attackCanvas.height = 88;
+        const ctx = attackCanvas.getContext('2d');
+        const W = attackCanvas.width, H = attackCanvas.height;
+        const nodes = [
+          { rx: 0.06, ry: 0.5,  label: 'EXT',  type: 'neutral' },
+          { rx: 0.21, ry: 0.28, label: 'FW',   type: 'neutral' },
+          { rx: 0.21, ry: 0.72, label: 'DMZ',  type: 'warn'    },
+          { rx: 0.41, ry: 0.5,  label: 'SVC',  type: 'breach'  },
+          { rx: 0.60, ry: 0.28, label: 'DB',   type: 'breach'  },
+          { rx: 0.60, ry: 0.72, label: 'API',  type: 'neutral' },
+          { rx: 0.78, ry: 0.5,  label: 'INT',  type: 'safe'    },
+          { rx: 0.93, ry: 0.5,  label: 'ROOT', type: 'breach'  },
+        ];
+        const edges = [
+          { f: 0, t: 1, atk: false }, { f: 0, t: 2, atk: true  },
+          { f: 1, t: 3, atk: false }, { f: 2, t: 3, atk: true  },
+          { f: 3, t: 4, atk: true  }, { f: 3, t: 5, atk: false },
+          { f: 4, t: 6, atk: false }, { f: 5, t: 6, atk: false },
+          { f: 6, t: 7, atk: true  },
+        ];
+        const tc = { neutral: '#3b82f6', warn: '#f59e0b', breach: '#f43f5e', safe: '#22c55e' };
+        const gp = n => ({ x: n.rx * W, y: n.ry * H });
+        let packets = [], lastSpawn = 0;
+        function drawAttack(ts) {
+          ctx.clearRect(0, 0, W, H);
+          edges.forEach(e => {
+            const a = gp(nodes[e.f]), b = gp(nodes[e.t]);
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.setLineDash(e.atk ? [5, 4] : []);
+            ctx.strokeStyle = e.atk ? 'rgba(244,63,94,0.28)' : 'rgba(59,130,246,0.16)';
+            ctx.lineWidth = e.atk ? 1 : 0.7;
+            ctx.stroke();
+          });
+          ctx.setLineDash([]);
+          nodes.forEach(n => {
+            const p = gp(n), c = tc[n.type];
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+            ctx.fillStyle = c + '25';
+            ctx.fill();
+            ctx.strokeStyle = c + '88';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+            ctx.fillStyle = c + 'cc';
+            ctx.fill();
+            ctx.font = '7px "JetBrains Mono", monospace';
+            ctx.fillStyle = c + 'aa';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.fillText(n.label, p.x, p.y + 11);
+          });
+          if (!lastSpawn || ts - lastSpawn > 380 + Math.random() * 320) {
+            const ae = edges.filter(e => e.atk);
+            packets.push({ edge: ae[Math.floor(Math.random() * ae.length)], prog: 0 });
+            lastSpawn = ts;
+          }
+          packets = packets.filter(p => p.prog < 1.05);
+          packets.forEach(p => {
+            p.prog += 0.013;
+            const pr = Math.min(p.prog, 1);
+            const a = gp(nodes[p.edge.f]), b = gp(nodes[p.edge.t]);
+            const px = a.x + (b.x - a.x) * pr, py = a.y + (b.y - a.y) * pr;
+            const tp = Math.max(0, pr - 0.11);
+            ctx.beginPath();
+            ctx.moveTo(a.x + (b.x - a.x) * tp, a.y + (b.y - a.y) * tp);
+            ctx.lineTo(px, py);
+            ctx.strokeStyle = 'rgba(244,63,94,0.38)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(px, py, 2.8, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(244,63,94,0.9)';
+            ctx.fill();
+          });
+          requestAnimationFrame(drawAttack);
+        }
+        requestAnimationFrame(drawAttack);
+      }
+
+      // ── 3. INFERENCE LATTICE — AI Lab section ─────────
+      const inferCanvas = document.getElementById('inference-canvas');
+      if (inferCanvas) {
+        inferCanvas.width = inferCanvas.parentElement.offsetWidth || 900;
+        inferCanvas.height = 80;
+        const ctx = inferCanvas.getContext('2d');
+        const W = inferCanvas.width, H = inferCanvas.height;
+        const layerDefs = [
+          { count: 3, rx: 0.09 },
+          { count: 5, rx: 0.33 },
+          { count: 5, rx: 0.60 },
+          { count: 3, rx: 0.88 },
+        ];
+        const layers = layerDefs.map(l => {
+          const step = H / (l.count + 1);
+          return Array.from({length: l.count}, (_, i) => ({ x: l.rx * W, y: step * (i + 1) }));
+        });
+        let particles = [], nextSpawn = 0, tick = 0;
+        function drawInfer() {
+          ctx.clearRect(0, 0, W, H);
+          for (let li = 0; li < layers.length - 1; li++) {
+            layers[li].forEach(a => {
+              layers[li + 1].forEach(b => {
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.lineTo(b.x, b.y);
+                ctx.strokeStyle = 'rgba(59,130,246,0.06)';
+                ctx.lineWidth = 0.4;
+                ctx.stroke();
+              });
+            });
+          }
+          layers.forEach((layer, li) => {
+            const isOut = li === layers.length - 1, isIn = li === 0;
+            layer.forEach(n => {
+              ctx.beginPath();
+              ctx.arc(n.x, n.y, 4.5, 0, Math.PI * 2);
+              ctx.fillStyle = isOut ? 'rgba(34,197,94,0.22)' : isIn ? 'rgba(59,130,246,0.32)' : 'rgba(59,130,246,0.13)';
+              ctx.fill();
+              ctx.strokeStyle = isOut ? 'rgba(34,197,94,0.5)' : 'rgba(59,130,246,0.42)';
+              ctx.lineWidth = 0.7;
+              ctx.stroke();
+            });
+          });
+          tick++;
+          if (tick >= nextSpawn) {
+            const si = Math.floor(Math.random() * layers[0].length);
+            layers[1].forEach((_, di) => {
+              particles.push({ li: 0, si, di, prog: 0, spd: 0.019 + Math.random() * 0.009 });
+            });
+            nextSpawn = tick + 38 + Math.floor(Math.random() * 38);
+          }
+          const next = [];
+          particles.forEach(p => {
+            p.prog += p.spd;
+            if (p.prog >= 1) {
+              if (p.li < layers.length - 2 && Math.random() < 0.55) {
+                next.push({ li: p.li + 1, si: p.di, di: Math.floor(Math.random() * layers[p.li + 2].length), prog: 0, spd: p.spd });
+              }
+              return;
+            }
+            next.push(p);
+            const src = layers[p.li][p.si], dst = layers[p.li + 1][p.di];
+            if (!src || !dst) return;
+            const px = src.x + (dst.x - src.x) * p.prog, py = src.y + (dst.y - src.y) * p.prog;
+            ctx.beginPath();
+            ctx.arc(px, py, 1.9, 0, Math.PI * 2);
+            ctx.fillStyle = p.li === layers.length - 2 ? `rgba(34,197,94,${0.8 - Math.abs(p.prog - 0.5) * 0.4})` : `rgba(96,165,250,${0.8 - Math.abs(p.prog - 0.5) * 0.4})`;
+            ctx.fill();
+            if (p.prog > 0.82) {
+              const glow = (p.prog - 0.82) / 0.18;
+              ctx.beginPath();
+              ctx.arc(dst.x, dst.y, 4.5 + glow * 5, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(59,130,246,${glow * 0.18})`;
+              ctx.fill();
+            }
+          });
+          particles = next;
+          requestAnimationFrame(drawInfer);
+        }
+        drawInfer();
+      }
+
+      // ── 4. FORENSIC TIMELINE — Case Studies section ───
+      const forensicCanvas = document.getElementById('forensic-canvas');
+      if (forensicCanvas) {
+        forensicCanvas.width = forensicCanvas.parentElement.offsetWidth || 900;
+        forensicCanvas.height = 64;
+        const ctx = forensicCanvas.getContext('2d');
+        const W = forensicCanvas.width, H = forensicCanvas.height;
+        const evts = [
+          { rx: 0.06, lbl: 'Recon',   col: '#3b82f6' },
+          { rx: 0.18, lbl: 'Init',    col: '#60a5fa' },
+          { rx: 0.31, lbl: 'Exploit', col: '#f59e0b' },
+          { rx: 0.44, lbl: 'Priv-Esc',col: '#f59e0b' },
+          { rx: 0.57, lbl: 'Exfil',   col: '#f43f5e' },
+          { rx: 0.71, lbl: 'C2',      col: '#f43f5e' },
+          { rx: 0.84, lbl: 'Patch',   col: '#22c55e' },
+          { rx: 0.94, lbl: 'Clear',   col: '#22c55e' },
+        ];
+        const lineY = H * 0.6;
+        let scanX = 0;
+        function drawForensic() {
+          ctx.clearRect(0, 0, W, H);
+          const tg = ctx.createLinearGradient(0, 0, W, 0);
+          tg.addColorStop(0, 'rgba(59,130,246,0)');
+          tg.addColorStop(0.08, 'rgba(59,130,246,0.18)');
+          tg.addColorStop(0.92, 'rgba(59,130,246,0.18)');
+          tg.addColorStop(1, 'rgba(59,130,246,0)');
+          ctx.beginPath();
+          ctx.moveTo(0, lineY);
+          ctx.lineTo(W, lineY);
+          ctx.strokeStyle = tg;
+          ctx.lineWidth = 0.7;
+          ctx.stroke();
+          evts.forEach(e => {
+            const x = e.rx * W;
+            ctx.beginPath();
+            ctx.moveTo(x, lineY - 14);
+            ctx.lineTo(x, lineY + 5);
+            ctx.strokeStyle = e.col + '44';
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(x, lineY, 3, 0, Math.PI * 2);
+            ctx.fillStyle = e.col + 'bb';
+            ctx.fill();
+            ctx.font = '8px "JetBrains Mono", monospace';
+            ctx.fillStyle = e.col + '80';
+            ctx.textAlign = 'center';
+            ctx.fillText(e.lbl, x, lineY - 20);
+          });
+          const sg = ctx.createLinearGradient(scanX - 28, 0, scanX + 3, 0);
+          sg.addColorStop(0, 'rgba(59,130,246,0)');
+          sg.addColorStop(1, 'rgba(59,130,246,0.07)');
+          ctx.fillStyle = sg;
+          ctx.fillRect(scanX - 28, 0, 31, H);
+          ctx.beginPath();
+          ctx.moveTo(scanX, 0);
+          ctx.lineTo(scanX, H);
+          ctx.strokeStyle = 'rgba(59,130,246,0.28)';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+          scanX += 0.85;
+          if (scanX > W + 10) scanX = -10;
+          requestAnimationFrame(drawForensic);
+        }
+        drawForensic();
+      }
+
+      // ── 5. ENTROPY WAVEFORM — Toolkit section ─────────
+      const entropyCanvas = document.getElementById('entropy-canvas');
+      if (entropyCanvas) {
+        entropyCanvas.width = entropyCanvas.parentElement.offsetWidth || 900;
+        entropyCanvas.height = 56;
+        const ctx = entropyCanvas.getContext('2d');
+        const W = entropyCanvas.width, H = entropyCanvas.height;
+        const wv = [
+          { f: 0.022, amp: 0.26, sp: 0.7,  ph: 0,   col: 'rgba(59,130,246,0.45)' },
+          { f: 0.038, amp: 0.16, sp: 1.1,  ph: 1.2, col: 'rgba(96,165,250,0.28)' },
+          { f: 0.014, amp: 0.22, sp: 0.45, ph: 0.5, col: 'rgba(147,197,253,0.17)' },
+        ];
+        let t = 0;
+        function drawEntropy() {
+          ctx.clearRect(0, 0, W, H);
+          ctx.beginPath();
+          ctx.moveTo(0, H / 2); ctx.lineTo(W, H / 2);
+          ctx.strokeStyle = 'rgba(59,130,246,0.05)';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+          wv.forEach(w => {
+            ctx.beginPath();
+            for (let x = 0; x <= W; x += 2) {
+              const v = Math.sin(x * w.f + t * w.sp + w.ph)
+                      * Math.sin(x * w.f * 1.8 + t * w.sp * 0.6)
+                      * (0.7 + 0.3 * Math.sin(x * 0.008 + t * 0.3));
+              const y = H / 2 + v * H * w.amp;
+              x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = w.col;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          });
+          // Token parsing dots flowing along primary wave
+          for (let i = 0; i < 6; i++) {
+            const dx = ((t * 55 * wv[0].sp + i * (W / 6)) % W + W) % W;
+            const dv = Math.sin(dx * wv[0].f + t * wv[0].sp)
+                     * Math.sin(dx * wv[0].f * 1.8 + t * wv[0].sp * 0.6)
+                     * (0.7 + 0.3 * Math.sin(dx * 0.008 + t * 0.3));
+            const dy = H / 2 + dv * H * wv[0].amp;
+            ctx.beginPath();
+            ctx.arc(dx, dy, 1.8, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(147,197,253,0.65)';
+            ctx.fill();
+          }
+          t += 0.007;
+          requestAnimationFrame(drawEntropy);
+        }
+        drawEntropy();
+      }
+
+    })(); // end initSectionVisuals
   </script>
 
 </body>
