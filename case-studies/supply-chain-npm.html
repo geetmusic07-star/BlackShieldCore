@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supply Chain Compromise via npm Dependency Confusion — Case Study</title>
+  <meta name="description" content="Anonymized case study: internal package naming collision with public registry led to RCE in production CI. Timeline, findings, and takeaways.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    .article-wrap { max-width: 900px; margin: 0 auto; padding: 140px 24px 80px; position: relative; z-index: 10; }
+    .breadcrumb { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); margin-bottom: 40px; }
+    .breadcrumb a { color: var(--text-tertiary); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb-sep { opacity: 0.4; }
+
+    .cs-header { margin-bottom: 40px; }
+    .cs-type-row { display: flex; gap: 8px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+    .cs-type-pill { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; padding: 4px 10px; border: 1px solid; border-radius: 999px; text-transform: uppercase; }
+    .cs-type-pill.red { color: #ef4444; border-color: rgba(239,68,68,0.4); background: rgba(239,68,68,0.08); }
+    .cs-tag { font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); letter-spacing: 0.3px; padding: 4px 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-dim); border-radius: 4px; }
+
+    .cs-title { font-size: clamp(28px, 4vw, 42px); font-weight: 800; letter-spacing: -0.04em; line-height: 1.08; color: var(--text-primary); margin-bottom: 20px; }
+    .cs-sector { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 1px; margin-bottom: 20px; }
+
+    .cs-meta { display: flex; gap: 20px; padding: 16px 0; border-top: 1px solid var(--border-dim); border-bottom: 1px solid var(--border-dim); font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); flex-wrap: wrap; }
+    .cs-meta-sep { opacity: 0.3; }
+
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 40px 0; }
+    .summary-card { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 12px; padding: 22px 24px; }
+    .summary-card.outcome { border-color: rgba(16,185,129,0.3); background: rgba(16,185,129,0.03); }
+    .summary-label { font-family: var(--mono); font-size: 9px; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+    .summary-label.outcome { color: #10b981; }
+    .summary-body { font-size: 14px; line-height: 1.75; color: var(--text-secondary); }
+    .summary-body strong { color: var(--text-primary); font-weight: 600; }
+
+    .cs-body { font-size: 15px; line-height: 1.82; color: var(--text-secondary); }
+    .cs-body h2 { font-size: 21px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.03em; margin: 48px 0 16px; padding-top: 20px; border-top: 1px solid var(--border-dim); scroll-margin-top: 80px; }
+    .cs-body h3 { font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 28px 0 12px; }
+    .cs-body p { margin: 0 0 18px; }
+    .cs-body strong { color: var(--text-primary); font-weight: 600; }
+    .cs-body code { font-family: var(--mono); font-size: 13px; color: var(--accent); background: var(--accent-dim); padding: 2px 7px; border-radius: 4px; }
+    .cs-body ul { padding-left: 22px; margin: 0 0 18px; }
+    .cs-body li { margin-bottom: 8px; }
+
+    .timeline-block { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 12px; padding: 24px 28px; margin: 24px 0; }
+    .tl-title { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; }
+    .tl-row { display: grid; grid-template-columns: 90px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border-dim); }
+    .tl-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .tl-row:first-of-type { padding-top: 0; }
+    .tl-time { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.5px; }
+    .tl-event { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+
+    .findings-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin: 20px 0; }
+    .finding-card { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 12px; padding: 22px 26px; }
+    .finding-label { font-family: var(--mono); font-size: 9px; color: #ef4444; letter-spacing: 1.5px; margin-bottom: 8px; }
+    .finding-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 10px; letter-spacing: -0.01em; }
+    .finding-body { font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
+
+    .takeaway-block { background: rgba(59,130,246,0.05); border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 24px 28px; margin: 32px 0; }
+    .takeaway-label { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
+    .takeaway-body { font-size: 14px; line-height: 1.75; color: var(--text-secondary); }
+
+    .related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .related-card { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 12px; padding: 20px; text-decoration: none; transition: all 0.3s; }
+    .related-card:hover { border-color: var(--border-subtle); transform: translateY(-2px); }
+    .related-type { font-family: var(--mono); font-size: 9px; color: var(--accent); letter-spacing: 1.5px; margin-bottom: 8px; }
+    .related-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+    .related-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.55; }
+
+    @media (max-width: 700px) {
+      .summary-grid, .related-grid { grid-template-columns: 1fr; }
+      .tl-row { grid-template-columns: 1fr; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain-overlay"></div>
+  <div class="bg-ambient"></div>
+  <div class="bg-grid-lines"></div>
+
+  <nav class="nav" id="main-nav">
+    <a href="/" class="nav-logo"><div class="nav-logo-mark"></div><span class="nav-logo-text">BlackShield Core</span></a>
+    <div class="nav-links">
+      <div class="nav-group"><button class="nav-group-trigger">Platform<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/labs.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/></svg></span><span class="dd-label"><span class="dd-name">Labs</span></span></a>
+          <a href="/tools.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><span class="dd-label"><span class="dd-name">Tools</span></span></a>
+          <a href="/ai-security.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/></svg></span><span class="dd-label"><span class="dd-name">AI Security</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Knowledge<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/blog.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></span><span class="dd-label"><span class="dd-name">Blog</span></span></a>
+          <a href="/research.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/></svg></span><span class="dd-label"><span class="dd-name">Research</span></span></a>
+          <a href="/case-studies.html" style="background:var(--accent-dim);border-radius:8px;"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/></svg></span><span class="dd-label"><span class="dd-name" style="color:var(--accent)">Case Studies</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Community<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/talks.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="dd-label"><span class="dd-name">Talks</span></span></a>
+          <a href="/about.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="dd-label"><span class="dd-name">About</span></span></a>
+        </div>
+      </div>
+      <a href="/" class="nav-cta-btn">Enter Platform</a>
+    </div>
+  </nav>
+
+  <div class="article-wrap">
+    <div class="breadcrumb">
+      <a href="/">Home</a><span class="breadcrumb-sep">/</span>
+      <a href="/case-studies.html">Case Studies</a><span class="breadcrumb-sep">/</span>
+      <span style="color:var(--text-secondary)">Supply Chain &middot; npm</span>
+    </div>
+
+    <div class="cs-header">
+      <div class="cs-type-row">
+        <span class="cs-type-pill red">RED TEAM / IR</span>
+        <span class="cs-tag">#supply-chain</span>
+        <span class="cs-tag">#npm</span>
+        <span class="cs-tag">#ci-cd</span>
+        <span class="cs-tag">#dependency-confusion</span>
+      </div>
+      <div class="cs-sector">FINANCIAL SERVICES &middot; MID-SIZE &middot; ~1,200 ENGINEERS</div>
+      <h1 class="cs-title">Supply Chain Compromise via npm Dependency Confusion</h1>
+      <div class="cs-meta">
+        <span>Case Study</span>
+        <span class="cs-meta-sep">&middot;</span>
+        <span>Engagement: Q1 2025 (anonymized)</span>
+        <span class="cs-meta-sep">&middot;</span>
+        <span>15 min read</span>
+        <span class="cs-meta-sep">&middot;</span>
+        <span>Published Apr 2026</span>
+      </div>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-label">Summary</div>
+        <div class="summary-body">
+          Internal npm scoped package name was never registered on the public npm registry. An
+          attacker (in this case a contracted red team) published a malicious package under the
+          same name and higher version. The build system installed the public one, executing
+          arbitrary code during <code>npm install</code> inside the production CI pipeline.
+        </div>
+      </div>
+      <div class="summary-card outcome">
+        <div class="summary-label outcome">Outcome</div>
+        <div class="summary-body">
+          <strong>Caught at detonation in CI</strong> via an outbound-connection rule to an
+          unexpected domain. No production artifacts were deployed. Remediation completed within
+          72 hours. Systemic root cause (unregistered scope + no lockfile enforcement) addressed
+          across all repos within two weeks.
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-body">
+
+      <h2>Context</h2>
+      <p>
+        The client operated ~280 internal npm packages under a single organizational scope.
+        Packages were hosted on a private Verdaccio registry with a fallback to the public npm
+        registry for external dependencies. This fallback is standard — and is also the structural
+        weakness that dependency confusion exploits.
+      </p>
+      <p>
+        Not all internal scoped packages had been <em>registered</em> on the public npm registry
+        as placeholders. The assumption was that the private registry would always serve internal
+        names first. In practice, the resolution behavior depends on lockfile handling, registry
+        configuration, and npm client version — and in this engagement, the assumption did not
+        hold.
+      </p>
+
+      <h2>Attack path</h2>
+      <p>
+        The engaged red team enumerated the client's public code surface and identified internal
+        package names from leaked <code>package.json</code> files in public Stack Overflow posts,
+        open-source SDK repos, and the client's own npm organization page (which listed every
+        scoped package regardless of registry). From that list they selected a package with:
+      </p>
+      <ul>
+        <li>No public-registry placeholder</li>
+        <li>Active usage across multiple internal repos (inferred from version history)</li>
+        <li>No pinned lockfile entries in at least one CI pipeline they could see in public CI logs</li>
+      </ul>
+      <p>
+        They published a malicious version to public npm at a version number higher than anything
+        the client used internally. The package contained a <code>postinstall</code> hook that
+        attempted a DNS lookup to an attacker-controlled domain, tagged with the build host's
+        identity.
+      </p>
+
+      <div class="timeline-block">
+        <div class="tl-title">Timeline</div>
+        <div class="tl-row"><span class="tl-time">T+0h</span><span class="tl-event">Red team publishes malicious package to public npm registry under scope <code>@client-scope/internal-util</code> at version 9.9.9.</span></div>
+        <div class="tl-row"><span class="tl-time">T+3h</span><span class="tl-event">Scheduled nightly CI run on the main product repo pulls the public version instead of the internal one due to lockfile drift.</span></div>
+        <div class="tl-row"><span class="tl-time">T+3h02m</span><span class="tl-event">Postinstall hook fires. DNS lookup to attacker-controlled domain is logged and flagged by the egress firewall.</span></div>
+        <div class="tl-row"><span class="tl-time">T+3h07m</span><span class="tl-event">On-call engineer receives egress alert. CI job is killed. Image is not pushed.</span></div>
+        <div class="tl-row"><span class="tl-time">T+5h</span><span class="tl-event">Incident response initiated. Red team notifies client. Engagement exits covert phase.</span></div>
+        <div class="tl-row"><span class="tl-time">T+72h</span><span class="tl-event">All ~280 internal scoped names registered as public placeholders. Lockfile enforcement enabled in CI. Build host network posture tightened.</span></div>
+      </div>
+
+      <h2>What went wrong</h2>
+      <div class="findings-grid">
+        <div class="finding-card">
+          <div class="finding-label">FINDING 01</div>
+          <div class="finding-title">Internal scope names were publicly enumerable</div>
+          <div class="finding-body">
+            The organization's npm page listed every scoped package, including ones with no
+            public placeholders. Combined with leaked <code>package.json</code> snippets, this
+            gave an attacker a complete target list without needing any access to the client's
+            infrastructure. <strong>The attacker's intel-gathering phase was trivially shortened.</strong>
+          </div>
+        </div>
+        <div class="finding-card">
+          <div class="finding-label">FINDING 02</div>
+          <div class="finding-title">CI ran <code>npm install</code> without strict lockfile enforcement</div>
+          <div class="finding-body">
+            The nightly build used <code>npm install</code> rather than <code>npm ci</code>, and
+            the registry config was configured to fall through to the public registry on private
+            registry miss. This meant a newer version on the public registry would be selected
+            even when the lockfile had an entry pointing at the private one. <strong>The fallback
+            behavior was the actual vulnerability.</strong>
+          </div>
+        </div>
+      </div>
+
+      <h2>What went right</h2>
+      <p>
+        The only reason this didn't become a production incident is that the egress firewall
+        enforced a <strong>default-deny outbound policy</strong> for build hosts, with explicit
+        allowlists for the public npm registry, the internal registry, and a handful of known
+        external dependencies. The DNS lookup attempt to the attacker's domain was blocked and
+        logged. The alert routed to an on-call rotation that actually responded.
+      </p>
+      <p>
+        Two separate controls were required for the catch: the egress policy existed, <em>and</em>
+        the alerting pipeline on top of it was real. Many organizations have the first and not
+        the second.
+      </p>
+
+      <div class="takeaway-block">
+        <div class="takeaway-label">Takeaway</div>
+        <div class="takeaway-body">
+          Dependency confusion is not a novel vulnerability. It is a well-understood structural
+          flaw that still catches organizations because the mitigations are <em>operational</em>
+          (register placeholder names, enforce lockfiles, restrict egress from build hosts) rather
+          than a single technical fix. The mitigations are also cheap. Organizations that haven't
+          done them usually haven't done them because nobody owns the end-to-end path — not
+          because the work is hard.
+        </div>
+      </div>
+
+      <h2>Recommendations applied</h2>
+      <ul>
+        <li>Register every internal scoped name on the public registry as a placeholder with a stub package</li>
+        <li>Replace <code>npm install</code> with <code>npm ci</code> in all CI pipelines</li>
+        <li>Configure the private registry with strict scope-based routing (no public fallback for the internal scope)</li>
+        <li>Default-deny egress on build hosts with an explicit allowlist of registries</li>
+        <li>Quarterly audit of scoped package registration coverage</li>
+      </ul>
+
+    </div>
+
+    <div style="margin-top:56px;padding-top:32px;border-top:1px solid var(--border-dim);">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:1.5px;margin-bottom:16px;">READ NEXT</div>
+      <div class="related-grid">
+        <a href="/blog.html" class="related-card">
+          <div class="related-type">BLOG</div>
+          <div class="related-title">Supply Chain Primer: npm, pip, and internal registries</div>
+          <div class="related-desc">Structured walkthrough of dependency confusion, typosquatting, and registry poisoning across Node, Python, and internal package systems.</div>
+        </a>
+        <a href="/research.html" class="related-card">
+          <div class="related-type">RESEARCH</div>
+          <div class="related-title">Attack Path Modeling in Segmented Networks</div>
+          <div class="related-desc">Why CI pipelines are effectively tier zero and what that means for where segmentation actually holds.</div>
+        </a>
+        <a href="/labs.html" class="related-card">
+          <div class="related-type">LAB</div>
+          <div class="related-title">Dependency Confusion Lab</div>
+          <div class="related-desc">Hands-on reproduction of the attack path in a controlled lab environment with a local npm registry.</div>
+        </a>
+        <a href="/case-studies.html" class="related-card">
+          <div class="related-type">CASE STUDY</div>
+          <div class="related-title">Ransomware AD Lateral Movement</div>
+          <div class="related-desc">Different attack, same lesson: the mitigations are operational, not technical.</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="module-connections-row" style="margin-top:40px;">
+      <span class="connections-label">Connected to</span>
+      <a href="/case-studies.html" class="connection-link">All Case Studies</a>
+      <a href="/blog.html" class="connection-link">Blog</a>
+      <a href="/labs.html" class="connection-link">Labs</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-ecosystem">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><div class="nav-logo-mark"></div><span class="footer-brand-name">BlackShield Core</span></div>
+        <p class="footer-brand-desc">A cybersecurity and AI experimentation platform.</p>
+      </div>
+      <div class="footer-col"><div class="footer-col-title">Platform</div><a href="/labs.html">Labs</a><a href="/tools.html">Tools</a><a href="/ai-security.html">AI Security</a></div>
+      <div class="footer-col"><div class="footer-col-title">Knowledge</div><a href="/blog.html">Blog</a><a href="/research.html">Research</a><a href="/case-studies.html">Case Studies</a></div>
+      <div class="footer-col"><div class="footer-col-title">Community</div><a href="/talks.html">Talks</a><a href="/about.html">About</a></div>
+    </div>
+    <div class="footer-bottom"><span class="footer-copy">&copy; 2026 BlackShield Core. All rights reserved.</span></div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.nav-group').forEach(group => {
+      group.querySelector('.nav-group-trigger').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = group.classList.contains('open');
+        document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open'));
+        if (!isOpen) group.classList.add('open');
+      });
+    });
+    document.addEventListener('click', () => document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open')));
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => { nav.style.background = window.scrollY > 40 ? 'rgba(2,9,26,0.9)' : 'rgba(2,11,24,0.6)'; }, { passive: true });
+  </script>
+</body>
+</html>

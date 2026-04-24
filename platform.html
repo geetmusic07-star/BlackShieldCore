@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platform — BlackShield Core</title>
+  <meta name="description" content="Platform overview — labs, tools, AI lab, dashboard, and the rest of the BlackShield Core surface area.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .page-header { padding: 140px 48px 48px; max-width: 1280px; margin: 0 auto; position: relative; z-index: 10; }
+    .page-header-label { font-family: var(--mono); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .page-header-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+    .page-header-title { font-size: clamp(36px, 5vw, 64px); font-weight: 800; letter-spacing: -0.05em; line-height: 1.0; color: var(--text-primary); margin-bottom: 20px; }
+    .page-header-desc { font-size: 16px; line-height: 1.75; color: var(--text-secondary); max-width: 620px; }
+    .breadcrumb { max-width: 1280px; margin: 0 auto; padding: 88px 48px 0; display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); }
+    .breadcrumb a { color: var(--text-tertiary); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .main-content { max-width: 1280px; margin: 0 auto; padding: 0 48px 80px; }
+
+    .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 40px; }
+    .stat-cell { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 12px; padding: 22px; }
+    .stat-val { font-family: var(--mono); font-size: 28px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.03em; line-height: 1; }
+    .stat-label { font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); letter-spacing: 1.2px; text-transform: uppercase; margin-top: 8px; }
+    .stat-meta { font-size: 11px; color: var(--text-secondary); margin-top: 8px; }
+
+    .section-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border-dim); }
+    .section-bar-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .section-bar-count { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); }
+
+    .module-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 48px; }
+    .module-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 16px;
+      padding: 28px 32px;
+      transition: all 0.35s var(--ease-out-expo);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .module-card:hover { border-color: var(--border-subtle); transform: translateY(-2px); }
+    .module-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+    .module-icon-block { display: flex; gap: 16px; align-items: center; }
+    .module-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--accent-dim); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .module-icon svg { width: 20px; height: 20px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+    .module-name { font-size: 17px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; margin-bottom: 4px; }
+    .module-path { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.5px; }
+    .module-desc { font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
+    .module-features { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 16px; border-top: 1px solid var(--border-dim); }
+    .module-feature { font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); letter-spacing: 0.3px; display: flex; align-items: center; gap: 6px; }
+    .module-feature::before { content: '+'; color: var(--accent); }
+    .module-cta { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; margin-top: 8px; }
+
+    .journey-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 48px; }
+    .journey-card { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 14px; padding: 24px; }
+    .journey-num { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 2px; margin-bottom: 12px; }
+    .journey-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 10px; letter-spacing: -0.01em; }
+    .journey-body { font-size: 12px; line-height: 1.65; color: var(--text-secondary); margin-bottom: 14px; }
+    .journey-links { display: flex; flex-direction: column; gap: 6px; padding-top: 12px; border-top: 1px solid var(--border-dim); }
+    .journey-link { font-family: var(--mono); font-size: 10px; color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+    .journey-link:hover { color: var(--accent); }
+    .journey-link::before { content: '>'; color: var(--accent); }
+
+    .arch-note { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 14px; padding: 28px 32px; margin-bottom: 40px; }
+    .arch-note-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+    .arch-note-body { font-size: 13px; color: var(--text-secondary); line-height: 1.75; }
+    .arch-note-body code { font-family: var(--mono); font-size: 12px; color: var(--accent); background: var(--accent-dim); padding: 2px 7px; border-radius: 4px; }
+
+    @media (max-width: 900px) {
+      .stat-row { grid-template-columns: 1fr 1fr; }
+      .module-grid { grid-template-columns: 1fr; }
+      .journey-grid { grid-template-columns: 1fr; }
+      .page-header, .main-content, .breadcrumb { padding-left: 20px; padding-right: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain-overlay"></div>
+  <div class="bg-ambient"></div>
+  <div class="bg-grid-lines"></div>
+
+  <nav class="nav" id="main-nav">
+    <a href="/" class="nav-logo"><div class="nav-logo-mark"></div><span class="nav-logo-text">BlackShield Core</span></a>
+    <div class="nav-links">
+      <div class="nav-group open"><button class="nav-group-trigger" style="color:var(--accent);">Platform<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/labs.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="dd-label"><span class="dd-name">Labs</span></span></a>
+          <a href="/tools.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><span class="dd-label"><span class="dd-name">Tools</span></span></a>
+          <a href="/index.html#ai-lab"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/></svg></span><span class="dd-label"><span class="dd-name">AI Lab</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Knowledge<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/blog.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></span><span class="dd-label"><span class="dd-name">Blog</span></span></a>
+          <a href="/research.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/></svg></span><span class="dd-label"><span class="dd-name">Research</span></span></a>
+          <a href="/case-studies.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/></svg></span><span class="dd-label"><span class="dd-name">Case Studies</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Community<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/talks.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="dd-label"><span class="dd-name">Talks</span></span></a>
+          <a href="/about.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="dd-label"><span class="dd-name">About</span></span></a>
+        </div>
+      </div>
+      <a href="/" class="nav-cta-btn">Enter Platform</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="/">Home</a><span style="opacity:0.4">/</span>
+    <span style="color:var(--text-secondary)">Platform</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-label">Platform Overview</div>
+    <h1 class="page-header-title">The<br><span style="color:var(--accent)">Platform.</span></h1>
+    <p class="page-header-desc">
+      BlackShield Core is organized around seven modules. Each module is a dedicated page with
+      its own catalog, filters, and navigation. This page is the map — a single view of what
+      exists, what's in build stage, and how everything connects.
+    </p>
+  </div>
+
+  <div class="main-content">
+
+    <!-- Stats -->
+    <div class="stat-row">
+      <div class="stat-cell"><div class="stat-val">7</div><div class="stat-label">Modules</div><div class="stat-meta">Dedicated page routes</div></div>
+      <div class="stat-cell"><div class="stat-val">47</div><div class="stat-label">Catalog Items</div><div class="stat-meta">Labs · Posts · Notes · Tools</div></div>
+      <div class="stat-cell"><div class="stat-val">4</div><div class="stat-label">Topic Areas</div><div class="stat-meta">Web · AD · AI · Detection</div></div>
+      <div class="stat-cell"><div class="stat-val">0</div><div class="stat-label">Accounts Required</div><div class="stat-meta">Public by default</div></div>
+    </div>
+
+    <!-- Modules -->
+    <div class="section-bar"><span class="section-bar-title">Modules</span><span class="section-bar-count">7 surfaces</span></div>
+    <div class="module-grid">
+
+      <a href="/labs.html" class="module-card">
+        <div class="module-head">
+          <div class="module-icon-block">
+            <div class="module-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+            <div>
+              <div class="module-name">Labs</div>
+              <div class="module-path">/labs</div>
+            </div>
+          </div>
+          <span class="status-badge status-beta">Available</span>
+        </div>
+        <p class="module-desc">Scenario-based hands-on labs across web exploitation, Active Directory, AI/ML security, and CTF-style challenges. Each lab is scoped, has clear objectives, hints, and a published solution writeup.</p>
+        <div class="module-features">
+          <div class="module-feature">24 labs across 4 categories</div>
+          <div class="module-feature">Difficulty: Easy → Expert</div>
+          <div class="module-feature">Per-lab XP &amp; time estimates</div>
+          <div class="module-feature">Cross-linked to blog writeups</div>
+        </div>
+        <div class="module-cta">Open Labs &rarr;</div>
+      </a>
+
+      <a href="/tools.html" class="module-card">
+        <div class="module-head">
+          <div class="module-icon-block">
+            <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+            <div>
+              <div class="module-name">Tools</div>
+              <div class="module-path">/tools</div>
+            </div>
+          </div>
+          <span class="status-badge status-beta">Available</span>
+        </div>
+        <p class="module-desc">Browser-based security utilities that execute entirely client-side. JWT decoder, hash analyzer, password entropy checker, log parser — small focused tools for incident work, audit prep, and CTF solving.</p>
+        <div class="module-features">
+          <div class="module-feature">4 featured + 8 compact tools</div>
+          <div class="module-feature">100% client-side execution</div>
+          <div class="module-feature">No telemetry on tool data</div>
+          <div class="module-feature">Categories: crypto, auth, logs, text</div>
+        </div>
+        <div class="module-cta">Open Tools &rarr;</div>
+      </a>
+
+      <a href="/index.html#ai-lab" class="module-card">
+        <div class="module-head">
+          <div class="module-icon-block">
+            <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12l4-2"/></svg></div>
+            <div>
+              <div class="module-name">AI Lab</div>
+              <div class="module-path">/ai-lab</div>
+            </div>
+          </div>
+          <span class="status-badge status-beta">Available</span>
+        </div>
+        <p class="module-desc">Dedicated surface for AI/ML security work: prompt injection labs, classifier evasion exercises, RAG poisoning demonstrations, and adversarial prompt taxonomy browsing.</p>
+        <div class="module-features">
+          <div class="module-feature">5 scenario-based labs</div>
+          <div class="module-feature">Prompt taxonomy browser</div>
+          <div class="module-feature">Linked research notes</div>
+          <div class="module-feature">Integrated with Labs catalog</div>
+        </div>
+        <div class="module-cta">Open AI Lab &rarr;</div>
+      </a>
+
+      <a href="/blog.html" class="module-card">
+        <div class="module-head">
+          <div class="module-icon-block">
+            <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div>
+            <div>
+              <div class="module-name">Blog</div>
+              <div class="module-path">/blog</div>
+            </div>
+          </div>
+          <span class="status-badge status-beta">Available</span>
+        </div>
+        <p class="module-desc">Long-form technical writing. Each post goes deep on a specific topic: JWT deep dive, EDR bypass analysis, LLM jailbreak taxonomies, supply chain dependency confusion. No hot takes or listicles.</p>
+        <div class="module-features">
+          <div class="module-feature">12 published posts</div>
+          <div class="module-feature">Category filtering</div>
+          <div class="module-feature">TOC &amp; related content per post</div>
+          <div class="module-feature">Cross-linked to labs &amp; research</div>
+        </div>
+        <div class="module-cta">Open Blog &rarr;</div>
+      </a>
+
+      <a href="/research.html" class="module-card">
+        <div class="module-head">
+          <div class="module-icon-block">
+            <div class="module-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+            <div>
+              <div class="module-name">Research</div>
+              <div class="module-path">/research</div>
+            </div>
+          </div>
+          <span class="status-badge status-research">Research Notes</span>
+        </div>
+        <p class="module-desc">Analysis, taxonomies, and pattern work that sits between blog posts and formal papers. Attack path modeling, adversarial prompt taxonomy, telemetry gap analysis.</p>
+        <div class="module-features">
+          <div class="module-feature">6 research notes</div>
+          <div class="module-feature">Multiple notes per topic area</div>
+          <div class="module-feature">Citations &amp; references</div>
+          <div class="module-feature">Filter by topic</div>
+        </div>
+        <div class="module-cta">Open Research &rarr;</div>
+      </a>
+
+      <a href="/case-studies.html" class="module-card">
+        <div class="module-head">
+          <div class="module-icon-block">
+            <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+            <div>
+              <div class="module-name">Case Studies</div>
+              <div class="module-path">/case-studies</div>
+            </div>
+          </div>
+          <span class="status-badge status-beta">Available</span>
+        </div>
+        <p class="module-desc">Anonymized breakdowns of real incidents and engagements. Supply chain compromise via npm, AD lateral movement, LLM indirect prompt injection, IAM misconfiguration. Consistent structure: summary, outcome, two findings, takeaway.</p>
+        <div class="module-features">
+          <div class="module-feature">5 published case studies</div>
+          <div class="module-feature">Type-filtered (red / IR / AI / policy)</div>
+          <div class="module-feature">Anonymized context</div>
+          <div class="module-feature">Linked to matching labs</div>
+        </div>
+        <div class="module-cta">Open Case Studies &rarr;</div>
+      </a>
+
+      <a href="/index.html#dashboard" class="module-card">
+        <div class="module-head">
+          <div class="module-icon-block">
+            <div class="module-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg></div>
+            <div>
+              <div class="module-name">Dashboard</div>
+              <div class="module-path">/dashboard</div>
+            </div>
+          </div>
+          <span class="status-badge status-dev">Build Stage</span>
+        </div>
+        <p class="module-desc">Personal progress view — lab completions, earned XP, track progression, and curated rails pointing to what to read or solve next. Anchored by your recent activity.</p>
+        <div class="module-features">
+          <div class="module-feature">Lab progress tracking</div>
+          <div class="module-feature">XP &amp; streak view</div>
+          <div class="module-feature">Recommended next-steps</div>
+          <div class="module-feature">Anonymous by default</div>
+        </div>
+        <div class="module-cta">Open Dashboard &rarr;</div>
+      </a>
+
+      <a href="/about.html" class="module-card">
+        <div class="module-head">
+          <div class="module-icon-block">
+            <div class="module-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div>
+              <div class="module-name">About</div>
+              <div class="module-path">/about</div>
+            </div>
+          </div>
+          <span class="status-badge status-beta">Available</span>
+        </div>
+        <p class="module-desc">Mission, focus areas, operating principles, and timeline. Also the contact surface — corrections and interesting writeups are actively welcomed. Scope is stated explicitly.</p>
+        <div class="module-features">
+          <div class="module-feature">Operating principles</div>
+          <div class="module-feature">6 focus areas</div>
+          <div class="module-feature">Catalog timeline</div>
+          <div class="module-feature">Explicit scope boundaries</div>
+        </div>
+        <div class="module-cta">Open About &rarr;</div>
+      </a>
+
+    </div>
+
+    <!-- Journeys -->
+    <div class="section-bar"><span class="section-bar-title">Common Paths Through the Site</span></div>
+    <div class="journey-grid">
+
+      <div class="journey-card">
+        <div class="journey-num">PATH 01</div>
+        <div class="journey-title">Learn a topic deeply</div>
+        <div class="journey-body">Start with the research note to build the model, then do the lab, then read the blog writeup that corresponds to it. Ends with the tool if one exists.</div>
+        <div class="journey-links">
+          <a class="journey-link" href="/research.html">Research Note</a>
+          <a class="journey-link" href="/labs.html">Hands-On Lab</a>
+          <a class="journey-link" href="/blog.html">Blog Writeup</a>
+        </div>
+      </div>
+
+      <div class="journey-card">
+        <div class="journey-num">PATH 02</div>
+        <div class="journey-title">Resolve an active incident</div>
+        <div class="journey-body">Start with Tools for quick analysis (JWT, hash, log parser), cross-check against matching Case Studies, then go to the Blog for the deeper reasoning pattern.</div>
+        <div class="journey-links">
+          <a class="journey-link" href="/tools.html">Tools</a>
+          <a class="journey-link" href="/case-studies.html">Case Studies</a>
+          <a class="journey-link" href="/blog.html">Blog</a>
+        </div>
+      </div>
+
+      <div class="journey-card">
+        <div class="journey-num">PATH 03</div>
+        <div class="journey-title">Prepare a talk or writeup</div>
+        <div class="journey-body">Browse Research for structured analysis, cross-check specific claims against Case Studies, then grab visual patterns from the Labs catalog for screenshots.</div>
+        <div class="journey-links">
+          <a class="journey-link" href="/research.html">Research</a>
+          <a class="journey-link" href="/talks.html">Talks</a>
+          <a class="journey-link" href="/labs.html">Labs</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Architecture -->
+    <div class="arch-note">
+      <div class="arch-note-title">Architecture notes</div>
+      <div class="arch-note-body">
+        Every module is a static HTML page sharing a single <code>shared.css</code> stylesheet. There is
+        no application shell, no SPA router, and no client-side state management — each route is
+        a fully pre-rendered document. Inputs to client-side tools (JWT, hash analyzer, log parser)
+        stay in browser memory and are never transmitted. The site works with JavaScript disabled
+        for all read-only content; tools require JS to run.
+      </div>
+    </div>
+
+    <div class="module-connections-row" style="margin-top:40px;">
+      <span class="connections-label">Jump to</span>
+      <a href="/labs.html" class="connection-link">Labs</a>
+      <a href="/tools.html" class="connection-link">Tools</a>
+      <a href="/blog.html" class="connection-link">Blog</a>
+      <a href="/research.html" class="connection-link">Research</a>
+      <a href="/case-studies.html" class="connection-link">Case Studies</a>
+      <a href="/about.html" class="connection-link">About</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-ecosystem">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><div class="nav-logo-mark"></div><span class="footer-brand-name">BlackShield Core</span></div>
+        <p class="footer-brand-desc">A cybersecurity and AI experimentation platform.</p>
+      </div>
+      <div class="footer-col"><div class="footer-col-title">Platform</div><a href="/labs.html">Labs</a><a href="/tools.html">Tools</a><a href="/index.html#ai-lab">AI Lab</a></div>
+      <div class="footer-col"><div class="footer-col-title">Knowledge</div><a href="/blog.html">Blog</a><a href="/research.html">Research</a><a href="/case-studies.html">Case Studies</a></div>
+      <div class="footer-col"><div class="footer-col-title">Community</div><a href="/talks.html">Talks</a><a href="/about.html">About</a></div>
+    </div>
+    <div class="footer-bottom"><span class="footer-copy">&copy; 2026 BlackShield Core. All rights reserved.</span></div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.nav-group').forEach(group => {
+      group.querySelector('.nav-group-trigger').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = group.classList.contains('open');
+        document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open'));
+        if (!isOpen) group.classList.add('open');
+      });
+    });
+    document.addEventListener('click', () => document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open')));
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => { nav.style.background = window.scrollY > 40 ? 'rgba(2,9,26,0.9)' : 'rgba(2,11,24,0.6)'; }, { passive: true });
+  </script>
+</body>
+</html>

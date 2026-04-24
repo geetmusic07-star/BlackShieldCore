@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labs & Cyber Range — BlackShield Core</title>
+  <meta name="description" content="Hands-on cybersecurity labs covering web exploitation, Active Directory attacks, AI/ML security, and CTF-style challenges.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .page-header { padding: 140px 48px 48px; max-width: 1280px; margin: 0 auto; position: relative; z-index: 10; }
+    .page-header-label { font-family: var(--mono); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .page-header-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+    .page-header-title { font-size: clamp(36px, 5vw, 64px); font-weight: 800; font-variation-settings: 'wght' 800; letter-spacing: -0.05em; line-height: 1.0; color: var(--text-primary); margin-bottom: 20px; }
+    .page-header-desc { font-size: 16px; line-height: 1.75; color: var(--text-secondary); max-width: 540px; }
+    .breadcrumb { max-width: 1280px; margin: 0 auto; padding: 88px 48px 0; display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); }
+    .breadcrumb a { color: var(--text-tertiary); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .main-content { max-width: 1280px; margin: 0 auto; padding: 0 48px 80px; }
+
+    .lab-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 0 auto 40px;
+    }
+    .lab-stat-cell {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 12px;
+      padding: 22px;
+      text-align: left;
+    }
+    .lab-stat-val { font-family: var(--mono); font-size: 28px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.03em; line-height: 1; }
+    .lab-stat-label { font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); letter-spacing: 1.2px; text-transform: uppercase; margin-top: 8px; }
+    .lab-stat-meta { font-size: 11px; color: var(--text-secondary); margin-top: 8px; }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+    .cat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 14px;
+      padding: 22px;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+    }
+    .cat-card:hover { border-color: var(--border-subtle); transform: translateY(-2px); }
+    .cat-card-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--accent-dim); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .cat-card-icon svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+    .cat-card-name { font-size: 14px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.01em; margin-bottom: 4px; }
+    .cat-card-count { font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); letter-spacing: 0.5px; margin-bottom: 10px; }
+    .cat-card-diff { display: flex; gap: 4px; flex-wrap: wrap; }
+
+    /* Lab Cards */
+    .labs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .lab-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.35s var(--ease-out-expo);
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+    }
+    .lab-card:hover { border-color: var(--border-subtle); transform: translateY(-2px); box-shadow: 0 12px 36px rgba(0,0,0,0.35); }
+    .lab-card-header { padding: 18px 18px 12px; display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .lab-card-body { padding: 0 18px 18px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+    .lab-card-title { font-size: 14px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.01em; }
+    .lab-card-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.65; flex: 1; }
+    .lab-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .lab-points { font-family: var(--mono); font-size: 10px; color: #f59e0b; letter-spacing: 0.5px; }
+    .lab-time { font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); }
+    .lab-cta { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase; color: var(--accent); margin-top: 8px; }
+
+    .section-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border-dim); }
+    .section-bar-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .section-bar-count { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); }
+
+    @media (max-width: 900px) {
+      .lab-stats { grid-template-columns: 1fr 1fr; }
+      .category-grid { grid-template-columns: 1fr 1fr; }
+      .labs-grid { grid-template-columns: 1fr 1fr; }
+      .page-header, .main-content, .breadcrumb { padding-left: 20px; padding-right: 20px; }
+    }
+    @media (max-width: 600px) { .labs-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="grain-overlay"></div>
+  <div class="bg-ambient"></div>
+  <div class="bg-grid-lines"></div>
+
+  <nav class="nav" id="main-nav">
+    <a href="/" class="nav-logo"><div class="nav-logo-mark"></div><span class="nav-logo-text">BlackShield Core</span></a>
+    <div class="nav-links">
+      <div class="nav-group"><button class="nav-group-trigger">Platform<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/labs.html" style="background:var(--accent-dim);border-radius:8px;"><span class="dd-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="dd-label"><span class="dd-name" style="color:var(--accent)">Labs</span><span class="dd-hint">Cyber Range / CTF Labs</span></span></a>
+          <a href="/tools.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><span class="dd-label"><span class="dd-name">Tools</span></span></a>
+          <a href="/index.html#ai-lab"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/></svg></span><span class="dd-label"><span class="dd-name">AI Lab</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Knowledge<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/blog.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></span><span class="dd-label"><span class="dd-name">Blog</span></span></a>
+          <a href="/research.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/></svg></span><span class="dd-label"><span class="dd-name">Research</span></span></a>
+          <a href="/case-studies.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/></svg></span><span class="dd-label"><span class="dd-name">Case Studies</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Community<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/talks.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="dd-label"><span class="dd-name">Talks</span></span></a>
+          <a href="/about.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="dd-label"><span class="dd-name">About</span></span></a>
+        </div>
+      </div>
+      <a href="/" class="nav-cta-btn">Enter Platform</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="/">Home</a><span style="opacity:0.4">/</span>
+    <span style="color:var(--text-secondary)">Labs</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-label">Cyber Range</div>
+    <h1 class="page-header-title">Hands-On<br><span style="color:var(--accent)">Labs.</span></h1>
+    <p class="page-header-desc">
+      Scenario-based labs covering offensive security, defensive architecture, and AI system testing.
+      Each lab is a scoped environment with clear objectives, hints, and solution writeups.
+      Built around realistic misconfigurations — not contrived toy problems.
+    </p>
+  </div>
+
+  <div class="main-content">
+
+    <div class="lab-stats">
+      <div class="lab-stat-cell">
+        <div class="lab-stat-val">24</div>
+        <div class="lab-stat-label">Total Labs</div>
+        <div class="lab-stat-meta">Across 4 categories</div>
+      </div>
+      <div class="lab-stat-cell">
+        <div class="lab-stat-val">4</div>
+        <div class="lab-stat-label">Categories</div>
+        <div class="lab-stat-meta">Web · Network · AI · CTF</div>
+      </div>
+      <div class="lab-stat-cell">
+        <div class="lab-stat-val">12h</div>
+        <div class="lab-stat-label">Avg. Depth</div>
+        <div class="lab-stat-meta">Multi-session scenarios</div>
+      </div>
+      <div class="lab-stat-cell">
+        <div class="lab-stat-val">9</div>
+        <div class="lab-stat-label">New in 2026</div>
+        <div class="lab-stat-meta">AI security focus</div>
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="section-bar"><span class="section-bar-title">Categories</span></div>
+    <div class="category-grid">
+      <a href="#web-exploitation" class="cat-card">
+        <div class="cat-card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+        <div class="cat-card-name">Web Exploitation</div>
+        <div class="cat-card-count">8 Labs</div>
+        <div class="cat-card-diff">
+          <span class="diff-badge diff-easy">2 Easy</span>
+          <span class="diff-badge diff-medium">4 Medium</span>
+          <span class="diff-badge diff-hard">2 Hard</span>
+        </div>
+      </a>
+      <a href="#network-ad" class="cat-card">
+        <div class="cat-card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="3" cy="3" r="2"/><circle cx="21" cy="3" r="2"/><circle cx="3" cy="21" r="2"/><circle cx="21" cy="21" r="2"/></svg></div>
+        <div class="cat-card-name">Network &amp; AD</div>
+        <div class="cat-card-count">6 Labs</div>
+        <div class="cat-card-diff">
+          <span class="diff-badge diff-medium">2 Medium</span>
+          <span class="diff-badge diff-hard">3 Hard</span>
+          <span class="diff-badge diff-expert">1 Expert</span>
+        </div>
+      </a>
+      <a href="#ai-ml" class="cat-card">
+        <div class="cat-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12l4-4m0 0h-3m3 0v3"/></svg></div>
+        <div class="cat-card-name">AI/ML Security</div>
+        <div class="cat-card-count">5 Labs</div>
+        <div class="cat-card-diff">
+          <span class="diff-badge diff-easy">1 Easy</span>
+          <span class="diff-badge diff-medium">2 Medium</span>
+          <span class="diff-badge diff-hard">2 Hard</span>
+        </div>
+      </a>
+      <a href="#ctf" class="cat-card">
+        <div class="cat-card-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <div class="cat-card-name">CTF Scenarios</div>
+        <div class="cat-card-count">5 Labs</div>
+        <div class="cat-card-diff">
+          <span class="diff-badge diff-medium">2 Medium</span>
+          <span class="diff-badge diff-hard">3 Hard</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Web Exploitation -->
+    <div class="section-bar" id="web-exploitation">
+      <span class="section-bar-title">Web Exploitation</span>
+      <span class="section-bar-count">8 labs</span>
+    </div>
+    <div class="labs-grid" style="margin-bottom:40px;">
+      <a href="/labs/jwt-exploit-chain.html" class="lab-card">
+        <div class="lab-card-header">
+          <div class="lab-card-title">JWT Exploitation Chain</div>
+          <span class="diff-badge diff-medium">Medium</span>
+        </div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Walk through alg confusion, weak secret recovery, and kid header injection against a vulnerable Node.js API.</p>
+          <div class="lab-meta">
+            <span class="lab-points">+350 XP</span>
+            <span class="lab-time">~90 min</span>
+            <span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span>
+          </div>
+          <span class="lab-cta">Open Lab <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header">
+          <div class="lab-card-title">SSRF to Cloud Metadata</div>
+          <span class="diff-badge diff-medium">Medium</span>
+        </div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Chain an unvalidated URL fetch to the cloud metadata service and extract role credentials.</p>
+          <div class="lab-meta">
+            <span class="lab-points">+400 XP</span>
+            <span class="lab-time">~120 min</span>
+            <span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header">
+          <div class="lab-card-title">GraphQL Introspection Abuse</div>
+          <span class="diff-badge diff-easy">Easy</span>
+        </div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Discover hidden endpoints and sensitive fields through unrestricted GraphQL introspection.</p>
+          <div class="lab-meta">
+            <span class="lab-points">+200 XP</span>
+            <span class="lab-time">~45 min</span>
+            <span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header">
+          <div class="lab-card-title">OAuth Redirect URI Bypass</div>
+          <span class="diff-badge diff-medium">Medium</span>
+        </div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Take over accounts via subtle flaws in OAuth redirect URI validation logic.</p>
+          <div class="lab-meta">
+            <span class="lab-points">+350 XP</span>
+            <span class="lab-time">~75 min</span>
+            <span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header">
+          <div class="lab-card-title">Deserialization RCE</div>
+          <span class="diff-badge diff-hard">Hard</span>
+        </div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Craft a malicious serialized object to achieve remote code execution on a Java application.</p>
+          <div class="lab-meta">
+            <span class="lab-points">+500 XP</span>
+            <span class="lab-time">~180 min</span>
+            <span class="status-badge status-dev" style="padding:2px 7px;font-size:8px;">Build Stage</span>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header">
+          <div class="lab-card-title">SQLi to File System Access</div>
+          <span class="diff-badge diff-easy">Easy</span>
+        </div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Classic SQL injection progression from data extraction to file read via INTO OUTFILE.</p>
+          <div class="lab-meta">
+            <span class="lab-points">+250 XP</span>
+            <span class="lab-time">~60 min</span>
+            <span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header">
+          <div class="lab-card-title">Server-Side Template Injection</div>
+          <span class="diff-badge diff-medium">Medium</span>
+        </div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Identify and exploit SSTI in Jinja2, Handlebars, and Freemarker template engines.</p>
+          <div class="lab-meta">
+            <span class="lab-points">+350 XP</span>
+            <span class="lab-time">~75 min</span>
+            <span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span>
+          </div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header">
+          <div class="lab-card-title">HTTP Request Smuggling</div>
+          <span class="diff-badge diff-hard">Hard</span>
+        </div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Exploit CL.TE / TE.CL inconsistencies between front-end and back-end HTTP parsers.</p>
+          <div class="lab-meta">
+            <span class="lab-points">+500 XP</span>
+            <span class="lab-time">~150 min</span>
+            <span class="status-badge status-dev" style="padding:2px 7px;font-size:8px;">Build Stage</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Network & AD -->
+    <div class="section-bar" id="network-ad">
+      <span class="section-bar-title">Network &amp; Active Directory</span>
+      <span class="section-bar-count">6 labs</span>
+    </div>
+    <div class="labs-grid" style="margin-bottom:40px;">
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">AS-REP Roasting to Domain Compromise</div><span class="diff-badge diff-hard">Hard</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">From unauthenticated AS-REP Roasting through Kerberoasting and Silver Ticket forgery.</p>
+          <div class="lab-meta"><span class="lab-points">+650 XP</span><span class="lab-time">~240 min</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span></div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">Constrained Delegation Abuse</div><span class="diff-badge diff-hard">Hard</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Abuse Kerberos constrained delegation to impersonate administrator accounts on target services.</p>
+          <div class="lab-meta"><span class="lab-points">+600 XP</span><span class="lab-time">~180 min</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span></div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">BloodHound Attack Path Analysis</div><span class="diff-badge diff-medium">Medium</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Map enterprise AD relationships with BloodHound CE to find privilege escalation paths.</p>
+          <div class="lab-meta"><span class="lab-points">+400 XP</span><span class="lab-time">~120 min</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span></div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">Pass-the-Hash Lateral Movement</div><span class="diff-badge diff-medium">Medium</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Extract NTLM hashes from memory and reuse them to authenticate across a Windows network.</p>
+          <div class="lab-meta"><span class="lab-points">+400 XP</span><span class="lab-time">~90 min</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span></div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">Full Domain Takeover Chain</div><span class="diff-badge diff-expert">Expert</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Multi-stage lab chaining initial access, lateral movement, Kerberos abuse, and domain compromise.</p>
+          <div class="lab-meta"><span class="lab-points">+1200 XP</span><span class="lab-time">~360 min</span><span class="status-badge status-dev" style="padding:2px 7px;font-size:8px;">Build Stage</span></div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">Network Pivoting &amp; Tunneling</div><span class="diff-badge diff-hard">Hard</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Establish pivots through compromised hosts using SOCKS proxies and SSH tunneling techniques.</p>
+          <div class="lab-meta"><span class="lab-points">+500 XP</span><span class="lab-time">~150 min</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span></div>
+        </div>
+      </a>
+    </div>
+
+    <!-- AI/ML Security -->
+    <div class="section-bar" id="ai-ml">
+      <span class="section-bar-title">AI / ML Security</span>
+      <span class="section-bar-count">5 labs</span>
+    </div>
+    <div class="labs-grid" style="margin-bottom:40px;">
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">LLM Jailbreak Workshop</div><span class="diff-badge diff-medium">Medium</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Execute classical jailbreak patterns against a safety-tuned LLM and measure defense reliability.</p>
+          <div class="lab-meta"><span class="lab-points">+400 XP</span><span class="lab-time">~90 min</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span></div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">Indirect Prompt Injection</div><span class="diff-badge diff-hard">Hard</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Embed malicious instructions in documents processed by an LLM-based document assistant.</p>
+          <div class="lab-meta"><span class="lab-points">+550 XP</span><span class="lab-time">~120 min</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span></div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">Adversarial Input Classifier Bypass</div><span class="diff-badge diff-hard">Hard</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Craft adversarial inputs that evade an ML-based input filter while retaining attack semantics.</p>
+          <div class="lab-meta"><span class="lab-points">+600 XP</span><span class="lab-time">~150 min</span><span class="status-badge status-dev" style="padding:2px 7px;font-size:8px;">Build Stage</span></div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">Model Extraction via API</div><span class="diff-badge diff-medium">Medium</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Query a public model endpoint systematically to reconstruct enough of its behavior to build a surrogate.</p>
+          <div class="lab-meta"><span class="lab-points">+450 XP</span><span class="lab-time">~120 min</span><span class="status-badge status-dev" style="padding:2px 7px;font-size:8px;">Build Stage</span></div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">Basic Prompt Injection</div><span class="diff-badge diff-easy">Easy</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Start with simple direct injection patterns against an LLM-backed chatbot and escalate.</p>
+          <div class="lab-meta"><span class="lab-points">+200 XP</span><span class="lab-time">~45 min</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span></div>
+        </div>
+      </a>
+    </div>
+
+    <!-- CTF -->
+    <div class="section-bar" id="ctf">
+      <span class="section-bar-title">CTF Scenarios</span>
+      <span class="section-bar-count">5 labs</span>
+    </div>
+    <div class="labs-grid">
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">Quarterly Challenge: Q2 2026</div><span class="diff-badge diff-hard">Hard</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Multi-flag CTF covering web, crypto, and reverse engineering. Time-limited competition format.</p>
+          <div class="lab-meta"><span class="lab-points">+1000 XP</span><span class="lab-time">~6 hours</span><span class="status-badge status-dev" style="padding:2px 7px;font-size:8px;">Planned</span></div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">Crypto Challenge Series</div><span class="diff-badge diff-medium">Medium</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Sequential cryptographic puzzles from classical ciphers to modern protocol weaknesses.</p>
+          <div class="lab-meta"><span class="lab-points">+500 XP</span><span class="lab-time">~3 hours</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span></div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">Forensics Chain: Laptop Image</div><span class="diff-badge diff-medium">Medium</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Analyze a disk image to reconstruct events, recover artifacts, and identify exfiltrated data.</p>
+          <div class="lab-meta"><span class="lab-points">+450 XP</span><span class="lab-time">~4 hours</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span></div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">Reverse Engineering Trail</div><span class="diff-badge diff-hard">Hard</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">Progressive RE challenges from simple crackmes to obfuscated protected binaries.</p>
+          <div class="lab-meta"><span class="lab-points">+700 XP</span><span class="lab-time">~5 hours</span><span class="status-badge status-beta" style="padding:2px 7px;font-size:8px;">Available</span></div>
+        </div>
+      </a>
+      <a href="#" class="lab-card" style="opacity:0.5;cursor:default;pointer-events:none;">
+        <div class="lab-card-header"><div class="lab-card-title">Seasonal Challenge: AI Red Team</div><span class="diff-badge diff-hard">Hard</span></div>
+        <div class="lab-card-body">
+          <p class="lab-card-desc">AI-focused CTF — jailbreaks, indirect injection, data exfiltration, and classifier evasion.</p>
+          <div class="lab-meta"><span class="lab-points">+900 XP</span><span class="lab-time">~6 hours</span><span class="status-badge status-dev" style="padding:2px 7px;font-size:8px;">Planned</span></div>
+        </div>
+      </a>
+    </div>
+
+    <div class="module-connections-row">
+      <span class="connections-label">Connected to</span>
+      <a href="/index.html#ai-lab" class="connection-link">AI Lab</a>
+      <a href="/blog.html" class="connection-link">Technical Blog</a>
+      <a href="/index.html#challenges" class="connection-link">Challenges / XP</a>
+      <a href="/research.html" class="connection-link">Research</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-ecosystem">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><div class="nav-logo-mark"></div><span class="footer-brand-name">BlackShield Core</span></div>
+        <p class="footer-brand-desc">A cybersecurity and AI experimentation platform.</p>
+      </div>
+      <div class="footer-col"><div class="footer-col-title">Platform</div><a href="/labs.html">Labs</a><a href="/tools.html">Tools</a><a href="/index.html#ai-lab">AI Lab</a></div>
+      <div class="footer-col"><div class="footer-col-title">Knowledge</div><a href="/blog.html">Blog</a><a href="/research.html">Research</a><a href="/case-studies.html">Case Studies</a></div>
+      <div class="footer-col"><div class="footer-col-title">Community</div><a href="/talks.html">Talks</a><a href="/about.html">About</a></div>
+    </div>
+    <div class="footer-bottom"><span class="footer-copy">&copy; 2026 BlackShield Core. All rights reserved.</span></div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.nav-group').forEach(group => {
+      group.querySelector('.nav-group-trigger').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = group.classList.contains('open');
+        document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open'));
+        if (!isOpen) group.classList.add('open');
+      });
+    });
+    document.addEventListener('click', () => document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open')));
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => { nav.style.background = window.scrollY > 40 ? 'rgba(2,9,26,0.9)' : 'rgba(2,11,24,0.6)'; }, { passive: true });
+  </script>
+</body>
+</html>

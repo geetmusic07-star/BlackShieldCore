@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — BlackShield Core</title>
+  <meta name="description" content="BlackShield Core is a cybersecurity and AI experimentation platform — labs, tools, research, and writing focused on depth over breadth.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .page-header { padding: 140px 48px 48px; max-width: 1280px; margin: 0 auto; position: relative; z-index: 10; }
+    .page-header-label { font-family: var(--mono); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .page-header-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+    .page-header-title { font-size: clamp(36px, 5vw, 64px); font-weight: 800; letter-spacing: -0.05em; line-height: 1.0; color: var(--text-primary); margin-bottom: 20px; }
+    .page-header-desc { font-size: 16px; line-height: 1.75; color: var(--text-secondary); max-width: 640px; }
+    .breadcrumb { max-width: 1280px; margin: 0 auto; padding: 88px 48px 0; display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); }
+    .breadcrumb a { color: var(--text-tertiary); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .main-content { max-width: 1280px; margin: 0 auto; padding: 0 48px 80px; }
+
+    .about-intro { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 16px; padding: 36px 40px; margin-bottom: 40px; }
+    .about-intro p { font-size: 16px; line-height: 1.8; color: var(--text-secondary); margin: 0 0 14px; }
+    .about-intro p:last-child { margin: 0; }
+    .about-intro p strong { color: var(--text-primary); font-weight: 600; }
+
+    .section-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border-dim); }
+    .section-bar-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .section-bar-count { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); }
+
+    .principles-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 48px; }
+    .principle-card { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 14px; padding: 24px; }
+    .principle-num { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 2px; margin-bottom: 10px; }
+    .principle-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 10px; letter-spacing: -0.01em; }
+    .principle-body { font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
+
+    .focus-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 48px; }
+    .focus-card { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 14px; padding: 24px; }
+    .focus-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--accent-dim); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .focus-icon svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+    .focus-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+    .focus-body { font-size: 12px; line-height: 1.65; color: var(--text-secondary); }
+
+    .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 48px; }
+    .stat-cell { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 12px; padding: 22px; }
+    .stat-val { font-family: var(--mono); font-size: 28px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.03em; line-height: 1; }
+    .stat-label { font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); letter-spacing: 1.2px; text-transform: uppercase; margin-top: 8px; }
+    .stat-meta { font-size: 11px; color: var(--text-secondary); margin-top: 8px; }
+
+    .timeline { display: flex; flex-direction: column; gap: 14px; margin-bottom: 48px; }
+    .timeline-item { display: grid; grid-template-columns: 110px 1fr; gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--border-dim); }
+    .timeline-item:last-child { border-bottom: 0; }
+    .timeline-date { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.5px; }
+    .timeline-label { font-family: var(--mono); font-size: 9px; color: var(--text-tertiary); letter-spacing: 1px; margin-top: 4px; }
+    .timeline-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+    .timeline-body { font-size: 12px; color: var(--text-secondary); line-height: 1.65; }
+
+    .scope-card { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 14px; padding: 28px 32px; margin-bottom: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .scope-section-title { font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+    .scope-section-title.alt { color: #ef4444; }
+    .scope-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .scope-list li { font-size: 13px; line-height: 1.6; color: var(--text-secondary); padding-left: 18px; position: relative; }
+    .scope-list li::before { content: '+'; position: absolute; left: 0; color: var(--accent); font-family: var(--mono); }
+    .scope-list.alt li::before { content: '-'; color: #ef4444; }
+
+    .contact-block { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 14px; padding: 28px 32px; margin-top: 32px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+    .contact-text h3 { font-size: 16px; font-weight: 600; color: var(--text-primary); margin: 0 0 6px; }
+    .contact-text p { font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.6; }
+    .contact-links { display: flex; gap: 10px; flex-wrap: wrap; }
+    .contact-pill { font-family: var(--mono); font-size: 11px; padding: 10px 16px; border: 1px solid var(--border-dim); border-radius: 999px; color: var(--text-secondary); text-decoration: none; transition: all 0.3s; }
+    .contact-pill:hover { color: var(--accent); border-color: var(--accent); }
+
+    @media (max-width: 900px) {
+      .principles-grid { grid-template-columns: 1fr; }
+      .focus-grid { grid-template-columns: 1fr 1fr; }
+      .stat-row { grid-template-columns: 1fr 1fr; }
+      .scope-card { grid-template-columns: 1fr; gap: 28px; }
+      .timeline-item { grid-template-columns: 1fr; gap: 8px; }
+      .page-header, .main-content, .breadcrumb { padding-left: 20px; padding-right: 20px; }
+    }
+    @media (max-width: 600px) { .focus-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="grain-overlay"></div>
+  <div class="bg-ambient"></div>
+  <div class="bg-grid-lines"></div>
+
+  <nav class="nav" id="main-nav">
+    <a href="/" class="nav-logo"><div class="nav-logo-mark"></div><span class="nav-logo-text">BlackShield Core</span></a>
+    <div class="nav-links">
+      <div class="nav-group"><button class="nav-group-trigger">Platform<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/labs.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="dd-label"><span class="dd-name">Labs</span></span></a>
+          <a href="/tools.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><span class="dd-label"><span class="dd-name">Tools</span></span></a>
+          <a href="/index.html#ai-lab"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/></svg></span><span class="dd-label"><span class="dd-name">AI Lab</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Knowledge<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/blog.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></span><span class="dd-label"><span class="dd-name">Blog</span></span></a>
+          <a href="/research.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/></svg></span><span class="dd-label"><span class="dd-name">Research</span></span></a>
+          <a href="/case-studies.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/></svg></span><span class="dd-label"><span class="dd-name">Case Studies</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Community<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/talks.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="dd-label"><span class="dd-name">Talks</span></span></a>
+          <a href="/about.html" style="background:var(--accent-dim);border-radius:8px;"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="dd-label"><span class="dd-name" style="color:var(--accent)">About</span><span class="dd-hint">Mission &amp; Focus</span></span></a>
+        </div>
+      </div>
+      <a href="/" class="nav-cta-btn">Enter Platform</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="/">Home</a><span style="opacity:0.4">/</span>
+    <span style="color:var(--text-secondary)">About</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-label">Mission &amp; Focus</div>
+    <h1 class="page-header-title">About<br><span style="color:var(--accent)">BlackShield Core.</span></h1>
+    <p class="page-header-desc">
+      A personal cybersecurity and AI experimentation platform focused on depth over breadth.
+      Every lab, tool, and writeup exists because the author worked through the scenario and
+      wanted to leave a legible trail behind.
+    </p>
+  </div>
+
+  <div class="main-content">
+
+    <!-- Intro -->
+    <div class="about-intro">
+      <p>
+        <strong>BlackShield Core</strong> is a solo project and a public notebook. It collects
+        hands-on labs, small browser tools, and long-form technical writing into one place — organized
+        the way the author wishes everyone else's security blogs were organized.
+      </p>
+      <p>
+        The bar for publishing anything here is a simple question: <em>is this useful to someone who
+        already knows the basics and is trying to go deeper?</em> If the answer is no, it doesn't
+        ship. That keeps the catalog small. It also keeps it honest.
+      </p>
+      <p>
+        The site deliberately does not try to be a training vendor, a certification track, or a
+        SOC-as-a-service. It is a working knowledge base. Features are gated by whether they are
+        actually finished. Everything marked <strong>Build Stage</strong> or <strong>Planned</strong>
+        is visible precisely so you can see what is and isn't real yet.
+      </p>
+    </div>
+
+    <!-- Stats -->
+    <div class="section-bar"><span class="section-bar-title">Catalog</span><span class="section-bar-count">as of Apr 2026</span></div>
+    <div class="stat-row">
+      <div class="stat-cell"><div class="stat-val">24</div><div class="stat-label">Labs</div><div class="stat-meta">Web · AD · AI · CTF</div></div>
+      <div class="stat-cell"><div class="stat-val">12</div><div class="stat-label">Blog Posts</div><div class="stat-meta">Technical deep dives</div></div>
+      <div class="stat-cell"><div class="stat-val">6</div><div class="stat-label">Research Notes</div><div class="stat-meta">Analysis &amp; taxonomy</div></div>
+      <div class="stat-cell"><div class="stat-val">5</div><div class="stat-label">Case Studies</div><div class="stat-meta">Anonymized engagements</div></div>
+    </div>
+
+    <!-- Principles -->
+    <div class="section-bar"><span class="section-bar-title">Operating Principles</span></div>
+    <div class="principles-grid">
+      <div class="principle-card">
+        <div class="principle-num">01</div>
+        <div class="principle-title">Depth over breadth.</div>
+        <div class="principle-body">
+          One thorough writeup is worth ten surface-level posts. If the material doesn't push past
+          Stack Overflow answers and marketing blogs, it isn't worth writing. Every piece should
+          answer a question you couldn't easily answer by searching.
+        </div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">02</div>
+        <div class="principle-title">No overclaim.</div>
+        <div class="principle-body">
+          The site does not have live connections, real-time threat intelligence, a 24/7 SOC, or
+          any of the theater that usually decorates security sites. Labs are self-contained.
+          Status badges reflect reality: Available, Build Stage, Planned.
+        </div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">03</div>
+        <div class="principle-title">Legible by design.</div>
+        <div class="principle-body">
+          Every post has a visible structure — TOC, callouts, clearly marked code blocks, related
+          content. A reader should be able to jump in at any point and orient themselves in under
+          thirty seconds.
+        </div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">04</div>
+        <div class="principle-title">Client-side where possible.</div>
+        <div class="principle-body">
+          Tools run in your browser. There's no account system, no telemetry on tool data, and no
+          server that sees your tokens or passwords. Content is static HTML — readable, linkable,
+          archivable.
+        </div>
+      </div>
+    </div>
+
+    <!-- Focus areas -->
+    <div class="section-bar"><span class="section-bar-title">Focus Areas</span></div>
+    <div class="focus-grid">
+      <div class="focus-card">
+        <div class="focus-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="focus-title">Web &amp; API Security</div>
+        <div class="focus-body">Authentication flows, session handling, JWTs, OAuth, IDOR, SSRF, cache deception, modern framework pitfalls.</div>
+      </div>
+      <div class="focus-card">
+        <div class="focus-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg></div>
+        <div class="focus-title">AI / LLM Security</div>
+        <div class="focus-body">Prompt injection taxonomy, indirect injection, classifier evasion, RAG poisoning, and what AI security <em>can't</em> do.</div>
+      </div>
+      <div class="focus-card">
+        <div class="focus-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg></div>
+        <div class="focus-title">Active Directory</div>
+        <div class="focus-body">Kerberos attacks, ACL paths, delegation abuse, tiered admin models, and realistic AD hardening tradeoffs.</div>
+      </div>
+      <div class="focus-card">
+        <div class="focus-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <div class="focus-title">Detection Engineering</div>
+        <div class="focus-body">Sigma rule quality, telemetry gap analysis, log correlation patterns, and detection-as-code in realistic SOCs.</div>
+      </div>
+      <div class="focus-card">
+        <div class="focus-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div>
+        <div class="focus-title">Incident Response</div>
+        <div class="focus-body">Anonymized post-incident breakdowns, timeline reconstruction, and what actually goes wrong in the first 48 hours.</div>
+      </div>
+      <div class="focus-card">
+        <div class="focus-icon"><svg viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M10 18h4"/></svg></div>
+        <div class="focus-title">Threat Modeling</div>
+        <div class="focus-body">Practical, stakeholder-legible threat modeling — without the LARP of ten-page STRIDE diagrams nobody reads.</div>
+      </div>
+    </div>
+
+    <!-- Scope -->
+    <div class="section-bar"><span class="section-bar-title">Scope</span></div>
+    <div class="scope-card">
+      <div>
+        <div class="scope-section-title">What this site is</div>
+        <ul class="scope-list">
+          <li>A personal, curated catalog of security labs and writeups</li>
+          <li>An outlet for research that doesn't fit into a vendor blog or academic paper</li>
+          <li>A place to link from resumes, talks, and interviews with real evidence of work</li>
+          <li>A reference for people who want depth on specific topics</li>
+        </ul>
+      </div>
+      <div>
+        <div class="scope-section-title alt">What this site isn't</div>
+        <ul class="scope-list alt">
+          <li>A bootcamp, certification track, or replacement for formal training</li>
+          <li>A live threat intel feed or SOC service</li>
+          <li>A pentesting company — engagements referenced in case studies are anonymized</li>
+          <li>A news site — content is slower and more considered by design</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="section-bar"><span class="section-bar-title">Timeline</span></div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div>
+          <div class="timeline-date">2026 Q2</div>
+          <div class="timeline-label">CURRENT</div>
+        </div>
+        <div>
+          <div class="timeline-title">Multi-page architecture &amp; AI security catalog expansion</div>
+          <div class="timeline-body">Site restructured from a single-page index into dedicated routes for labs, tools, blog, research, and case studies. AI/ML security content expanded with 5 new labs and 2 research notes.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div>
+          <div class="timeline-date">2026 Q1</div>
+          <div class="timeline-label">SHIPPED</div>
+        </div>
+        <div>
+          <div class="timeline-title">JWT Security deep dive &amp; first 3 case studies published</div>
+          <div class="timeline-body">Long-form technical content pipeline established. Case study format settled: summary, outcome, two findings, takeaway. Featured post published to set the bar.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div>
+          <div class="timeline-date">2025 Q4</div>
+          <div class="timeline-label">SHIPPED</div>
+        </div>
+        <div>
+          <div class="timeline-title">Initial lab catalog &amp; browser toolkit</div>
+          <div class="timeline-body">First 15 labs across web, AD, and CTF. Four featured browser tools launched with client-side-only execution. Design system settled around the current aesthetic.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div>
+          <div class="timeline-date">2025 Q3</div>
+          <div class="timeline-label">ORIGIN</div>
+        </div>
+        <div>
+          <div class="timeline-title">Site concept &amp; initial platform build</div>
+          <div class="timeline-body">Started as a structured replacement for a scattered collection of CTF writeups, personal notes, and half-finished blog drafts. Goal was one permanent home for all of it.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="contact-block">
+      <div class="contact-text">
+        <h3>Questions, corrections, or interesting writeups?</h3>
+        <p>Corrections on technical content are especially welcome. Replies will usually land within a few days.</p>
+      </div>
+      <div class="contact-links">
+        <a href="#" class="contact-pill" style="opacity:0.5;pointer-events:none;">@blackshieldcore</a>
+        <a href="#" class="contact-pill" style="opacity:0.5;pointer-events:none;">GitHub</a>
+        <a href="#" class="contact-pill" style="opacity:0.5;pointer-events:none;">contact@</a>
+      </div>
+    </div>
+
+    <div class="module-connections-row" style="margin-top:40px;">
+      <span class="connections-label">Connected to</span>
+      <a href="/talks.html" class="connection-link">Talks</a>
+      <a href="/blog.html" class="connection-link">Blog</a>
+      <a href="/research.html" class="connection-link">Research</a>
+      <a href="/case-studies.html" class="connection-link">Case Studies</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-ecosystem">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><div class="nav-logo-mark"></div><span class="footer-brand-name">BlackShield Core</span></div>
+        <p class="footer-brand-desc">A cybersecurity and AI experimentation platform.</p>
+      </div>
+      <div class="footer-col"><div class="footer-col-title">Platform</div><a href="/labs.html">Labs</a><a href="/tools.html">Tools</a><a href="/index.html#ai-lab">AI Lab</a></div>
+      <div class="footer-col"><div class="footer-col-title">Knowledge</div><a href="/blog.html">Blog</a><a href="/research.html">Research</a><a href="/case-studies.html">Case Studies</a></div>
+      <div class="footer-col"><div class="footer-col-title">Community</div><a href="/talks.html">Talks</a><a href="/about.html">About</a></div>
+    </div>
+    <div class="footer-bottom"><span class="footer-copy">&copy; 2026 BlackShield Core. All rights reserved.</span></div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.nav-group').forEach(group => {
+      group.querySelector('.nav-group-trigger').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = group.classList.contains('open');
+        document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open'));
+        if (!isOpen) group.classList.add('open');
+      });
+    });
+    document.addEventListener('click', () => document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open')));
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => { nav.style.background = window.scrollY > 40 ? 'rgba(2,9,26,0.9)' : 'rgba(2,11,24,0.6)'; }, { passive: true });
+  </script>
+</body>
+</html>

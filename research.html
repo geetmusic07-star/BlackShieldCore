@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research & Analysis — BlackShield Core</title>
+  <meta name="description" content="Technical notes, structured analyses, and investigative deep dives on cybersecurity topics. More detailed than blog posts, less formal than papers.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .page-header { padding: 140px 48px 64px; max-width: 1280px; margin: 0 auto; position: relative; z-index: 10; }
+    .page-header-label { font-family: var(--mono); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .page-header-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+    .page-header-title { font-size: clamp(36px, 5vw, 64px); font-weight: 800; font-variation-settings: 'wght' 800; letter-spacing: -0.05em; line-height: 1.0; color: var(--text-primary); margin-bottom: 20px; }
+    .page-header-desc { font-size: 16px; line-height: 1.75; color: var(--text-secondary); max-width: 540px; }
+    .breadcrumb { max-width: 1280px; margin: 0 auto; padding: 88px 48px 0; display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); }
+    .breadcrumb a { color: var(--text-tertiary); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .main-content { max-width: 1280px; margin: 0 auto; padding: 0 48px 80px; }
+
+    /* Featured research card */
+    .research-featured {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 40px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 24px;
+      transition: all 0.4s var(--ease-out-expo);
+    }
+    .research-featured:hover { border-color: var(--border-subtle); box-shadow: 0 20px 60px rgba(0,0,0,0.35); }
+
+    /* Research note card */
+    .research-note {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 14px;
+      padding: 28px;
+      transition: all 0.35s var(--ease-out-expo);
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+    }
+    .research-note:hover { border-color: var(--border-subtle); transform: translateY(-2px); box-shadow: 0 12px 36px rgba(0,0,0,0.35); }
+
+    .note-type { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; background: rgba(59,130,246,0.1); color: var(--accent); display: inline-block; margin-bottom: 14px; }
+    .note-title { font-size: 17px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.03em; line-height: 1.3; margin-bottom: 12px; }
+    .note-abstract { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 14px; flex: 1; }
+    .note-findings { list-style: none; margin-bottom: 16px; }
+    .note-findings li { font-size: 12px; color: var(--text-tertiary); padding: 5px 0 5px 16px; position: relative; line-height: 1.5; }
+    .note-findings li::before { content: ''; position: absolute; left: 0; top: 12px; width: 6px; height: 1px; background: var(--accent); }
+    .note-meta { display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--text-dim); font-family: var(--mono); padding-top: 14px; border-top: 1px solid var(--border-hair); margin-top: auto; }
+    .note-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .note-tag { font-size: 10px; padding: 2px 8px; border-radius: 4px; background: var(--bg-elevated); color: var(--text-tertiary); font-family: var(--mono); }
+
+    .notes-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; }
+    .notes-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+
+    .section-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border-dim); }
+    .section-bar-title { font-size: 13px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.01em; }
+    .section-bar-count { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); }
+
+    .key-finding {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hair);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-bottom: 12px;
+    }
+    .key-finding-label { font-size: 11px; font-family: var(--mono); color: var(--accent); margin-bottom: 8px; letter-spacing: 0.06em; }
+    .key-finding p { font-size: 12.5px; color: var(--text-tertiary); line-height: 1.7; }
+
+    @media (max-width: 900px) {
+      .research-featured { grid-template-columns: 1fr; }
+      .notes-grid-3 { grid-template-columns: 1fr 1fr; }
+      .notes-grid-2 { grid-template-columns: 1fr; }
+      .page-header, .main-content { padding-left: 20px; padding-right: 20px; }
+      .breadcrumb { padding-left: 20px; padding-right: 20px; }
+    }
+    @media (max-width: 600px) {
+      .notes-grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain-overlay"></div>
+  <div class="bg-ambient"></div>
+  <div class="bg-grid-lines"></div>
+
+  <nav class="nav" id="main-nav">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-mark"></div>
+      <span class="nav-logo-text">BlackShield Core</span>
+    </a>
+    <div class="nav-links">
+      <div class="nav-group"><button class="nav-group-trigger">Platform<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/labs.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="dd-label"><span class="dd-name">Labs</span><span class="dd-hint">Cyber Range / CTF Labs</span></span></a>
+          <a href="/tools.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><span class="dd-label"><span class="dd-name">Tools</span><span class="dd-hint">Security Utilities</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Knowledge<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/blog.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></span><span class="dd-label"><span class="dd-name">Blog</span><span class="dd-hint">Deep-Dive Technical Posts</span></span></a>
+          <a href="/research.html" style="background:var(--accent-dim);border-radius:8px;"><span class="dd-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><span class="dd-label"><span class="dd-name" style="color:var(--accent)">Research</span><span class="dd-hint">Analysis & Investigation Notes</span></span></a>
+          <a href="/case-studies.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span class="dd-label"><span class="dd-name">Case Studies</span><span class="dd-hint">Incident Analysis</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Community<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/talks.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="dd-label"><span class="dd-name">Talks</span><span class="dd-hint">Presentations & Demos</span></span></a>
+          <a href="/about.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="dd-label"><span class="dd-name">About</span></span></a>
+        </div>
+      </div>
+      <a href="/" class="nav-cta-btn">Enter Platform</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="/">Home</a><span style="opacity:0.4">/</span>
+    <span style="color:var(--text-secondary)">Research</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-label">Investigation & Analysis</div>
+    <h1 class="page-header-title">Research<br><span style="color:var(--accent)">Notes.</span></h1>
+    <p class="page-header-desc">
+      Technical notes, structured analyses, and investigative deep dives.
+      More detailed than blog posts. Less formal than papers.
+      Built for practitioners who want the reasoning, not just the conclusion.
+    </p>
+  </div>
+
+  <div class="main-content">
+
+    <div class="filter-tabs">
+      <button class="filter-tab active">All</button>
+      <button class="filter-tab">Deep Analysis</button>
+      <button class="filter-tab">AI Security</button>
+      <button class="filter-tab">Detection Engineering</button>
+      <button class="filter-tab">Lab Design</button>
+    </div>
+
+    <!-- Featured Research -->
+    <div class="section-bar">
+      <span class="section-bar-title">Featured Analysis</span>
+    </div>
+
+    <a href="/research/attack-path-modeling.html" class="research-featured" style="display:grid;text-decoration:none;">
+      <div>
+        <span class="note-type">Deep Analysis</span>
+        <div class="note-tags">
+          <span class="note-tag">Attack Paths</span>
+          <span class="note-tag">Active Directory</span>
+          <span class="note-tag">Graph Analysis</span>
+        </div>
+        <h3 class="note-title" style="font-size:22px;">Attack Path Modeling in Segmented Enterprise Networks</h3>
+        <p class="note-abstract">
+          This analysis maps how attackers traverse segmented network environments using legitimate credentials,
+          trusted tools, and protocol abuse. Rather than exploiting perimeter weaknesses, modern lateral movement
+          relies on BloodHound-visible privilege relationships that defenders rarely audit proactively.
+        </p>
+        <ul class="note-findings">
+          <li>Tier-0 asset exposure through transitive group membership in 6 of 8 lab simulations</li>
+          <li>AS-REP Roasting effective against default configurations in all tested environments</li>
+          <li>Constrained delegation abuse consistently underdetected across Elastic and Splunk baselines</li>
+          <li>GenericWrite permissions mapped to 3+ privilege escalation paths in each AD structure analyzed</li>
+        </ul>
+        <a href="/research/attack-path-modeling.html" class="btn-ghost" style="font-size:12px;width:fit-content;padding:10px 20px;">Read Full Analysis →</a>
+      </div>
+      <div>
+        <div class="key-finding">
+          <div class="key-finding-label">KEY FINDING</div>
+          <p>In segmented environments, the most reliable lateral movement paths are not firewall bypasses —
+          they are misconfigured delegation settings and over-provisioned service accounts that exist in
+          nearly every production AD deployment.</p>
+        </div>
+        <div class="key-finding">
+          <div class="key-finding-label" style="color:var(--text-dim);">METHODOLOGY</div>
+          <p>Lab recreations of 4 enterprise AD topologies. Each environment built from real architectural
+          patterns, then analyzed using BloodHound CE, manual enumeration, and custom detection evaluation scripts.</p>
+        </div>
+        <div class="note-meta" style="margin-top:12px;">
+          <span>Apr 2026</span><span>·</span><span>Research Note</span><span>·</span><span>35 min read</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- Row of 3 -->
+    <div class="section-bar" style="margin-top:40px;">
+      <span class="section-bar-title">Recent Notes</span>
+      <span class="section-bar-count">5 notes</span>
+    </div>
+
+    <div class="notes-grid-3">
+      <a href="#" class="research-note" style="opacity:0.55;cursor:default;pointer-events:none;">
+        <span class="note-type" style="background:rgba(167,139,250,0.1);color:#a78bfa;">AI Security</span>
+        <div class="note-tags"><span class="note-tag">Prompt Injection</span><span class="note-tag">LLM Security</span><span class="note-tag">Evasion</span></div>
+        <h3 class="note-title">Adversarial Prompt Taxonomy: Classification and Bypass Analysis</h3>
+        <p class="note-abstract">
+          Structured classification of prompt injection and jailbreak techniques. Maps each technique to the
+          safety mechanism it bypasses, and evaluates which classifier designs resist each category.
+        </p>
+        <div class="note-meta"><span>Mar 2026</span><span>·</span><span>22 min</span></div>
+      </a>
+
+      <a href="#" class="research-note" style="opacity:0.55;cursor:default;pointer-events:none;">
+        <span class="note-type" style="background:rgba(245,158,11,0.1);color:#f59e0b;">Detection Engineering</span>
+        <div class="note-tags"><span class="note-tag">SIEM</span><span class="note-tag">Telemetry</span><span class="note-tag">Coverage</span></div>
+        <h3 class="note-title">Telemetry Coverage Gaps in Standard SIEM Deployments</h3>
+        <p class="note-abstract">
+          Systematic review of which attack techniques in MITRE ATT&amp;CK are consistently
+          under-logged in standard Elastic and Splunk deployments. Includes log source gap analysis
+          and coverage scoring methodology.
+        </p>
+        <div class="note-meta"><span>Feb 2026</span><span>·</span><span>28 min</span></div>
+      </a>
+
+      <a href="#" class="research-note" style="opacity:0.55;cursor:default;pointer-events:none;">
+        <span class="note-type" style="background:rgba(167,139,250,0.1);color:#a78bfa;">AI Security</span>
+        <div class="note-tags"><span class="note-tag">Red Teaming</span><span class="note-tag">LLM</span><span class="note-tag">Boundaries</span></div>
+        <h3 class="note-title">AI Security Tool Boundaries: Where Model-Assisted Analysis Fails</h3>
+        <p class="note-abstract">
+          Structured evaluation of AI-assisted security tooling — where model outputs are reliable,
+          where they produce confident-sounding hallucinations, and what validation frameworks are necessary.
+        </p>
+        <div class="note-meta"><span>Jan 2026</span><span>·</span><span>19 min</span></div>
+      </a>
+    </div>
+
+    <!-- Row of 2 -->
+    <div class="notes-grid-2">
+      <a href="#" class="research-note" style="opacity:0.55;cursor:default;pointer-events:none;">
+        <span class="note-type" style="background:rgba(34,197,94,0.08);color:#22c55e;">Lab Design</span>
+        <div class="note-tags"><span class="note-tag">Architecture</span><span class="note-tag">Simulation</span><span class="note-tag">Fidelity</span></div>
+        <h3 class="note-title">Lab Design Tradeoffs: Realism vs. Safety in Cyber Range Environments</h3>
+        <p class="note-abstract">
+          Analysis of design decisions in building offensive security labs — how to balance environmental
+          realism (complete Active Directory configurations, realistic traffic patterns) against isolation
+          requirements and operational safety.
+        </p>
+        <div class="note-meta"><span>Dec 2025</span><span>·</span><span>15 min</span></div>
+      </a>
+
+      <a href="#" class="research-note" style="opacity:0.55;cursor:default;pointer-events:none;">
+        <span class="note-type">Auth Patterns</span>
+        <div class="note-tags"><span class="note-tag">OAuth</span><span class="note-tag">JWT</span><span class="note-tag">Enterprise Auth</span></div>
+        <h3 class="note-title">OAuth and JWT Pattern Analysis: Common Weaknesses in Enterprise Auth</h3>
+        <p class="note-abstract">
+          Survey of real-world OAuth 2.0 and JWT implementation patterns — identifies the misconfiguration
+          categories most frequently exploitable in enterprise deployments, with supporting lab evidence.
+        </p>
+        <div class="note-meta"><span>Nov 2025</span><span>·</span><span>24 min</span></div>
+      </a>
+    </div>
+
+    <div class="module-connections-row">
+      <span class="connections-label">Related</span>
+      <a href="/blog.html" class="connection-link">Technical Blog</a>
+      <a href="/case-studies.html" class="connection-link">Case Studies</a>
+      <a href="/labs.html" class="connection-link">Labs</a>
+      <a href="/talks.html" class="connection-link">Talks</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-ecosystem">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><div class="nav-logo-mark"></div><span class="footer-brand-name">BlackShield Core</span></div>
+        <p class="footer-brand-desc">A cybersecurity and AI experimentation platform.</p>
+        <div style="margin-top:16px;"><span class="status-badge status-beta">12 Modules</span></div>
+      </div>
+      <div class="footer-col"><div class="footer-col-title">Platform</div><a href="/labs.html">Labs</a><a href="/tools.html">Tools</a><a href="/index.html#ai-lab">AI Lab</a></div>
+      <div class="footer-col"><div class="footer-col-title">Knowledge</div><a href="/blog.html">Blog</a><a href="/research.html">Research</a><a href="/case-studies.html">Case Studies</a></div>
+      <div class="footer-col"><div class="footer-col-title">Community</div><a href="/talks.html">Talks</a><a href="/about.html">About</a><a href="/index.html#challenges">Challenges</a></div>
+      <div class="footer-col"><div class="footer-col-title">Resources</div><a href="#" style="opacity:0.4;cursor:default;pointer-events:none;">Sigma Rules</a><a href="#" style="opacity:0.4;cursor:default;pointer-events:none;">Lab Configs</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2026 BlackShield Core. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.nav-group').forEach(group => {
+      group.querySelector('.nav-group-trigger').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = group.classList.contains('open');
+        document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open'));
+        if (!isOpen) group.classList.add('open');
+      });
+    });
+    document.addEventListener('click', () => document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open')));
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+      });
+    });
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.style.background = window.scrollY > 40 ? 'rgba(2,9,26,0.9)' : 'rgba(2,11,24,0.6)';
+    }, { passive: true });
+  </script>
+</body>
+</html>

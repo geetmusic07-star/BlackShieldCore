@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JWT Decoder &amp; Inspector — BlackShield Core Tools</title>
+  <meta name="description" content="Client-side JWT decoder. Paste a token to inspect its header, claims, and common weaknesses. Token never leaves your browser.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    .tool-wrap { max-width: 1080px; margin: 0 auto; padding: 140px 32px 80px; position: relative; z-index: 10; }
+    .breadcrumb { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); margin-bottom: 32px; }
+    .breadcrumb a { color: var(--text-tertiary); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb-sep { opacity: 0.4; }
+
+    .tool-header { margin-bottom: 32px; }
+    .tool-label { font-family: var(--mono); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+    .tool-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+    .tool-title { font-size: clamp(28px, 3.5vw, 40px); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; color: var(--text-primary); margin-bottom: 14px; }
+    .tool-desc { font-size: 15px; line-height: 1.7; color: var(--text-secondary); max-width: 720px; }
+
+    .privacy-inline { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; color: #10b981; letter-spacing: 0.5px; padding: 6px 12px; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3); border-radius: 999px; margin-top: 14px; }
+    .privacy-inline svg { width: 12px; height: 12px; stroke: #10b981; fill: none; stroke-width: 1.8; }
+
+    .input-panel { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 14px; padding: 24px; margin-bottom: 24px; }
+    .input-label { font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .input-label-actions { display: flex; gap: 8px; }
+    .btn-inline { font-family: var(--mono); font-size: 10px; color: var(--accent); padding: 4px 10px; background: transparent; border: 1px solid var(--border-dim); border-radius: 6px; cursor: pointer; letter-spacing: 0.5px; transition: all 0.2s; }
+    .btn-inline:hover { border-color: var(--accent); }
+
+    .jwt-input {
+      width: 100%;
+      min-height: 120px;
+      padding: 16px 18px;
+      background: var(--bg-void);
+      border: 1px solid var(--border-dim);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      resize: vertical;
+      word-break: break-all;
+    }
+    .jwt-input:focus { outline: none; border-color: var(--accent); }
+
+    .output-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    .output-panel { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 14px; overflow: hidden; }
+    .output-head { padding: 14px 20px; border-bottom: 1px solid var(--border-dim); display: flex; justify-content: space-between; align-items: center; }
+    .output-head-title { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; }
+    .output-head-sub { font-family: var(--mono); font-size: 9px; color: var(--text-tertiary); letter-spacing: 0.5px; }
+    .output-body { padding: 20px; font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text-secondary); white-space: pre-wrap; word-break: break-all; min-height: 180px; }
+    .output-body .k { color: #93c5fd; }
+    .output-body .s { color: #6ee7b7; }
+    .output-body .n { color: #f59e0b; }
+    .output-body .p { color: var(--text-tertiary); }
+
+    .signature-panel { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 14px; overflow: hidden; margin-bottom: 24px; }
+    .signature-body { padding: 20px; font-family: var(--mono); font-size: 12px; line-height: 1.7; color: var(--text-secondary); word-break: break-all; }
+
+    .findings-panel { background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 14px; margin-bottom: 24px; overflow: hidden; }
+    .findings-head { padding: 14px 20px; border-bottom: 1px solid var(--border-dim); display: flex; justify-content: space-between; align-items: center; }
+    .findings-body { padding: 8px 0; }
+    .finding-row { padding: 12px 20px; border-bottom: 1px solid var(--border-dim); display: flex; gap: 14px; align-items: flex-start; }
+    .finding-row:last-child { border-bottom: 0; }
+    .finding-level { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; flex-shrink: 0; margin-top: 1px; }
+    .finding-level.ok { color: #10b981; border: 1px solid rgba(16,185,129,0.4); background: rgba(16,185,129,0.08); }
+    .finding-level.warn { color: #f59e0b; border: 1px solid rgba(245,158,11,0.4); background: rgba(245,158,11,0.08); }
+    .finding-level.crit { color: #ef4444; border: 1px solid rgba(239,68,68,0.4); background: rgba(239,68,68,0.08); }
+    .finding-level.info { color: var(--accent); border: 1px solid var(--accent); background: var(--accent-dim); }
+    .finding-text { font-size: 13px; line-height: 1.55; color: var(--text-secondary); }
+    .finding-text strong { color: var(--text-primary); }
+
+    .presets { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .preset-btn { font-family: var(--mono); font-size: 10px; color: var(--text-secondary); padding: 6px 12px; background: transparent; border: 1px solid var(--border-dim); border-radius: 999px; cursor: pointer; transition: all 0.2s; }
+    .preset-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    .tool-nav-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 24px; padding: 14px 20px; background: var(--bg-surface); border: 1px solid var(--border-dim); border-radius: 12px; align-items: center; }
+    .tool-nav-label { font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); letter-spacing: 1px; text-transform: uppercase; }
+    .tool-nav-link { font-family: var(--mono); font-size: 11px; color: var(--text-secondary); padding: 5px 12px; border: 1px solid var(--border-dim); border-radius: 999px; text-decoration: none; letter-spacing: 0.3px; }
+    .tool-nav-link:hover { color: var(--accent); border-color: var(--accent); }
+
+    @media (max-width: 800px) {
+      .output-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain-overlay"></div>
+  <div class="bg-ambient"></div>
+  <div class="bg-grid-lines"></div>
+
+  <nav class="nav" id="main-nav">
+    <a href="/" class="nav-logo"><div class="nav-logo-mark"></div><span class="nav-logo-text">BlackShield Core</span></a>
+    <div class="nav-links">
+      <div class="nav-group"><button class="nav-group-trigger">Platform<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/labs.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/></svg></span><span class="dd-label"><span class="dd-name">Labs</span></span></a>
+          <a href="/tools.html" style="background:var(--accent-dim);border-radius:8px;"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><span class="dd-label"><span class="dd-name" style="color:var(--accent)">Tools</span></span></a>
+          <a href="/ai-security.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/></svg></span><span class="dd-label"><span class="dd-name">AI Security</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Knowledge<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/blog.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></span><span class="dd-label"><span class="dd-name">Blog</span></span></a>
+          <a href="/research.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/></svg></span><span class="dd-label"><span class="dd-name">Research</span></span></a>
+          <a href="/case-studies.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/></svg></span><span class="dd-label"><span class="dd-name">Case Studies</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Community<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/talks.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="dd-label"><span class="dd-name">Talks</span></span></a>
+          <a href="/about.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="dd-label"><span class="dd-name">About</span></span></a>
+        </div>
+      </div>
+      <a href="/" class="nav-cta-btn">Enter Platform</a>
+    </div>
+  </nav>
+
+  <div class="tool-wrap">
+    <div class="breadcrumb">
+      <a href="/">Home</a><span class="breadcrumb-sep">/</span>
+      <a href="/tools.html">Tools</a><span class="breadcrumb-sep">/</span>
+      <span style="color:var(--text-secondary)">JWT Decoder</span>
+    </div>
+
+    <div class="tool-header">
+      <div class="tool-label">Security Tool</div>
+      <h1 class="tool-title">JWT Decoder &amp; Inspector</h1>
+      <p class="tool-desc">
+        Paste a JWT to decode its header and claims. The tool flags common weaknesses —
+        <code style="font-family:var(--mono);font-size:13px;color:var(--accent)">alg:none</code> acceptance,
+        missing <code style="font-family:var(--mono);font-size:13px;color:var(--accent)">exp</code>,
+        suspicious <code style="font-family:var(--mono);font-size:13px;color:var(--accent)">kid</code> patterns,
+        and algorithm choices worth double-checking against the server's policy.
+      </p>
+      <div class="privacy-inline">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>CLIENT-SIDE ONLY &middot; Token never leaves your browser</span>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-panel">
+      <div class="input-label">
+        <span>JWT Input</span>
+        <span class="input-label-actions">
+          <button class="btn-inline" id="btn-clear">Clear</button>
+          <button class="btn-inline" id="btn-paste">Paste</button>
+        </span>
+      </div>
+      <textarea class="jwt-input" id="jwt-input" placeholder="Paste a JWT here — three base64url-encoded segments separated by periods."></textarea>
+      <div class="presets">
+        <button class="preset-btn" data-preset="standard">Standard HS256</button>
+        <button class="preset-btn" data-preset="none">alg:none token</button>
+        <button class="preset-btn" data-preset="noexp">Missing exp</button>
+        <button class="preset-btn" data-preset="kid">Suspicious kid</button>
+      </div>
+    </div>
+
+    <!-- Output -->
+    <div class="output-grid">
+      <div class="output-panel">
+        <div class="output-head">
+          <span class="output-head-title">Header</span>
+          <span class="output-head-sub" id="header-alg">—</span>
+        </div>
+        <div class="output-body" id="header-out"><span class="p">(waiting for input)</span></div>
+      </div>
+      <div class="output-panel">
+        <div class="output-head">
+          <span class="output-head-title">Claims</span>
+          <span class="output-head-sub" id="claims-count">—</span>
+        </div>
+        <div class="output-body" id="claims-out"><span class="p">(waiting for input)</span></div>
+      </div>
+    </div>
+
+    <!-- Signature -->
+    <div class="signature-panel">
+      <div class="output-head">
+        <span class="output-head-title">Signature (base64url)</span>
+        <span class="output-head-sub" id="sig-bytes">—</span>
+      </div>
+      <div class="signature-body" id="sig-out"><span style="color:var(--text-tertiary);">(waiting for input)</span></div>
+    </div>
+
+    <!-- Findings -->
+    <div class="findings-panel">
+      <div class="findings-head">
+        <span class="output-head-title">Findings</span>
+        <span class="output-head-sub" id="findings-count">0 findings</span>
+      </div>
+      <div class="findings-body" id="findings-out">
+        <div class="finding-row"><span class="finding-level info">INFO</span><span class="finding-text">Paste a token above to see findings. The analyzer checks for <strong>alg:none</strong>, missing <strong>exp</strong>, short signatures, suspicious <strong>kid</strong> values, and algorithm choices that often indicate misconfiguration.</span></div>
+      </div>
+    </div>
+
+    <!-- Related -->
+    <div class="tool-nav-row">
+      <span class="tool-nav-label">Related</span>
+      <a href="/tools.html" class="tool-nav-link">All Tools</a>
+      <a href="/labs/jwt-exploit-chain.html" class="tool-nav-link">JWT Exploit Chain Lab</a>
+      <a href="/blog/jwt-security-deep-dive.html" class="tool-nav-link">JWT Security Deep Dive</a>
+      <a href="/ai-security.html" class="tool-nav-link">AI Security</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-ecosystem">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><div class="nav-logo-mark"></div><span class="footer-brand-name">BlackShield Core</span></div>
+        <p class="footer-brand-desc">A cybersecurity and AI experimentation platform.</p>
+      </div>
+      <div class="footer-col"><div class="footer-col-title">Platform</div><a href="/labs.html">Labs</a><a href="/tools.html">Tools</a><a href="/ai-security.html">AI Security</a></div>
+      <div class="footer-col"><div class="footer-col-title">Knowledge</div><a href="/blog.html">Blog</a><a href="/research.html">Research</a><a href="/case-studies.html">Case Studies</a></div>
+      <div class="footer-col"><div class="footer-col-title">Community</div><a href="/talks.html">Talks</a><a href="/about.html">About</a></div>
+    </div>
+    <div class="footer-bottom"><span class="footer-copy">&copy; 2026 BlackShield Core. All rights reserved.</span></div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.nav-group').forEach(group => {
+      group.querySelector('.nav-group-trigger').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = group.classList.contains('open');
+        document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open'));
+        if (!isOpen) group.classList.add('open');
+      });
+    });
+    document.addEventListener('click', () => document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open')));
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => { nav.style.background = window.scrollY > 40 ? 'rgba(2,9,26,0.9)' : 'rgba(2,11,24,0.6)'; }, { passive: true });
+
+    // -------- JWT decoder logic --------
+    const PRESETS = {
+      standard: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyXzQyIiwibmFtZSI6IkphbmUgRG9lIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6MTcwMDAwMzYwMH0.abcDEF123ignoredSigForDemo',
+      none:     'eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJ1c2VyXzEyMyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcwMDAwMDAwMH0.',
+      noexp:    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhcHAtdG9rZW4iLCJzY29wZSI6ImFwaTpyZWFkIiwiaWF0IjoxNzAwMDAwMDAwfQ.shortSig',
+      kid:      'eyJhbGciOiJIUzI1NiIsImtpZCI6IngnIFVOSU9OIFNFTEVDVCAnYWJjJy0tIn0.eyJzdWIiOiJ1c2VyXzk5OSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcwMDAwMDAwMCwiZXhwIjoxNzAwMDAzNjAwfQ.sig'
+    };
+
+    const input = document.getElementById('jwt-input');
+    const headerOut = document.getElementById('header-out');
+    const claimsOut = document.getElementById('claims-out');
+    const sigOut = document.getElementById('sig-out');
+    const headerAlg = document.getElementById('header-alg');
+    const claimsCount = document.getElementById('claims-count');
+    const sigBytes = document.getElementById('sig-bytes');
+    const findingsOut = document.getElementById('findings-out');
+    const findingsCount = document.getElementById('findings-count');
+
+    function b64urlDecode(s) {
+      s = s.replace(/-/g, '+').replace(/_/g, '/');
+      while (s.length % 4) s += '=';
+      try { return decodeURIComponent(escape(atob(s))); }
+      catch (e) { return null; }
+    }
+
+    function renderJson(obj) {
+      const pretty = JSON.stringify(obj, null, 2);
+      return pretty
+        .replace(/("(?:[^"\\]|\\.)*")(\s*:)/g, '<span class="k">$1</span>$2')
+        .replace(/:\s*("(?:[^"\\]|\\.)*")/g, ': <span class="s">$1</span>')
+        .replace(/:\s*(-?\d+(?:\.\d+)?)/g, ': <span class="n">$1</span>')
+        .replace(/:\s*(true|false|null)/g, ': <span class="n">$1</span>');
+    }
+
+    function analyze(header, claims, sigPart) {
+      const findings = [];
+      if (!header || typeof header !== 'object') return findings;
+
+      const alg = (header.alg || '').toLowerCase();
+      if (alg === 'none') {
+        findings.push({ level: 'crit', text: '<strong>alg:none</strong> &mdash; token is not signed. If the server accepts this, it is a complete authentication bypass.' });
+      } else if (alg === 'hs256' || alg === 'hs384' || alg === 'hs512') {
+        findings.push({ level: 'info', text: `HMAC algorithm (<strong>${header.alg}</strong>). Make sure the server enforces this algorithm explicitly and uses a long random secret.` });
+      } else if (alg === 'rs256' || alg === 'rs384' || alg === 'rs512' || alg === 'es256' || alg === 'es384') {
+        findings.push({ level: 'ok', text: `Asymmetric algorithm (<strong>${header.alg}</strong>). Watch for RS256&rarr;HS256 algorithm confusion if the server uses a permissive library.` });
+      } else if (alg) {
+        findings.push({ level: 'warn', text: `Unusual algorithm: <strong>${header.alg}</strong>. Worth verifying the server expects this.` });
+      }
+
+      if (header.kid) {
+        const kid = String(header.kid);
+        if (/['"\\;]|--|\/\*|UNION|SELECT|\.\.|\//i.test(kid)) {
+          findings.push({ level: 'crit', text: `<strong>kid</strong> header contains SQL / path / separator characters. If the server uses <code>kid</code> in a query or file path without sanitization, this is injectable.` });
+        } else {
+          findings.push({ level: 'info', text: `<strong>kid</strong> header set to <code>${kid.substring(0, 80)}</code>. Verify the server treats this as untrusted input.` });
+        }
+      }
+
+      if (!claims || typeof claims !== 'object') return findings;
+
+      if (typeof claims.exp !== 'number') {
+        findings.push({ level: 'crit', text: 'Missing <strong>exp</strong> claim. Token does not expire &mdash; if the server does not enforce its own expiry, the token is effectively permanent.' });
+      } else {
+        const now = Math.floor(Date.now() / 1000);
+        if (claims.exp < now) {
+          findings.push({ level: 'warn', text: `Token is expired (<strong>exp</strong> in the past). Most servers will reject it.` });
+        } else {
+          const hours = Math.round((claims.exp - now) / 3600);
+          findings.push({ level: 'ok', text: `Token expires in ~<strong>${hours} hour(s)</strong>.` });
+        }
+      }
+
+      if (typeof claims.iat !== 'number') {
+        findings.push({ level: 'warn', text: 'Missing <strong>iat</strong> claim. Not required, but makes replay / reuse analysis harder.' });
+      }
+
+      if (!claims.iss) {
+        findings.push({ level: 'warn', text: 'Missing <strong>iss</strong> (issuer) claim. Multi-tenant services should enforce this.' });
+      }
+
+      if (!claims.aud) {
+        findings.push({ level: 'warn', text: 'Missing <strong>aud</strong> (audience) claim. Without it, a token valid for one service may be replayed against another.' });
+      }
+
+      if (sigPart !== undefined && alg !== 'none') {
+        const sigLen = sigPart.length;
+        if (sigLen === 0) {
+          findings.push({ level: 'crit', text: 'Signature segment is empty but algorithm is not <code>none</code>. Some libraries will still accept this &mdash; complete bypass.' });
+        } else if (sigLen < 30) {
+          findings.push({ level: 'warn', text: `Signature segment is unusually short (<strong>${sigLen} chars</strong>). Expected ~43 for HS256, more for RSA.` });
+        }
+      }
+
+      return findings;
+    }
+
+    function decode() {
+      const raw = input.value.trim();
+      if (!raw) {
+        headerOut.innerHTML = '<span class="p">(waiting for input)</span>';
+        claimsOut.innerHTML = '<span class="p">(waiting for input)</span>';
+        sigOut.innerHTML = '<span style="color:var(--text-tertiary);">(waiting for input)</span>';
+        headerAlg.textContent = '—';
+        claimsCount.textContent = '—';
+        sigBytes.textContent = '—';
+        findingsOut.innerHTML = '<div class="finding-row"><span class="finding-level info">INFO</span><span class="finding-text">Paste a token above to see findings.</span></div>';
+        findingsCount.textContent = '0 findings';
+        return;
+      }
+
+      const parts = raw.split('.');
+      if (parts.length !== 3) {
+        headerOut.innerHTML = '<span style="color:#ef4444;">Token must have exactly 3 segments separated by periods.</span>';
+        claimsOut.innerHTML = '<span class="p">—</span>';
+        sigOut.innerHTML = '<span class="p">—</span>';
+        findingsOut.innerHTML = '<div class="finding-row"><span class="finding-level crit">ERROR</span><span class="finding-text">Malformed token. Expected <code>header.claims.signature</code>.</span></div>';
+        findingsCount.textContent = '1 finding';
+        return;
+      }
+
+      const [h, c, s] = parts;
+
+      let header = null, claims = null;
+      try { header = JSON.parse(b64urlDecode(h)); } catch (e) {}
+      try { claims = JSON.parse(b64urlDecode(c)); } catch (e) {}
+
+      if (header) {
+        headerOut.innerHTML = renderJson(header);
+        headerAlg.textContent = header.alg ? `alg: ${header.alg}` : '';
+      } else {
+        headerOut.innerHTML = '<span style="color:#ef4444;">Header is not valid base64url JSON.</span>';
+        headerAlg.textContent = 'invalid';
+      }
+
+      if (claims) {
+        claimsOut.innerHTML = renderJson(claims);
+        const keys = Object.keys(claims);
+        claimsCount.textContent = `${keys.length} claim${keys.length === 1 ? '' : 's'}`;
+      } else {
+        claimsOut.innerHTML = '<span style="color:#ef4444;">Claims segment is not valid base64url JSON.</span>';
+        claimsCount.textContent = 'invalid';
+      }
+
+      if (s.length === 0) {
+        sigOut.innerHTML = '<span style="color:#f59e0b;">(empty — alg:none token)</span>';
+        sigBytes.textContent = '0 chars';
+      } else {
+        sigOut.textContent = s;
+        sigBytes.textContent = `${s.length} chars`;
+      }
+
+      const findings = analyze(header, claims, s);
+      if (findings.length === 0) {
+        findingsOut.innerHTML = '<div class="finding-row"><span class="finding-level ok">OK</span><span class="finding-text">No obvious issues detected in the token structure.</span></div>';
+      } else {
+        findingsOut.innerHTML = findings.map(f =>
+          `<div class="finding-row"><span class="finding-level ${f.level}">${f.level}</span><span class="finding-text">${f.text}</span></div>`
+        ).join('');
+      }
+      findingsCount.textContent = `${findings.length} finding${findings.length === 1 ? '' : 's'}`;
+    }
+
+    input.addEventListener('input', decode);
+    document.getElementById('btn-clear').addEventListener('click', () => { input.value = ''; decode(); });
+    document.getElementById('btn-paste').addEventListener('click', async () => {
+      try { input.value = await navigator.clipboard.readText(); decode(); }
+      catch (e) { input.focus(); }
+    });
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        input.value = PRESETS[btn.dataset.preset] || '';
+        decode();
+      });
+    });
+  </script>
+</body>
+</html>

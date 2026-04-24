@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Studies — BlackShield Core</title>
+  <meta name="description" content="Scenario-based incident analysis and post-incident reconstruction. Technical breakdowns of real-world attack chains, defense failures, and remediation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .page-header { padding: 140px 48px 64px; max-width: 1280px; margin: 0 auto; position: relative; z-index: 10; }
+    .page-header-label { font-family: var(--mono); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .page-header-label::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+    .page-header-title { font-size: clamp(36px, 5vw, 64px); font-weight: 800; font-variation-settings: 'wght' 800; letter-spacing: -0.05em; line-height: 1.0; color: var(--text-primary); margin-bottom: 20px; }
+    .page-header-desc { font-size: 16px; line-height: 1.75; color: var(--text-secondary); max-width: 540px; }
+    .breadcrumb { max-width: 1280px; margin: 0 auto; padding: 88px 48px 0; display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); }
+    .breadcrumb a { color: var(--text-tertiary); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .main-content { max-width: 1280px; margin: 0 auto; padding: 0 48px 80px; }
+
+    .cs-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      padding: 40px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-dim);
+      border-radius: 20px;
+      margin-bottom: 20px;
+      transition: all 0.4s var(--ease-out-expo);
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .cs-block::after { content: ''; position: absolute; inset: 0; border-radius: 20px; border: 1px solid rgba(255,255,255,0.02); box-shadow: inset 0 1px 0 rgba(255,255,255,0.03); pointer-events: none; }
+    .cs-block:hover { border-color: rgba(59,130,246,0.2); transform: translateY(-2px); box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 40px rgba(59,130,246,0.05); }
+
+    .cs-left { display: flex; flex-direction: column; gap: 16px; }
+    .cs-right { border-left: 1px solid var(--border-dim); padding-left: 48px; display: flex; flex-direction: column; gap: 14px; justify-content: center; }
+
+    .cs-type { font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 9px; border-radius: 4px; background: rgba(59,130,246,0.1); color: var(--accent); display: inline-block; }
+    .cs-title { font-size: 20px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.03em; line-height: 1.25; }
+    .cs-summary { font-size: 13px; color: var(--text-secondary); line-height: 1.72; }
+    .cs-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .cs-tag { font-size: 10px; padding: 2px 8px; border-radius: 4px; background: var(--bg-elevated); color: var(--text-tertiary); font-family: var(--mono); }
+    .cs-outcome { font-family: var(--mono); font-size: 13px; color: var(--accent); font-weight: 500; }
+    .cs-finding { font-size: 12.5px; color: var(--text-secondary); line-height: 1.65; border-left: 2px solid var(--border-subtle); padding-left: 14px; }
+    .cs-meta { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 10px; color: var(--text-tertiary); padding-top: 12px; border-top: 1px solid var(--border-hair); margin-top: auto; }
+    .cs-read-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent); }
+
+    .section-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--border-dim); }
+    .section-bar-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .section-bar-count { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); }
+
+    @media (max-width: 900px) {
+      .cs-block { grid-template-columns: 1fr; gap: 24px; }
+      .cs-right { border-left: none; padding-left: 0; padding-top: 20px; border-top: 1px solid var(--border-dim); }
+      .page-header, .main-content, .breadcrumb { padding-left: 20px; padding-right: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain-overlay"></div>
+  <div class="bg-ambient"></div>
+  <div class="bg-grid-lines"></div>
+
+  <nav class="nav" id="main-nav">
+    <a href="/" class="nav-logo"><div class="nav-logo-mark"></div><span class="nav-logo-text">BlackShield Core</span></a>
+    <div class="nav-links">
+      <div class="nav-group"><button class="nav-group-trigger">Platform<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/labs.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="dd-label"><span class="dd-name">Labs</span><span class="dd-hint">Cyber Range / CTF Labs</span></span></a>
+          <a href="/tools.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><span class="dd-label"><span class="dd-name">Tools</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Knowledge<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/blog.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></span><span class="dd-label"><span class="dd-name">Blog</span></span></a>
+          <a href="/research.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><span class="dd-label"><span class="dd-name">Research</span></span></a>
+          <a href="/case-studies.html" style="background:var(--accent-dim);border-radius:8px;"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><span class="dd-label"><span class="dd-name" style="color:var(--accent)">Case Studies</span><span class="dd-hint">Incident Analysis</span></span></a>
+        </div>
+      </div>
+      <div class="nav-group"><button class="nav-group-trigger">Community<svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <a href="/talks.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><span class="dd-label"><span class="dd-name">Talks</span></span></a>
+          <a href="/about.html"><span class="dd-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="dd-label"><span class="dd-name">About</span></span></a>
+        </div>
+      </div>
+      <a href="/" class="nav-cta-btn">Enter Platform</a>
+    </div>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="/">Home</a><span style="opacity:0.4">/</span>
+    <span style="color:var(--text-secondary)">Case Studies</span>
+  </div>
+
+  <div class="page-header">
+    <div class="page-header-label">Incident Analysis</div>
+    <h1 class="page-header-title">Case<br><span style="color:var(--accent)">Studies.</span></h1>
+    <p class="page-header-desc">
+      Scenario-based technical breakdowns of attack chains, defense failures, and post-incident analysis.
+      Each case study reconstructs a realistic scenario with full technical detail — what happened, why defenses
+      failed, and what would have caught it earlier.
+    </p>
+  </div>
+
+  <div class="main-content">
+
+    <div class="filter-tabs">
+      <button class="filter-tab active">All</button>
+      <button class="filter-tab">Supply Chain</button>
+      <button class="filter-tab">Ransomware</button>
+      <button class="filter-tab">Insider Threat</button>
+      <button class="filter-tab">Cloud</button>
+      <button class="filter-tab">AI / LLM</button>
+    </div>
+
+    <div class="section-bar">
+      <span class="section-bar-title">All Case Studies</span>
+      <span class="section-bar-count">5 scenarios</span>
+    </div>
+
+    <!-- Case Study 1 -->
+    <a href="/case-studies/supply-chain-npm.html" class="cs-block">
+      <div class="cs-left">
+        <div>
+          <span class="cs-type">Supply Chain</span>
+          <span class="status-badge status-beta" style="margin-left:8px;">In-Depth</span>
+        </div>
+        <div class="cs-tags">
+          <span class="cs-tag">CI/CD</span><span class="cs-tag">Dependency Confusion</span>
+          <span class="cs-tag">Build Pipeline</span><span class="cs-tag">npm</span>
+        </div>
+        <h2 class="cs-title">Supply Chain Compromise via Dependency Confusion in a CI/CD Pipeline</h2>
+        <p class="cs-summary">
+          Reconstruction of an internal package substitution scenario: a private npm package name was registered
+          publicly with a higher version number. The build pipeline resolved to the malicious public version,
+          executing attacker-controlled code during the CI build.
+        </p>
+        <div class="cs-meta">
+          <span>Scenario · Apr 2026</span><span>·</span><span>45 min read</span>
+        </div>
+      </div>
+      <div class="cs-right">
+        <div class="cs-outcome">Attack Vector: Dependency Confusion (npm)</div>
+        <div class="cs-finding">
+          Package manager resolved public registry over private registry for the same package name.
+          Attacker-controlled version executed preinstall scripts with network access during build.
+        </div>
+        <div class="cs-finding">
+          Dwell time: 14 days in CI environment before anomalous outbound connections triggered alert.
+          Three production builds executed the malicious package without detection.
+        </div>
+        <span class="cs-read-link">Full Analysis <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </div>
+    </a>
+
+    <!-- Case Study 2 -->
+    <a href="#" class="cs-block" style="opacity:0.55;cursor:default;pointer-events:none;">
+      <div class="cs-left">
+        <div>
+          <span class="cs-type" style="background:rgba(244,63,94,0.1);color:#f43f5e;">Ransomware</span>
+        </div>
+        <div class="cs-tags">
+          <span class="cs-tag">Active Directory</span><span class="cs-tag">Lateral Movement</span>
+          <span class="cs-tag">Ransomware</span><span class="cs-tag">Kerberos</span>
+        </div>
+        <h2 class="cs-title">Ransomware Deployment via Active Directory Lateral Movement</h2>
+        <p class="cs-summary">
+          Analysis of a ransomware scenario where initial access via a phishing email escalated to domain
+          compromise in under 4 hours. The attack used Kerberoasting to extract service account credentials,
+          followed by GPO modification to deploy the ransomware payload to domain-joined workstations.
+        </p>
+        <div class="cs-meta">
+          <span>Scenario · Mar 2026</span><span>·</span><span>38 min read</span>
+        </div>
+      </div>
+      <div class="cs-right">
+        <div class="cs-outcome">Initial Access → Domain Admin: 3h 47m</div>
+        <div class="cs-finding">
+          Service account passwords had not been rotated in 18+ months. Kerberoasted hash cracked
+          in under 2 minutes with a 10-word GPU rig on a medium-complexity dictionary.
+        </div>
+        <div class="cs-finding">
+          GPO-based deployment bypassed endpoint protection on 87% of domain-joined machines.
+          Detection triggered only after file system encryption began.
+        </div>
+        <span class="cs-read-link">Full Analysis <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </div>
+    </a>
+
+    <!-- Case Study 3 -->
+    <a href="#" class="cs-block" style="opacity:0.55;cursor:default;pointer-events:none;">
+      <div class="cs-left">
+        <div>
+          <span class="cs-type" style="background:rgba(167,139,250,0.1);color:#a78bfa;">AI / LLM</span>
+        </div>
+        <div class="cs-tags">
+          <span class="cs-tag">Prompt Injection</span><span class="cs-tag">Data Exfiltration</span>
+          <span class="cs-tag">Indirect Injection</span><span class="cs-tag">API Security</span>
+        </div>
+        <h2 class="cs-title">LLM-Assisted Application: Indirect Prompt Injection Enabling Data Exfiltration</h2>
+        <p class="cs-summary">
+          Demonstration scenario where an LLM-powered document assistant was manipulated via malicious
+          content embedded in uploaded documents. The injected instructions redirected the assistant
+          to summarize and transmit session data to an attacker-controlled URL.
+        </p>
+        <div class="cs-meta">
+          <span>Scenario · Feb 2026</span><span>·</span><span>32 min read</span>
+        </div>
+      </div>
+      <div class="cs-right">
+        <div class="cs-outcome">Attack Type: Indirect Prompt Injection</div>
+        <div class="cs-finding">
+          Malicious instructions embedded in a PDF document were processed as trusted content.
+          No input sanitization was applied to document text before passing it to the model context.
+        </div>
+        <div class="cs-finding">
+          The model completed the exfiltration task without any safety system triggering, as the
+          malicious instruction was framed as a "document formatting requirement."
+        </div>
+        <span class="cs-read-link">Full Analysis <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </div>
+    </a>
+
+    <!-- Case Study 4 -->
+    <a href="#" class="cs-block" style="opacity:0.55;cursor:default;pointer-events:none;">
+      <div class="cs-left">
+        <div>
+          <span class="cs-type" style="background:rgba(245,158,11,0.1);color:#f59e0b;">Insider Threat</span>
+        </div>
+        <div class="cs-tags">
+          <span class="cs-tag">Data Exfiltration</span><span class="cs-tag">DLP Bypass</span>
+          <span class="cs-tag">UEBA</span>
+        </div>
+        <h2 class="cs-title">Insider Exfiltration: DLP Bypass via Legitimate Cloud Storage Channels</h2>
+        <p class="cs-summary">
+          Analysis of a data exfiltration scenario by a privileged user who bypassed DLP controls by
+          staging sensitive data through corporate-approved cloud storage with minor obfuscation techniques.
+          The scenario highlights gaps in content inspection for authorized storage platforms.
+        </p>
+        <div class="cs-meta">
+          <span>Scenario · Jan 2026</span><span>·</span><span>28 min read</span>
+        </div>
+      </div>
+      <div class="cs-right">
+        <div class="cs-outcome">Bypass Method: Legitimate Cloud Sync</div>
+        <div class="cs-finding">
+          DLP policies blocked direct upload to personal storage but allowed sync via corporate-approved
+          tools. Rename + compress obfuscation was sufficient to avoid content-based detection.
+        </div>
+        <div class="cs-finding">
+          UEBA flagged the behavior 6 days after exfiltration began due to unusual access volume patterns.
+          Earlier detection would have required deeper file content inspection.
+        </div>
+        <span class="cs-read-link">Full Analysis <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </div>
+    </a>
+
+    <!-- Case Study 5 -->
+    <a href="#" class="cs-block" style="opacity:0.55;cursor:default;pointer-events:none;">
+      <div class="cs-left">
+        <div>
+          <span class="cs-type">Cloud</span>
+        </div>
+        <div class="cs-tags">
+          <span class="cs-tag">AWS</span><span class="cs-tag">IAM Misconfiguration</span>
+          <span class="cs-tag">S3</span><span class="cs-tag">Privilege Escalation</span>
+        </div>
+        <h2 class="cs-title">Cloud Privilege Escalation via IAM Misconfiguration and Metadata Service Abuse</h2>
+        <p class="cs-summary">
+          Reconstruction of an AWS environment compromise starting from an overpermissioned IAM role
+          attached to a publicly accessible EC2 instance. SSRF access to the metadata service yielded
+          credentials that permitted S3 bucket enumeration, data access, and further privilege escalation.
+        </p>
+        <div class="cs-meta">
+          <span>Scenario · Dec 2025</span><span>·</span><span>35 min read</span>
+        </div>
+      </div>
+      <div class="cs-right">
+        <div class="cs-outcome">Entry Point: SSRF → EC2 Metadata</div>
+        <div class="cs-finding">
+          IMDSv1 was enabled with no hop count restriction. SSRF via a web application parameter
+          retrieved role credentials within a single HTTP request.
+        </div>
+        <div class="cs-finding">
+          The IAM role permitted sts:AssumeRole on a second role with S3 full access.
+          No CloudTrail alerting was configured for cross-role assumption from EC2.
+        </div>
+        <span class="cs-read-link">Full Analysis <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+      </div>
+    </a>
+
+    <div class="module-connections-row">
+      <span class="connections-label">Related</span>
+      <a href="/research.html" class="connection-link">Research Notes</a>
+      <a href="/blog.html" class="connection-link">Technical Blog</a>
+      <a href="/labs.html" class="connection-link">Labs</a>
+      <a href="/index.html#osint" class="connection-link">OSINT Projects</a>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-ecosystem">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><div class="nav-logo-mark"></div><span class="footer-brand-name">BlackShield Core</span></div>
+        <p class="footer-brand-desc">A cybersecurity and AI experimentation platform.</p>
+        <div style="margin-top:16px;"><span class="status-badge status-beta">12 Modules</span></div>
+      </div>
+      <div class="footer-col"><div class="footer-col-title">Platform</div><a href="/labs.html">Labs</a><a href="/tools.html">Tools</a><a href="/index.html#ai-lab">AI Lab</a></div>
+      <div class="footer-col"><div class="footer-col-title">Knowledge</div><a href="/blog.html">Blog</a><a href="/research.html">Research</a><a href="/case-studies.html">Case Studies</a></div>
+      <div class="footer-col"><div class="footer-col-title">Community</div><a href="/talks.html">Talks</a><a href="/about.html">About</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2026 BlackShield Core. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.nav-group').forEach(group => {
+      group.querySelector('.nav-group-trigger').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = group.classList.contains('open');
+        document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open'));
+        if (!isOpen) group.classList.add('open');
+      });
+    });
+    document.addEventListener('click', () => document.querySelectorAll('.nav-group').forEach(g => g.classList.remove('open')));
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => { document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); });
+    });
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => { nav.style.background = window.scrollY > 40 ? 'rgba(2,9,26,0.9)' : 'rgba(2,11,24,0.6)'; }, { passive: true });
+  </script>
+</body>
+</html>
