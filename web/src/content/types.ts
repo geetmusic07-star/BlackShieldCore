@@ -71,3 +71,23 @@ export interface Talk {
   summary: string;
   resources: { label: string; available: boolean }[];
 }
+
+export interface OsintCase {
+  slug: string;
+  caseId: string;
+  title: string;
+  category: "Phishing" | "Domain" | "Actor" | "Infrastructure" | "Supply Chain";
+  status: "Active" | "Published" | "Closed";
+  date: string;
+  summary: string;
+  findings: string[];
+  tags: string[];
+}
+
+export interface HomeLabComponent {
+  category: "Cyber Range" | "Detection" | "Identity" | "Network" | "Tooling";
+  name: string;
+  role: string;
+  notes: string;
+  stage: Stage;
+}

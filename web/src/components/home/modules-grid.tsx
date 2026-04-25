@@ -32,7 +32,7 @@ const modules = [
     href: "/dashboard",
     name: "Threat Dashboard",
     category: "Telemetry",
-    desc: "Live CVE feed, severity routing, infrastructure tracking, actor pages.",
+    desc: "Tracked CVE feed, severity routing, infrastructure mapping, actor pages.",
     stage: "build" as const,
     icon: "dash",
   },
@@ -77,12 +77,20 @@ const modules = [
     icon: "talks",
   },
   {
-    href: "/platform",
-    name: "Enterprise Workflow",
-    category: "Operations",
-    desc: "Routine sweeps, ticket handoffs, audit trails — built for SOC and security ops.",
-    stage: "build" as const,
+    href: "/osint",
+    name: "OSINT Investigations",
+    category: "Field Work",
+    desc: "Phishing kit reconstructions, infrastructure mapping, and actor-tracking writeups.",
+    stage: "available" as const,
     icon: "ops",
+  },
+  {
+    href: "/home-lab",
+    name: "Home Lab",
+    category: "Architecture",
+    desc: "Self-hosted SIEM, EDR, and AD topology for safe offensive practice and detection work.",
+    stage: "available" as const,
+    icon: "lab",
   },
 ];
 
@@ -111,10 +119,10 @@ export function ModulesGrid() {
         <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
             <div className="mb-4 text-[10px] font-mono uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
-              Platform modules
+              What's inside
             </div>
             <h2 className="text-[clamp(32px,4vw,48px)] font-semibold leading-[1.06] tracking-[-0.022em]">
-              Twelve modules.
+              Modules.
               <br />
               <span className="text-[color:var(--bsc-text-3)]">Each cross-linked.</span>
             </h2>
@@ -216,6 +224,15 @@ function ModuleGlyph({ kind }: { kind: string }) {
     ops: (
       <>
         <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+      </>
+    ),
+    lab: (
+      <>
+        <rect x="3" y="4" width="18" height="5" rx="1" />
+        <rect x="3" y="10.5" width="18" height="5" rx="1" />
+        <rect x="3" y="17" width="18" height="3" rx="1" />
+        <circle cx="6.5" cy="6.5" r="0.5" />
+        <circle cx="6.5" cy="13" r="0.5" />
       </>
     ),
   };

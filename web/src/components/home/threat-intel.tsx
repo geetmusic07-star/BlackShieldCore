@@ -2,6 +2,7 @@
 
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
+import { ThreatGlobe } from "@/components/scenes/threat-globe";
 
 const cves = [
   { id: "CVE-2026-3849", sev: "CRITICAL", topic: "Remote code execution · imageio", score: 9.8 },
@@ -28,18 +29,32 @@ export function ThreatIntelSection() {
   return (
     <section className="relative py-28 md:py-36">
       <Container>
-        <div className="mb-14 max-w-2xl">
-          <Reveal>
-            <div className="mb-4 text-[10px] font-mono uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
-              Threat Intelligence
+        <div className="mb-16 grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-center">
+          <div className="max-w-xl">
+            <Reveal>
+              <div className="mb-4 text-[10px] font-mono uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
+                Threat Intelligence
+              </div>
+            </Reveal>
+            <Reveal delay={0.05}>
+              <h2 className="text-[clamp(32px,4vw,48px)] font-semibold leading-[1.06] tracking-[-0.022em]">
+                Tracked intelligence,
+                <br />
+                <span className="text-[color:var(--bsc-text-3)]">scored against your graph.</span>
+              </h2>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <p className="mt-5 text-[15px] leading-relaxed text-[color:var(--bsc-text-2)]">
+                Continuously model adversary infrastructure, campaign topology, and indicator
+                drift. Every alert in your stack is correlated against a unified topology — so
+                you see the threat graph, not a list of unrelated CVEs.
+              </p>
+            </Reveal>
+          </div>
+          <Reveal delay={0.1}>
+            <div className="flex justify-center lg:justify-end">
+              <ThreatGlobe />
             </div>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="text-[clamp(32px,4vw,48px)] font-semibold leading-[1.06] tracking-[-0.022em]">
-              Live intelligence,
-              <br />
-              <span className="text-[color:var(--bsc-text-3)]">scored against your graph.</span>
-            </h2>
           </Reveal>
         </div>
       </Container>

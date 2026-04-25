@@ -34,11 +34,11 @@ export function TelemetryFeedPanel() {
     <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[color-mix(in_oklch,var(--bsc-surface)_55%,transparent)] p-5 backdrop-blur-xl shadow-[0_20px_60px_-20px_rgba(0,0,0,0.55)]">
       <div className="flex items-center justify-between">
         <span className="text-[10px] font-mono uppercase tracking-[0.16em] text-[color:var(--bsc-text-3)]">
-          Live Telemetry
+          Tracked Telemetry
         </span>
         <span className="inline-flex items-center gap-1.5 text-[10px] font-mono text-[color:var(--bsc-accent)]">
           <span className="size-1 rounded-full bg-current animate-pulse" />
-          STREAMING
+          TRACKED FEED
         </span>
       </div>
       <div className="mt-3 space-y-1.5 font-mono text-[11px] leading-[1.6]">

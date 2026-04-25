@@ -26,14 +26,22 @@ export const nav = {
       ],
     },
     {
-      label: "Community",
+      label: "Investigate",
       items: [
+        { href: "/osint", name: "OSINT", hint: "Field investigations" },
+        { href: "/home-lab", name: "Home Lab", hint: "Self-hosted topology" },
         { href: "/talks", name: "Talks", hint: "Conference recordings" },
-        { href: "/about", name: "About", hint: "Mission & principles" },
+      ],
+    },
+    {
+      label: "About",
+      items: [
+        { href: "/about", name: "About BSC", hint: "Mission & principles" },
+        { href: "/platform", name: "Platform overview", hint: "All modules" },
       ],
     },
   ],
-  cta: { href: "/platform", label: "Enter Platform" },
+  cta: { href: "/labs", label: "Browse Labs" },
 } as const;
 
 export const footerLinks = {
@@ -48,8 +56,13 @@ export const footerLinks = {
     { href: "/research", label: "Research" },
     { href: "/case-studies", label: "Case Studies" },
   ],
-  Community: [
+  Investigate: [
+    { href: "/osint", label: "OSINT" },
+    { href: "/home-lab", label: "Home Lab" },
     { href: "/talks", label: "Talks" },
-    { href: "/about", label: "About" },
+  ],
+  About: [
+    { href: "/about", label: "About BSC" },
+    { href: "/platform", label: "Platform overview" },
   ],
 } as const;

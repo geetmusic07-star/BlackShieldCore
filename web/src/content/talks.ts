@@ -9,7 +9,7 @@ export const talks: Talk[] = [
     duration: "45 min",
     stage: "available",
     summary:
-      "Three production-viable attack chains against LLM agents with external tool access. Live demo escalating indirect injection to data exfiltration.",
+      "Three production-viable attack chains against LLM agents with external tool access. Walkthrough escalating indirect injection to data exfiltration.",
     resources: [
       { label: "Slides", available: false },
       { label: "Recording", available: false },

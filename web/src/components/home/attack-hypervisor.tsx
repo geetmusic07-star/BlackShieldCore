@@ -65,7 +65,7 @@ export function AttackHypervisorSection() {
           <Reveal delay={0.1}>
             <div className="relative overflow-hidden rounded-3xl border border-white/[0.07] bg-[color-mix(in_oklch,var(--bsc-surface)_55%,transparent)] p-5 backdrop-blur-xl shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)]">
               <div className="mb-3 flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.16em] text-[color:var(--bsc-text-3)]">
-                <span>Live Attack Graph</span>
+                <span>Mapped Attack Graph</span>
                 <span className="text-[color:var(--bsc-text-2)]">7 nodes · 8 edges · 2 hot paths</span>
               </div>
               <svg viewBox="0 0 600 400" className="w-full" aria-hidden="true">

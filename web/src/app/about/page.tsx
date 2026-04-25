@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 const stats = [
-  ["24", "Active Labs"],
+  ["24", "Lab Tracks"],
   ["142", "CVEs Reviewed"],
   ["18", "Research Notes"],
   ["12", "Platform Modules"],
