@@ -1,8 +1,7 @@
     /* ═══════════════════════════════════════════
-       DESIGN SYSTEM — TASTE-SKILL CALIBRATED
-       DESIGN_VARIANCE: 8  |  MOTION_INTENSITY: 7  |  VISUAL_DENSITY: 4
-       Palette: Zinc/Slate base + singular Cyber-Blue accent
-       Font: Outfit (display) + JetBrains Mono (data)
+       DESIGN SYSTEM
+       Palette: Neutral dark base + restrained blue accent
+       Font: Apple system stack (SF Pro / system-ui) + ui-monospace (SF Mono)
        ═══════════════════════════════════════════ */
 
     *, *::before, *::after {
@@ -18,27 +17,27 @@
       --bg-elevated: #091829;
       --bg-glass: rgba(9, 24, 41, 0.68);
 
-      /* ── Border system — more restrained ── */
-      --border-subtle: rgba(59, 130, 246, 0.28);
-      --border-dim: rgba(59, 130, 246, 0.12);
-      --border-hair: rgba(255, 255, 255, 0.05);
+      /* ── Border system — neutral, restrained ── */
+      --border-subtle: rgba(255, 255, 255, 0.10);
+      --border-dim: rgba(255, 255, 255, 0.06);
+      --border-hair: rgba(255, 255, 255, 0.04);
 
-      /* ── Accent hierarchy ── */
-      --accent: #3b82f6;
-      --accent-muted: #2563eb;
-      --accent-bright: #93c5fd;
-      --accent-dim: rgba(59, 130, 246, 0.08);
-      --accent-glow: rgba(59, 130, 246, 0.15);
+      /* ── Accent hierarchy — calmer blue, less neon ── */
+      --accent: #5b8cff;
+      --accent-muted: #3a6cd9;
+      --accent-bright: #a9c2ff;
+      --accent-dim: rgba(91, 140, 255, 0.07);
+      --accent-glow: rgba(91, 140, 255, 0.10);
 
-      /* ── Text — more elegant, less tinted ── */
-      --text-primary: #eef2ff;
-      --text-secondary: rgba(160, 186, 232, 0.82);
-      --text-tertiary: rgba(95, 132, 196, 0.64);
-      --text-dim: rgba(60, 100, 162, 0.42);
+      /* ── Text — neutral, system-grade, less blue-tinted ── */
+      --text-primary: #f2f2f5;
+      --text-secondary: rgba(235, 235, 240, 0.68);
+      --text-tertiary: rgba(235, 235, 240, 0.45);
+      --text-dim: rgba(235, 235, 240, 0.28);
 
-      /* ── Typography ── */
-      --mono: 'JetBrains Mono', 'Fira Code', monospace;
-      --sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      /* ── Typography — Apple system stack ── */
+      --mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Monaco, Consolas, monospace;
+      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI", sans-serif;
 
       /* ── Shadows ── */
       --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -60,8 +59,12 @@
       background: var(--bg-void);
       color: var(--text-primary);
       font-family: var(--sans);
+      font-weight: 400;
+      letter-spacing: -0.003em;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'ss01' 1;
       overflow-x: hidden;
     }
 
@@ -286,10 +289,10 @@
     .hero-title {
       font-family: var(--sans);
       font-size: clamp(44px, 6vw, 80px);
-      font-weight: 800;
-      font-variation-settings: 'wght' 800;
-      line-height: 1.0;
-      letter-spacing: -0.052em;
+      font-weight: 700;
+      font-variation-settings: 'wght' 700;
+      line-height: 1.04;
+      letter-spacing: -0.028em;
       color: var(--text-primary);
       margin-bottom: 28px;
       animation: fadeInUp 0.9s var(--ease-cinematic) 0.3s both;
@@ -301,8 +304,8 @@
 
     .hero-desc {
       font-size: 16px;
-      font-weight: 340;
-      font-variation-settings: 'wght' 340;
+      font-weight: 400;
+      font-variation-settings: 'wght' 400;
       line-height: 1.78;
       color: var(--text-secondary);
       max-width: 460px;
@@ -591,11 +594,11 @@
     .section-heading {
       font-family: var(--sans);
       font-size: clamp(28px, 3.5vw, 46px);
-      font-weight: 700;
-      font-variation-settings: 'wght' 700;
+      font-weight: 600;
+      font-variation-settings: 'wght' 600;
       color: var(--text-primary);
-      letter-spacing: -0.035em;
-      line-height: 1.08;
+      letter-spacing: -0.022em;
+      line-height: 1.1;
       margin-bottom: 16px;
       max-width: 600px;
     }
@@ -2795,22 +2798,22 @@
     /* ── Button upgrades ── */
     .btn-main {
       box-shadow: 0 2px 12px rgba(59, 130, 246, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-      font-variation-settings: 'wght' 650;
+      font-variation-settings: 'wght' 600;
     }
     .btn-main:hover {
       box-shadow: 0 6px 28px rgba(59, 130, 246, 0.35), 0 0 0 1px rgba(59, 130, 246, 0.2);
     }
 
     /* ── Variable weight on key text nodes ── */
-    .nav-logo-text { font-variation-settings: 'wght' 650; }
-    .hero-desc { font-variation-settings: 'wght' 340; }
-    .card-heading { font-variation-settings: 'wght' 650; }
+    .nav-logo-text { font-variation-settings: 'wght' 600; }
+    .hero-desc { font-variation-settings: 'wght' 400; }
+    .card-heading { font-variation-settings: 'wght' 600; }
     .feature-heading { font-variation-settings: 'wght' 700; }
-    .module-card-name { font-variation-settings: 'wght' 650; }
-    .experiment-title { font-variation-settings: 'wght' 660; }
-    .post-title { font-variation-settings: 'wght' 660; }
-    .talk-title { font-variation-settings: 'wght' 660; }
-    .challenge-card-title { font-variation-settings: 'wght' 660; }
+    .module-card-name { font-variation-settings: 'wght' 600; }
+    .experiment-title { font-variation-settings: 'wght' 600; }
+    .post-title { font-variation-settings: 'wght' 600; }
+    .talk-title { font-variation-settings: 'wght' 600; }
+    .challenge-card-title { font-variation-settings: 'wght' 600; }
 
     /* ── Tabular nums for data/metric surfaces ── */
     .metric-value,
@@ -2950,7 +2953,7 @@
 
     /* ── Section subtext weight ── */
     .section-subtext {
-      font-variation-settings: 'wght' 350;
+      font-variation-settings: 'wght' 400;
       line-height: 1.78;
     }
 
