@@ -4,11 +4,14 @@ import { ListingLayout } from "@/components/listings/listing-layout";
 import { Reveal } from "@/components/ui/reveal";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { aiExperiments } from "@/content/ai-experiments";
+import { InjectionSandbox } from "@/components/ai-security/injection-sandbox";
+import { JailbreakRolodex } from "@/components/ai-security/jailbreak-rolodex";
+import { InjectionRange } from "@/components/ai-security/injection-range";
 
 export const metadata: Metadata = {
   title: "AI Security",
   description:
-    "Curated AI security experiments — prompt injection, phishing detection, log anomaly, and malware static classification.",
+    "Adversarial AI as a security surface — live prompt-injection sandbox, jailbreak rolodex, and curated red-team experiments.",
 };
 
 export default function AISecurityPage() {
@@ -19,12 +22,65 @@ export default function AISecurityPage() {
         <>
           Adversarial AI,
           <br />
-          <span className="text-[color:var(--bsc-text-3)]">treated as a security surface.</span>
+          <span className="text-[color:var(--bsc-text-3)]">
+            treated as a security surface.
+          </span>
         </>
       }
-      lede="Curated experiments in adversarial AI — prompt injection, phishing classification, log anomaly detection, and static malware scoring. Each is a documented walkthrough with sample inputs, sample outputs, and the methodology behind it."
+      lede="Three escalating surfaces in one place. A browser-side prompt-injection classifier you can probe directly; a curated rolodex of documented jailbreak techniques to study; and the Indirect Injection Range — a five-level adversarial CTF where you play attacker against a simulated agent with progressively stacked defenses. Curated red-team experiments at the bottom document the methodology."
     >
+      {/* ─────────────── 1. Live Sandbox ─────────────── */}
       <Container>
+        <Reveal>
+          <SectionHeader
+            eyebrow="01 · Live"
+            title="Prompt-injection sandbox"
+            sub="Type or paste a prompt. The classifier runs entirely in your browser, scoring against the rule catalogue used in the production filter. Pick a preset to see what classic attacks look like under inspection."
+          />
+        </Reveal>
+        <Reveal delay={0.05}>
+          <InjectionSandbox />
+        </Reveal>
+      </Container>
+
+      {/* ─────────────── 2. Jailbreak Rolodex ─────────────── */}
+      <Container className="mt-24">
+        <Reveal>
+          <SectionHeader
+            eyebrow="02 · Catalogue"
+            title="Jailbreak rolodex"
+            sub="Documented attack techniques against LLM safety, organised by category and effectiveness. Search by name, mechanism, or payload shape; click any entry to see sanitised illustrations and mitigation guidance."
+          />
+        </Reveal>
+        <Reveal delay={0.05}>
+          <JailbreakRolodex />
+        </Reveal>
+      </Container>
+
+      {/* ─────────────── 3. Indirect Injection Range ─────────────── */}
+      <Container className="mt-24">
+        <Reveal>
+          <SectionHeader
+            eyebrow="03 · Range"
+            title="Indirect Injection Range — adversarial CTF"
+            sub="Five progressively harder levels against a simulated agent named Atlas. Each level adds one defense layer (hidden-content scrubber → URL blocklist → tool gating → intent classifier), and each requires a genuinely different bypass to clear. Edit the page payload, watch Atlas's full processing trace, and capture the per-level flag."
+          />
+        </Reveal>
+        <Reveal delay={0.05}>
+          <InjectionRange />
+        </Reveal>
+      </Container>
+
+      {/* ─────────────── 4. Curated Experiments ─────────────── */}
+      <Container className="mt-24">
+        <Reveal>
+          <SectionHeader
+            eyebrow="04 · Methodology"
+            title="Curated AI security experiments"
+            sub="Walkthroughs of the classifiers, detectors, and scoring methods behind the surfaces above. Each experiment publishes its own input/output samples, signals, and reproducibility notes."
+          />
+        </Reveal>
+
         <div className="space-y-4">
           {aiExperiments.map((e, i) => (
             <Reveal key={e.slug} delay={i * 0.04}>
@@ -85,11 +141,35 @@ export default function AISecurityPage() {
 
         <Reveal delay={0.1}>
           <p className="mt-12 text-center text-[12.5px] text-[color:var(--bsc-text-3)]">
-            All experiments are curated walkthroughs. Each will publish full reproducibility
-            notes and code as it stabilises.
+            All experiments are curated walkthroughs. Each will publish full
+            reproducibility notes and code as it stabilises.
           </p>
         </Reveal>
       </Container>
     </ListingLayout>
+  );
+}
+
+function SectionHeader({
+  eyebrow,
+  title,
+  sub,
+}: {
+  eyebrow: string;
+  title: string;
+  sub: string;
+}) {
+  return (
+    <div className="mb-8 max-w-3xl">
+      <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-[color:var(--bsc-text-3)]">
+        {eyebrow}
+      </div>
+      <h2 className="mt-2 text-[clamp(24px,3.2vw,32px)] font-semibold tracking-[-0.018em] text-[color:var(--bsc-text-1)]">
+        {title}
+      </h2>
+      <p className="mt-3 text-[14.5px] leading-relaxed text-[color:var(--bsc-text-2)]">
+        {sub}
+      </p>
+    </div>
   );
 }

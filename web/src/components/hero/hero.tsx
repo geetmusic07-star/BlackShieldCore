@@ -24,47 +24,63 @@ export function Hero() {
 
       <Container className="relative z-10">
         <div className="mx-auto max-w-3xl text-center">
+          {/* Status pill */}
           <motion.div
             custom={0}
             variants={fade}
             initial="hidden"
             animate="show"
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-[11px] font-mono tracking-[0.12em] uppercase text-[color:var(--bsc-text-3)] backdrop-blur"
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)] backdrop-blur"
           >
             <span className="size-1.5 rounded-full bg-[color:var(--bsc-accent)]" />
-            BlackShield Core · v0.1
+            v0.1 · Active research
           </motion.div>
 
+          {/* Brand wordmark */}
           <motion.h1
             custom={1}
             variants={fade}
             initial="hidden"
             animate="show"
-            className="mt-7 text-[clamp(44px,6.4vw,84px)] font-semibold leading-[1.02] tracking-[-0.028em] text-[color:var(--bsc-text-1)]"
+            className="mt-7 text-[clamp(44px,7.4vw,92px)] font-semibold leading-[0.98] tracking-[-0.028em] text-[color:var(--bsc-text-1)]"
           >
-            A cybersecurity and AI
-            <br />
-            <span className="text-[color:var(--bsc-text-3)]">research environment.</span>
+            BlackShield{" "}
+            <span className="text-[color:var(--bsc-text-3)]">Core</span>
           </motion.h1>
 
+          {/* Subtitle */}
           <motion.p
             custom={2}
             variants={fade}
             initial="hidden"
             animate="show"
-            className="mx-auto mt-7 max-w-xl text-[15.5px] md:text-base leading-relaxed text-[color:var(--bsc-text-2)]"
+            className="mt-5 text-[clamp(17px,2vw,22px)] font-medium leading-snug tracking-[-0.012em] text-[color:var(--bsc-text-2)]"
           >
-            Hands-on labs, security tools, deep-dive research, and curated case studies —
-            built to be useful, documented, and reproducible. Made for practitioners who
-            want depth, not marketing.
+            A cybersecurity{" "}
+            <span className="text-[color:var(--bsc-accent)]">×</span>{" "}
+            AI research environment.
           </motion.p>
 
-          <motion.div
+          {/* Lede */}
+          <motion.p
             custom={3}
             variants={fade}
             initial="hidden"
             animate="show"
-            className="mt-10 flex flex-wrap items-center justify-center gap-3"
+            className="mx-auto mt-5 max-w-xl text-[15px] md:text-[15.5px] leading-relaxed text-[color:var(--bsc-text-3)]"
+          >
+            Hands-on labs, security tools, deep-dive research, and curated case
+            studies — built to be useful, documented, and reproducible. Made for
+            practitioners who want depth, not marketing.
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            custom={4}
+            variants={fade}
+            initial="hidden"
+            animate="show"
+            className="mt-9 flex flex-wrap items-center justify-center gap-3"
           >
             <LinkButton
               size="lg"
@@ -77,15 +93,16 @@ export function Hero() {
             <LinkButton
               size="lg"
               variant="ghost"
-              href="/research"
-              className="rounded-full border border-white/10 bg-white/[0.02] text-[color:var(--bsc-text-2)] hover:bg-white/[0.05] hover:text-[color:var(--bsc-text-1)] px-6"
+              href="/ai-security"
+              className="rounded-full border border-white/10 bg-white/[0.02] px-6 text-[color:var(--bsc-text-2)] hover:bg-white/[0.05] hover:text-[color:var(--bsc-text-1)]"
             >
-              Read research
+              AI Security range
             </LinkButton>
           </motion.div>
 
+          {/* Stats */}
           <motion.dl
-            custom={4}
+            custom={5}
             variants={fade}
             initial="hidden"
             animate="show"
@@ -98,7 +115,7 @@ export function Hero() {
               ["12", "Modules"],
             ].map(([v, l]) => (
               <div key={l} className="text-left md:text-center">
-                <dt className="text-[10px] font-mono uppercase tracking-wider text-[color:var(--bsc-text-3)]">
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-[color:var(--bsc-text-3)]">
                   {l}
                 </dt>
                 <dd className="mt-1.5 text-[22px] font-semibold tracking-[-0.022em] text-[color:var(--bsc-text-1)]">

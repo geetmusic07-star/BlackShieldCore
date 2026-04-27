@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { LabCard } from "@/components/labs/lab-card";
-import { labs } from "@/content/labs";
 import { Reveal } from "@/components/ui/reveal";
 
 export const metadata: Metadata = {
@@ -10,11 +9,57 @@ export const metadata: Metadata = {
     "Hands-on offensive security scenarios: web exploitation, auth bypasses, cloud abuse, and AI adversarial work.",
 };
 
-export default function LabsPage() {
-  const byCategory = labs.reduce<Record<string, typeof labs>>((acc, l) => {
-    (acc[l.category] ??= []).push(l);
-    return acc;
-  }, {});
+// ✅ Import the official Lab type which includes all required fields
+import type { Lab } from "@/content/types";
+
+export default async function LabsPage() {
+  const res = await fetch("http://localhost:3000/api/labs", {
+    cache: "no-store",
+  });
+
+  const data = await res.json();
+
+  // ✅ Helper to map difficulty to a category (fallback to "Web")
+  const mapCategory = (difficulty: string): Lab["category"] => {
+    switch (difficulty) {
+      case "Easy":
+        return "Web";
+      case "Medium":
+        return "Auth";
+      case "Hard":
+        return "Cloud";
+      default:
+        return "Web";
+    }
+  };
+
+  // ✅ Typed formatting
+  const formattedLabs: Lab[] = data.map((lab: any) => ({
+    slug: String(lab.id),
+    title: lab.title,
+    description: lab.description,
+    difficulty: lab.difficulty,
+    category: mapCategory(lab.difficulty),
+    durationMinutes: lab.durationMinutes ?? 0,
+    xp: lab.xp ?? 0,
+    stage: lab.stage ?? "available",
+    summary: lab.summary ?? "",
+    tags: lab.tags ?? [],
+  }));
+
+  // ✅ Typed grouping – safe fallback for missing category
+  const byCategory: Record<string, Lab[]> = {};
+
+  formattedLabs.forEach((lab) => {
+    // Ensure we always have a string key
+    const cat = lab.category ?? "General";
+
+    if (!byCategory[cat]) {
+      byCategory[cat] = [];
+    }
+    byCategory[cat].push(lab);
+  });
+
 
   return (
     <>
@@ -25,17 +70,22 @@ export default function LabsPage() {
               Cyber Playground
             </div>
           </Reveal>
+
           <Reveal delay={0.05}>
             <h1 className="max-w-3xl text-[clamp(40px,5.2vw,64px)] font-semibold leading-[1.04] tracking-[-0.028em] text-[color:var(--bsc-text-1)]">
               Offensive scenarios,
               <br />
-              <span className="text-[color:var(--bsc-text-3)]">grounded in real attack patterns.</span>
+              <span className="text-[color:var(--bsc-text-3)]">
+                grounded in real attack patterns.
+              </span>
             </h1>
           </Reveal>
+
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-[15px] md:text-base leading-relaxed text-[color:var(--bsc-text-2)]">
               Each lab reconstructs a documented vulnerability class. The goal is understanding
-              — not payload memorization. Start with {labs[0].title}, which is the first lab
+              — not payload memorization. Start with{" "}
+              {formattedLabs[0]?.title || "your first lab"}, which is the first lab
               we have taken through to a finished, documented walkthrough.
             </p>
           </Reveal>
@@ -54,6 +104,7 @@ export default function LabsPage() {
                   {items.length} labs
                 </span>
               </div>
+
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {items.map((lab, i) => (
                   <LabCard key={lab.slug} lab={lab} index={i} />

@@ -1,17 +1,35 @@
 export type Stage = "available" | "build" | "research" | "beta" | "planned";
 
+export type LabCategory = "Web" | "Auth" | "Cloud" | "AI" | "Forensics" | "CTF";
+
 export interface Lab {
   slug: string;
   title: string;
-  category: "Web" | "Auth" | "Cloud" | "AI" | "Forensics" | "CTF";
+  description: string;
   difficulty: "Easy" | "Medium" | "Hard";
-  durationMinutes: number;
-  xp: number;
-  stage: Stage;
-  summary: string;
+
+  // Optional from backend
+  category?: LabCategory;
+  durationMinutes?: number;
+  xp?: number;
+  stage?: Stage;
+  summary?: string;
+
+  // ⚠️ Make this ALWAYS safe
   tags: string[];
+
   body?: string;
 }
+
+export type BlogBlock =
+  | { kind: "h2"; value: string }
+  | { kind: "h3"; value: string }
+  | { kind: "p"; value: string }
+  | { kind: "ul"; items: string[] }
+  | { kind: "ol"; items: string[] }
+  | { kind: "code"; lang?: string; value: string }
+  | { kind: "callout"; tone: "note" | "warn" | "tip"; value: string }
+  | { kind: "quote"; value: string; cite?: string };
 
 export interface BlogPost {
   slug: string;
@@ -22,7 +40,7 @@ export interface BlogPost {
   tags: string[];
   stage: Stage;
   excerpt: string;
-  body?: string;
+  body?: BlogBlock[];
 }
 
 export interface ResearchNote {
