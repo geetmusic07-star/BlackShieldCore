@@ -37,9 +37,6 @@ function analyzeToken(token: string) {
         let score = 0;
         const explanations: string[] = [];
 
-        // =========================
-        // 🔥 ATTACK 1: alg:none
-        // =========================
         if (header.alg === "none") {
             techniques.push("alg-none");
             score += 100;
@@ -48,9 +45,6 @@ function analyzeToken(token: string) {
             );
         }
 
-        // =========================
-        // 🔥 ATTACK 2: weak signature
-        // =========================
         if (signature && header.alg === "HS256") {
             techniques.push("weak-signature");
             score += 70;
@@ -59,9 +53,6 @@ function analyzeToken(token: string) {
             );
         }
 
-        // =========================
-        // 🔥 ATTACK 3: alg confusion
-        // =========================
         if (header.alg === "HS256" && header.key === "public") {
             techniques.push("alg-confusion");
             score += 150;
@@ -70,9 +61,6 @@ function analyzeToken(token: string) {
             );
         }
 
-        // =========================
-        // 🔥 ATTACK 4: kid injection
-        // =========================
         if (header.kid && header.kid.includes("..")) {
             techniques.push("kid-injection");
             score += 120;
@@ -81,9 +69,6 @@ function analyzeToken(token: string) {
             );
         }
 
-        // =========================
-        // 🔥 ATTACK 5: role escalation
-        // =========================
         if (payload.role === "admin") {
             techniques.push("role-escalation");
             score += 90;
@@ -92,9 +77,6 @@ function analyzeToken(token: string) {
             );
         }
 
-        // =========================
-        // 🚀 COMBO BONUS
-        // =========================
         if (techniques.length >= 2) {
             score += 50;
             explanations.push(
@@ -137,9 +119,10 @@ export async function GET() {
 // =====================================
 export async function POST(
     req: NextRequest,
-    { params }: { params: { slug: string } }
+    context: { params: { slug: string } }
 ) {
-    const { slug } = params;
+    const { slug } = context.params;
+
     try {
         const body = await req.json();
         const token = body.payload;
@@ -163,7 +146,7 @@ export async function POST(
         }
 
         const completed = currentLevel.required.every((tech) =>
-            result.techniques?.includes(tech)
+            (result as any).techniques?.includes(tech)
         );
 
         return NextResponse.json({
