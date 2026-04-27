@@ -123,13 +123,24 @@ function analyzeToken(token: string) {
     }
 }
 
+// =====================================
+// ✅ OPTIONAL (prevents 405 on GET)
+// =====================================
+export async function GET() {
+    return NextResponse.json({
+        message: "Use POST to interact with this endpoint",
+    });
+}
+
+// =====================================
+// 🚀 MAIN API (LEVEL-AWARE)
+// =====================================
 export async function POST(
     req: NextRequest,
-    context: { params: { slug: string } }
+    { params }: { params: { slug: string } }
 ) {
+    const { slug } = params;
     try {
-        const { slug } = context.params;
-
         const body = await req.json();
         const token = body.payload;
         const level = body.level || 1;
@@ -141,22 +152,20 @@ export async function POST(
             );
         }
 
-        // ===== YOUR ORIGINAL CORE LOGIC =====
         const result = analyzeToken(token);
         const currentLevel = LEVELS[level];
 
         if (!currentLevel) {
-            return NextResponse.json(
-                { success: false, message: "Invalid level" },
-                { status: 400 }
-            );
+            return NextResponse.json({
+                success: false,
+                message: "Invalid level",
+            });
         }
 
-        const completed = currentLevel.required.every((tech: string) =>
+        const completed = currentLevel.required.every((tech) =>
             result.techniques?.includes(tech)
         );
 
-        // ===== RESPONSE =====
         return NextResponse.json({
             labId: slug,
             ...result,
@@ -165,9 +174,7 @@ export async function POST(
             levelComplete: completed,
             nextLevel: completed ? level + 1 : level,
         });
-    } catch (error) {
-        console.error(error);
-
+    } catch {
         return NextResponse.json(
             { success: false, message: "Server error" },
             { status: 500 }
