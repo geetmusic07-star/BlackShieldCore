@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/container";
 import { LabCard } from "@/components/labs/lab-card";
 import { Reveal } from "@/components/ui/reveal";
 import type { Lab } from "@/content/types";
+import { createClient } from "@supabase/supabase-js";
 
 export const metadata: Metadata = {
   title: "Labs",
@@ -11,22 +12,24 @@ export const metadata: Metadata = {
 };
 
 export default async function LabsPage() {
-  const getBaseUrl = () => {
-    if (process.env.NEXT_PUBLIC_BASE_URL) return process.env.NEXT_PUBLIC_BASE_URL;
-    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-    return "http://localhost:3000";
-  };
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-  const res = await fetch(`${getBaseUrl()}/api/labs`, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    console.error("API failed:", res.status);
-    return <div className="p-10 text-center">Failed to load labs</div>;
+  if (!supabaseUrl || !supabaseKey) {
+    console.error("Supabase credentials missing. Check Vercel Environment Variables.");
+    return <div className="p-10 text-center text-red-500">Failed to load labs: Environment missing</div>;
   }
 
-  const data = await res.json();
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  const { data, error } = await supabase
+    .from("labs")
+    .select("*");
+
+  if (error || !data) {
+    console.error("Supabase error:", error);
+    return <div className="p-10 text-center text-red-500">Failed to load labs: Database error</div>;
+  }
 
   const mapCategory = (difficulty: string): Lab["category"] => {
     switch (difficulty) {
