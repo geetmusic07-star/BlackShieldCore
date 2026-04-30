@@ -7,7 +7,7 @@ const steps = [
   {
     n: "01",
     title: "Simulate",
-    body: "Run authentic adversary playbooks against the live graph — chained, scoped, and reviewed.",
+    body: "Run authentic adversary playbooks against the live graph.",
     sample: [
       "$ bsc sim run apt-iridium --chain wmic+ldap",
       "→ stage 1/5  initial access  ✓",

@@ -20,7 +20,7 @@ export function LatestResearch() {
           <span className="text-[color:var(--bsc-text-3)]">Shipped work.</span>
         </>
       }
-      lede="Deep analyses and short notes from active technical work — not beginner guides or marketing."
+      lede="Deep analyses and short notes from active technical work."
     >
       <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr]">
         <Reveal>

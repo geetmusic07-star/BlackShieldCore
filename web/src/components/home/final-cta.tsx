@@ -38,7 +38,7 @@ export function FinalCTASection() {
           className="mx-auto mt-6 max-w-xl text-[15.5px] leading-relaxed text-[color:var(--bsc-text-2)]"
         >
           BlackShield Core is in research preview. Request access if you operate a security
-          program against a serious threat model — we&apos;ll start with a scoped pilot.
+          program against a serious threat model - we&apos;ll start with a scoped pilot.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 16 }}

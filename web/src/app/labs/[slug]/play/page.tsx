@@ -26,7 +26,7 @@ const decodeB64url = (s: string) =>
   atob(s.replace(/-/g, "+").replace(/_/g, "/"));
 
 // ════════════════════════════════════════════════════════════════
-// PAGE — dispatches to the right practical based on lab profile
+// PAGE - dispatches to the right practical based on lab profile
 // ════════════════════════════════════════════════════════════════
 
 export default function PlayPage() {
@@ -69,7 +69,7 @@ export default function PlayPage() {
 }
 
 // ════════════════════════════════════════════════════════════════
-// SHARED — Console + Flag panel
+// SHARED - Console + Flag panel
 // ════════════════════════════════════════════════════════════════
 
 type LogLine = { tone: "info" | "ok" | "err"; text: string };
@@ -194,7 +194,7 @@ function JwtPractical({ profile }: { profile: LabProfile }) {
         if (sig === "") {
           log(
             "ok",
-            "alg=none accepted, signature segment empty — verifier skipped.",
+            "alg=none accepted, signature segment empty - verifier skipped.",
           );
           if (p.role === "admin") {
             log("ok", `Authenticated as admin. Flag: ${profile.flag}`);
@@ -288,7 +288,7 @@ function JwtPractical({ profile }: { profile: LabProfile }) {
 }
 
 // ════════════════════════════════════════════════════════════════
-// GRAPHQL PRACTICAL — introspect → hidden mutation → flag
+// GRAPHQL PRACTICAL - introspect → hidden mutation → flag
 // ════════════════════════════════════════════════════════════════
 
 const SAMPLE_QUERY = `# Try an introspection query first.
@@ -332,7 +332,7 @@ function GraphqlPractical({ profile }: { profile: LabProfile }) {
 
     // 1) Introspection
     if (q.includes("__schema")) {
-      log("ok", "Introspection accepted — schema returned.");
+      log("ok", "Introspection accepted - schema returned.");
       const dump = FAKE_SCHEMA_TYPES.map(
         (t) => `  type ${t.name} { ${t.fields.join(", ")} }`,
       ).join("\n");
@@ -364,7 +364,7 @@ function GraphqlPractical({ profile }: { profile: LabProfile }) {
       if (!wantsAdmin) {
         log(
           "err",
-          "Mutation executed — but role is not ADMIN. The endpoint accepts USER/MODERATOR/ADMIN.",
+          "Mutation executed - but role is not ADMIN. The endpoint accepts USER/MODERATOR/ADMIN.",
         );
         return;
       }
@@ -397,7 +397,7 @@ function GraphqlPractical({ profile }: { profile: LabProfile }) {
       <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--bsc-text-2)]">
         The simulated GraphQL server below has introspection enabled and a hidden
         mutation that escalates roles. Map the schema first, then call the
-        mutation to capture the flag — format{" "}
+        mutation to capture the flag - format{" "}
         <code className="font-mono text-[oklch(0.78_0.18_140)]">BSC{"{...}"}</code>.
       </p>
 
@@ -456,7 +456,7 @@ function GraphqlPractical({ profile }: { profile: LabProfile }) {
 }
 
 // ════════════════════════════════════════════════════════════════
-// SSRF PRACTICAL — webhook tester → metadata → credentials → flag
+// SSRF PRACTICAL - webhook tester → metadata → credentials → flag
 // ════════════════════════════════════════════════════════════════
 
 function SsrfPractical({ profile }: { profile: LabProfile }) {
@@ -489,7 +489,7 @@ function SsrfPractical({ profile }: { profile: LabProfile }) {
       return;
     }
 
-    // Block the literal IP — naive filter
+    // Block the literal IP - naive filter
     if (u.includes("169.254")) {
       log("err", "URL rejected: blocked by hostname filter (matched '169.254').");
       return;
@@ -554,7 +554,7 @@ function SsrfPractical({ profile }: { profile: LabProfile }) {
       return;
     }
 
-    // Crown jewel endpoint — accepts captured credentials
+    // Crown jewel endpoint - accepts captured credentials
     if (/\/api\/v1\/secrets/.test(u)) {
       if (!creds) {
         log(
@@ -585,7 +585,7 @@ function SsrfPractical({ profile }: { profile: LabProfile }) {
       <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[color:var(--bsc-text-2)]">
         The webhook tester below fetches whatever URL you give it. The blunt
         hostname filter blocks the literal string{" "}
-        <code className="font-mono">169.254</code> — re-read Chapter 4 for ways
+        <code className="font-mono">169.254</code> - re-read Chapter 4 for ways
         around that. Then walk the metadata path to credentials, and use them at{" "}
         <code className="font-mono">/api/v1/secrets</code> to capture the flag.
       </p>

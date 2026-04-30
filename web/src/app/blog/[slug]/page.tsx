@@ -82,7 +82,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
           </div>
         ) : (
           <p className="text-[15px] italic text-[color:var(--bsc-text-3)]">
-            This post is in build stage — body forthcoming.
+            This post is in build stage - body forthcoming.
           </p>
         )}
 
@@ -255,7 +255,7 @@ function BlockView({ block, index }: { block: BlogBlock; index: number }) {
       return (
         <blockquote>
           {block.value}
-          {block.cite && <cite>— {block.cite}</cite>}
+          {block.cite && <cite>- {block.cite}</cite>}
         </blockquote>
       );
     default:

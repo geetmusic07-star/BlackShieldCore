@@ -4,7 +4,7 @@ import { MotionConfig } from "motion/react";
 import type { ReactNode } from "react";
 
 /**
- * Global Motion for React configuration — tuned for premium, restrained feel.
+ * Global Motion for React configuration - tuned for premium, restrained feel.
  */
 export function MotionConfigProvider({ children }: { children: ReactNode }) {
   return (

@@ -61,13 +61,13 @@ function decode(token: string): Decoded | { error: string } {
   if (headerJson?.alg === "none") {
     warnings.push({
       level: "alert",
-      message: "alg:none — token claims to be unsigned. Many libraries treat this as valid; this is a critical bypass class.",
+      message: "alg:none - token claims to be unsigned. Many libraries treat this as valid; this is a critical bypass class.",
     });
   }
   if (headerJson?.alg && headerJson.alg.startsWith("HS") && signature.length < 24) {
     warnings.push({
       level: "warn",
-      message: "Short signature segment — likely a small or test secret, susceptible to offline brute-force.",
+      message: "Short signature segment - likely a small or test secret, susceptible to offline brute-force.",
     });
   }
   if (headerJson?.alg === "RS256" || headerJson?.alg === "ES256") {
@@ -87,7 +87,7 @@ function decode(token: string): Decoded | { error: string } {
     warnings.push({ level: "warn", message: "Token has expired (exp is in the past)." });
   }
   if (payloadJson?.exp && payloadJson.exp - (payloadJson.iat ?? 0) > 60 * 60 * 24 * 365) {
-    warnings.push({ level: "warn", message: "Token validity exceeds 1 year — long-lived tokens are a credential-handling risk." });
+    warnings.push({ level: "warn", message: "Token validity exceeds 1 year - long-lived tokens are a credential-handling risk." });
   }
 
   return { header, payload, signature, warnings };

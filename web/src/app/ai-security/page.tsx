@@ -11,7 +11,7 @@ import { InjectionRange } from "@/components/ai-security/injection-range";
 export const metadata: Metadata = {
   title: "AI Security",
   description:
-    "Adversarial AI as a security surface — live prompt-injection sandbox, jailbreak rolodex, and curated red-team experiments.",
+    "Adversarial AI as a security surface - live prompt-injection sandbox, jailbreak rolodex, and curated red-team experiments.",
 };
 
 export default function AISecurityPage() {
@@ -27,7 +27,7 @@ export default function AISecurityPage() {
           </span>
         </>
       }
-      lede="Three escalating surfaces in one place. A browser-side prompt-injection classifier you can probe directly; a curated rolodex of documented jailbreak techniques to study; and the Indirect Injection Range — a five-level adversarial CTF where you play attacker against a simulated agent with progressively stacked defenses. Curated red-team experiments at the bottom document the methodology."
+      lede="Three escalating surfaces in one place. A browser-side prompt-injection classifier you can probe directly; a curated rolodex of documented jailbreak techniques to study; and the Indirect Injection Range - a five-level adversarial CTF where you play attacker against a simulated agent with progressively stacked defenses. Curated red-team experiments at the bottom document the methodology."
     >
       {/* ─────────────── 1. Live Sandbox ─────────────── */}
       <Container>
@@ -62,7 +62,7 @@ export default function AISecurityPage() {
         <Reveal>
           <SectionHeader
             eyebrow="03 · Range"
-            title="Indirect Injection Range — adversarial CTF"
+            title="Indirect Injection Range - adversarial CTF"
             sub="Five progressively harder levels against a simulated agent named Atlas. Each level adds one defense layer (hidden-content scrubber → URL blocklist → tool gating → intent classifier), and each requires a genuinely different bypass to clear. Edit the page payload, watch Atlas's full processing trace, and capture the per-level flag."
           />
         </Reveal>

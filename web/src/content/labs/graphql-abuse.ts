@@ -17,7 +17,7 @@ export const GRAPHQL_ABUSE: LabProfile = {
         {
           kind: "p",
           value:
-            "GraphQL is a query language and runtime for APIs that lets clients ask for exactly the data they need — no more, no less. Born inside Facebook in 2012 and open-sourced in 2015, it has displaced REST in many large platforms because it eliminates over-fetching and the N+1 problems that have haunted REST APIs for a decade.",
+            "GraphQL is a query language and runtime for APIs that lets clients ask for exactly the data they need - no more, no less. Born inside Facebook in 2012 and open-sourced in 2015, it has displaced REST in many large platforms because it eliminates over-fetching and the N+1 problems that have haunted REST APIs for a decade.",
         },
         {
           kind: "p",
@@ -46,14 +46,14 @@ export const GRAPHQL_ABUSE: LabProfile = {
           kind: "callout",
           tone: "tip",
           value:
-            "Estimated time: 60 minutes. Chapters 3 and 4 are the technical core — the practical hinges on getting both internalised.",
+            "Estimated time: 60 minutes. Chapters 3 and 4 are the technical core - the practical hinges on getting both internalised.",
         },
       ],
       questions: [
         {
           prompt: "I have read the briefing and am cleared to begin.",
           answer: "",
-          placeholder: "No answer needed — just acknowledge",
+          placeholder: "No answer needed - just acknowledge",
           xp: 5,
         },
       ],
@@ -68,7 +68,7 @@ export const GRAPHQL_ABUSE: LabProfile = {
         {
           kind: "p",
           value:
-            "A GraphQL request, despite the buzz around it, is unremarkable on the wire: it's a POST to a single endpoint — usually /graphql — with a JSON body containing a query string. Unlike REST where every resource lives at its own URL, GraphQL exposes a single typed graph and the client navigates it through the query.",
+            "A GraphQL request, despite the buzz around it, is unremarkable on the wire: it's a POST to a single endpoint - usually /graphql - with a JSON body containing a query string. Unlike REST where every resource lives at its own URL, GraphQL exposes a single typed graph and the client navigates it through the query.",
         },
         {
           kind: "code",
@@ -79,9 +79,9 @@ export const GRAPHQL_ABUSE: LabProfile = {
         {
           kind: "ul",
           items: [
-            "Query — read data (idempotent, cacheable)",
-            "Mutation — modify data (not idempotent, side-effects expected)",
-            "Subscription — realtime updates over WebSocket",
+            "Query - read data (idempotent, cacheable)",
+            "Mutation - modify data (not idempotent, side-effects expected)",
+            "Subscription - realtime updates over WebSocket",
           ],
         },
         { kind: "h3", value: "The schema" },
@@ -98,13 +98,13 @@ export const GRAPHQL_ABUSE: LabProfile = {
         {
           kind: "p",
           value:
-            "The exclamation mark means non-null. An attacker's first move on any GraphQL target is to acquire a copy of the schema — because the schema tells them where to look.",
+            "The exclamation mark means non-null. An attacker's first move on any GraphQL target is to acquire a copy of the schema - because the schema tells them where to look.",
         },
         { kind: "h3", value: "Field-level resolution" },
         {
           kind: "p",
           value:
-            "Every field is resolved by a separate function called a resolver. When a request asks for user.email, the email resolver runs. This per-field execution is what makes GraphQL flexible — and it's also where most authorization mistakes happen, as we'll see in Chapter 4.",
+            "Every field is resolved by a separate function called a resolver. When a request asks for user.email, the email resolver runs. This per-field execution is what makes GraphQL flexible - and it's also where most authorization mistakes happen, as we'll see in Chapter 4.",
         },
         {
           kind: "callout",
@@ -124,12 +124,12 @@ export const GRAPHQL_ABUSE: LabProfile = {
           prompt: "Which GraphQL operation type modifies data?",
           answer: "mutation",
           placeholder: "operation type",
-          hint: "Three types — only one writes.",
+          hint: "Three types - only one writes.",
           xp: 15,
         },
         {
           prompt:
-            "In GraphQL, resolvers run per ___. (one word — what unit of the query?)",
+            "In GraphQL, resolvers run per ___. (one word - what unit of the query?)",
           answer: "field",
           placeholder: "noun",
           xp: 15,
@@ -139,14 +139,14 @@ export const GRAPHQL_ABUSE: LabProfile = {
 
     {
       number: 3,
-      title: "Introspection — The Schema as Oracle",
+      title: "Introspection - The Schema as Oracle",
       kind: "mechanics",
       minutes: 7,
       body: [
         {
           kind: "p",
           value:
-            "GraphQL specifies a meta-query system called introspection. By querying special fields prefixed with double underscores, a client can ask the server to describe its own schema. The feature exists for tooling — IDE autocomplete, codegen, GraphiQL, GraphQL Voyager — and it is on by default in essentially every popular library.",
+            "GraphQL specifies a meta-query system called introspection. By querying special fields prefixed with double underscores, a client can ask the server to describe its own schema. The feature exists for tooling - IDE autocomplete, codegen, GraphiQL, GraphQL Voyager - and it is on by default in essentially every popular library.",
         },
         {
           kind: "p",
@@ -167,7 +167,7 @@ export const GRAPHQL_ABUSE: LabProfile = {
         {
           kind: "ul",
           items: [
-            "All available types — including ones not exposed in any documented client",
+            "All available types - including ones not exposed in any documented client",
             "Every field on every type, with their declared types",
             "Hidden mutations such as debug__deleteUser, internal__resetPassword, setRole",
             "Argument shapes for every operation, so payloads can be constructed precisely",
@@ -185,7 +185,7 @@ export const GRAPHQL_ABUSE: LabProfile = {
           items: [
             "Default-enabled in Apollo Server, GraphQL Yoga, Hasura, and most other servers",
             "'Disabled in production' config exists but is silently missed in copy-paste setups",
-            "Fear of breaking tooling — devs leave it on for staging and forget to disable on promote",
+            "Fear of breaking tooling - devs leave it on for staging and forget to disable on promote",
             "The team running the API and the team writing internal clients are sometimes different teams",
           ],
         },
@@ -230,7 +230,7 @@ export const GRAPHQL_ABUSE: LabProfile = {
         {
           kind: "p",
           value:
-            "This is where GraphQL APIs bleed. In REST, you write authorization at the endpoint: /admin/users/42 checks 'is the caller an admin?'. There's exactly one place to check, and frameworks make it natural to put the check there. GraphQL has only one endpoint, so authorization has to be written at the resolver level — every field, every type, every mutation has to be individually guarded. Most teams don't.",
+            "This is where GraphQL APIs bleed. In REST, you write authorization at the endpoint: /admin/users/42 checks 'is the caller an admin?'. There's exactly one place to check, and frameworks make it natural to put the check there. GraphQL has only one endpoint, so authorization has to be written at the resolver level - every field, every type, every mutation has to be individually guarded. Most teams don't.",
         },
         {
           kind: "p",
@@ -252,7 +252,7 @@ export const GRAPHQL_ABUSE: LabProfile = {
           kind: "ul",
           items: [
             "Object-level (BOLA): user(id: 42) returns user 42 even when the caller is user 7. The resolver doesn't check ownership.",
-            "Field-level: user(id: 7).ssn returns the caller's own SSN — fine — but user(id: 7).adminNotes shouldn't, and if adminNotes has no separate check, anyone can read it.",
+            "Field-level: user(id: 7).ssn returns the caller's own SSN - fine - but user(id: 7).adminNotes shouldn't, and if adminNotes has no separate check, anyone can read it.",
             "Mutation-level: updateUserRole supposedly requires admin. Did anyone wire that check up? In a fresh codebase under deadline, the answer is rarely yes.",
           ],
         },
@@ -260,13 +260,13 @@ export const GRAPHQL_ABUSE: LabProfile = {
         {
           kind: "p",
           value:
-            "Shopify's 2018 disclosure described a single vulnerable mutation that let any authenticated user become a store admin. The mutation was guarded against unauthenticated access — but not against unauthorized authenticated access. Fixed in days; would have taken months in a REST codebase to even map.",
+            "Shopify's 2018 disclosure described a single vulnerable mutation that let any authenticated user become a store admin. The mutation was guarded against unauthenticated access - but not against unauthorized authenticated access. Fixed in days; would have taken months in a REST codebase to even map.",
         },
         {
           kind: "callout",
           tone: "redflag",
           value:
-            "GraphQL libraries do not enforce authorization. They give you tools — directives, schema visitors, middleware. What you do with those tools is entirely your problem.",
+            "GraphQL libraries do not enforce authorization. They give you tools - directives, schema visitors, middleware. What you do with those tools is entirely your problem.",
         },
         { kind: "h3", value: "Hunting these in the wild" },
         {
@@ -275,13 +275,13 @@ export const GRAPHQL_ABUSE: LabProfile = {
             "Run introspection. Enumerate every mutation.",
             "For each mutation, ask: 'Could a regular user call this and have it work?'",
             "For each query, ask: 'If I substitute someone else's ID, does the response change?'",
-            "Look for naming red flags: 'admin', 'internal', 'debug', 'set', 'override' — these tend to be sensitive even if undocumented.",
+            "Look for naming red flags: 'admin', 'internal', 'debug', 'set', 'override' - these tend to be sensitive even if undocumented.",
           ],
         },
       ],
       questions: [
         {
-          prompt: "What does BOLA stand for? (initialism — full phrase)",
+          prompt: "What does BOLA stand for? (initialism - full phrase)",
           answer: "broken object level authorization",
           placeholder: "full phrase",
           hint: "Four words. Starts with 'broken'.",
@@ -313,7 +313,7 @@ export const GRAPHQL_ABUSE: LabProfile = {
         {
           kind: "p",
           value:
-            "GraphQL gives the client an unusual amount of control over how much work the server does per request. That's a feature for legitimate clients writing efficient queries — and a weapon for attackers who can multiply the cost of a single HTTP request by orders of magnitude.",
+            "GraphQL gives the client an unusual amount of control over how much work the server does per request. That's a feature for legitimate clients writing efficient queries - and a weapon for attackers who can multiply the cost of a single HTTP request by orders of magnitude.",
         },
         { kind: "h3", value: "Aliases" },
         {
@@ -357,13 +357,13 @@ export const GRAPHQL_ABUSE: LabProfile = {
         {
           kind: "p",
           value:
-            "The right defense is to assign every field a 'cost' and reject queries whose total cost exceeds a per-request budget. Apollo, Hasura, and graphql-armor ship libraries for this — but it's opt-in, and adding it after a public launch is much harder than including it from the start.",
+            "The right defense is to assign every field a 'cost' and reject queries whose total cost exceeds a per-request budget. Apollo, Hasura, and graphql-armor ship libraries for this - but it's opt-in, and adding it after a public launch is much harder than including it from the start.",
         },
         {
           kind: "callout",
           tone: "tip",
           value:
-            "If a target's GraphQL endpoint accepts a 50-deep introspection query without complaint, it almost certainly has no depth or cost limits. Note that down — it almost guarantees the API has no resource ceiling at all.",
+            "If a target's GraphQL endpoint accepts a 50-deep introspection query without complaint, it almost certainly has no depth or cost limits. Note that down - it almost guarantees the API has no resource ceiling at all.",
         },
       ],
       questions: [
@@ -408,7 +408,7 @@ export const GRAPHQL_ABUSE: LabProfile = {
           kind: "ul",
           items: [
             "Run an introspection query to discover the schema",
-            "Read the mutation list carefully — find the one that doesn't belong in a public API",
+            "Read the mutation list carefully - find the one that doesn't belong in a public API",
             "Call that mutation with a payload that escalates your role to admin",
             "Capture the flag the server returns on success",
           ],
@@ -417,7 +417,7 @@ export const GRAPHQL_ABUSE: LabProfile = {
           kind: "callout",
           tone: "tip",
           value:
-            "There is no time limit. The hidden mutation has a name that suggests it's internal-only — names matter, even when they shouldn't. The flag is in the BSC{...} format.",
+            "There is no time limit. The hidden mutation has a name that suggests it's internal-only - names matter, even when they shouldn't. The flag is in the BSC{...} format.",
         },
       ],
       questions: [
@@ -441,7 +441,7 @@ export const GRAPHQL_ABUSE: LabProfile = {
         {
           kind: "p",
           value:
-            "GraphQL didn't invent any new vulnerability classes. What it did was concentrate familiar problems — broken authorization, information disclosure, denial of service — onto a single endpoint where they're harder to catch with traditional tooling. The bugs are old; the surface is new.",
+            "GraphQL didn't invent any new vulnerability classes. What it did was concentrate familiar problems - broken authorization, information disclosure, denial of service - onto a single endpoint where they're harder to catch with traditional tooling. The bugs are old; the surface is new.",
         },
         { kind: "h3", value: "What you should take away" },
         {
@@ -468,14 +468,14 @@ export const GRAPHQL_ABUSE: LabProfile = {
           kind: "callout",
           tone: "tip",
           value:
-            "If you finished the practical without reading any hints, you're ahead of the median engineer shipping production GraphQL today. Most teams don't run introspection against their own APIs in dev — be the one who does.",
+            "If you finished the practical without reading any hints, you're ahead of the median engineer shipping production GraphQL today. Most teams don't run introspection against their own APIs in dev - be the one who does.",
         },
       ],
       questions: [
         {
           prompt: "I have completed the room and reviewed the debrief.",
           answer: "",
-          placeholder: "No answer needed — close the loop",
+          placeholder: "No answer needed - close the loop",
           xp: 5,
         },
       ],

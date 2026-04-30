@@ -23,7 +23,7 @@ export default function ToolsPage() {
           <span className="text-[color:var(--bsc-text-3)]">Calibrated for real work.</span>
         </>
       }
-      lede="Lightweight, focused analysis utilities — each built for a specific part of the cryptographic, auth, or detection workflow."
+      lede="Lightweight, focused analysis utilities - each built for a specific part of the cryptographic, auth, or detection workflow."
     >
       <Container>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

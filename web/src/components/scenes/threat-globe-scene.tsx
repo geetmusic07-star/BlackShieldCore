@@ -9,7 +9,7 @@ import * as THREE from "three";
  *
  * A dark, calm globe with a low-density wireframe shell, a halo of surface
  * nodes ("regions"), and animated arcs spawning between random point pairs.
- * Each arc draws progressively then fades — feels like signal flow.
+ * Each arc draws progressively then fades - feels like signal flow.
  *
  * Different identity from the hero: cooler tone, structured grid, clear
  * earth-like rotation rather than the chaotic noise-displaced core.
@@ -121,7 +121,7 @@ function SurfaceNodes({ count }: { count: number }) {
 }
 
 /**
- * Arc connections — re-spawn periodically.
+ * Arc connections - re-spawn periodically.
  * Use <primitive> wrapping pre-built THREE.Line objects so we sidestep the
  * JSX-intrinsic clash between R3F <line> and SVG <line>.
  */

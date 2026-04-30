@@ -35,14 +35,14 @@ const VERDICT_META: Record<
     Icon: ShieldAlert,
   },
   suspicious: {
-    label: "Borderline — escalate to review",
+    label: "Borderline - escalate to review",
     short: "SUSPICIOUS",
     fg: "oklch(0.82 0.14 75)",
     chip: "border-[oklch(0.82_0.14_75)]/40 bg-[oklch(0.82_0.14_75)]/10 text-[oklch(0.88_0.12_75)]",
     Icon: Shield,
   },
   allowed: {
-    label: "Allowed — no patterns matched",
+    label: "Allowed - no patterns matched",
     short: "ALLOWED",
     fg: "oklch(0.78 0.18 140)",
     chip: "border-[oklch(0.78_0.18_140)]/40 bg-[oklch(0.78_0.18_140)]/10 text-[oklch(0.85_0.14_140)]",
@@ -253,13 +253,13 @@ export function InjectionSandbox() {
         </span>
         This classifier is intentionally pattern-based and runs in your browser.
         Real production filters layer this with semantic intent classifiers and
-        per-user rate-limits — the point here is to make the rule shapes
+        per-user rate-limits. The point here is to make the rule shapes
         legible, not to win every adversarial prompt.
       </div>
     </div>
   );
 }
 
-// Local — to avoid a second import round-trip
+// Local - to avoid a second import round-trip
 import { INJECTION_RULES } from "@/content/ai-security/injection-rules";
 const INJECTION_RULES_COUNT = INJECTION_RULES.length;

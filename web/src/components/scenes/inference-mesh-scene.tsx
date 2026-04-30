@@ -14,7 +14,7 @@ import * as THREE from "three";
  *   - Particles flow from input → output along these edges
  *
  * Different identity from the AI-CORE: structural, deterministic, machine
- * reasoning — not organic.
+ * reasoning - not organic.
  */
 export function InferenceMeshScene() {
   return (

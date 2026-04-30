@@ -4,7 +4,7 @@ import { Reveal } from "@/components/ui/reveal";
 
 export const metadata: Metadata = {
   title: "About",
-  description: "BlackShield Core — mission, principles, and the kind of work we publish.",
+  description: "BlackShield Core - mission, principles, and the kind of work we publish.",
 };
 
 const stats = [
@@ -17,7 +17,7 @@ const stats = [
 const principles = [
   {
     title: "Grounded in real attack patterns",
-    body: "Every lab and writeup maps to documented attacker behavior — not invented scenarios.",
+    body: "Every lab and writeup maps to documented attacker behavior - not invented scenarios.",
   },
   {
     title: "Defender and attacker lenses together",
@@ -52,7 +52,7 @@ export default function AboutPage() {
         <Reveal delay={0.1}>
           <p className="mt-6 max-w-2xl text-[16px] leading-relaxed text-[color:var(--bsc-text-2)]">
             BlackShield Core is built as a structured research and learning environment covering
-            the full breadth of modern cybersecurity — from offensive techniques and detection
+            the full breadth of modern cybersecurity - from offensive techniques and detection
             engineering to AI security and open-source intelligence. Everything here is built
             to be useful, documented, and reproducible.
           </p>

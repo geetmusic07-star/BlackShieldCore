@@ -36,7 +36,7 @@ export function JailbreakRolodex() {
   );
 
   // Nudge Lenis (smooth-scroll) to recompute max scroll height when filters
-  // or expanded state change — without this the document height is cached
+  // or expanded state change - without this the document height is cached
   // and the page becomes "stuck" past the rolodex.
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -141,7 +141,7 @@ export function JailbreakRolodex() {
         </span>
         Payloads are sanitised illustrations of pattern shape, not working
         exploits. Status reflects effectiveness against current frontier models
-        as of early 2026 — re-evaluated on each model release.
+        as of early 2026, re-evaluated on each model release.
       </div>
     </div>
   );

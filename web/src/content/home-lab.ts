@@ -7,7 +7,7 @@ export const homeLab: HomeLabComponent[] = [
   { category: "Cyber Range", name: "Linux target stack", role: "Target environment", notes: "Web app, DB, message bus, and SSRF/SSRF-adjacent edge surfaces for lab work.", stage: "available" },
   // Detection
   { category: "Detection", name: "Elastic Stack", role: "SIEM", notes: "Centralised log ingestion, detection-as-code rules, and lab telemetry visualisation.", stage: "available" },
-  { category: "Detection", name: "Wazuh", role: "EDR / HIDS", notes: "Endpoint telemetry across the lab — process trees, file integrity, syscalls.", stage: "available" },
+  { category: "Detection", name: "Wazuh", role: "EDR / HIDS", notes: "Endpoint telemetry across the lab - process trees, file integrity, syscalls.", stage: "available" },
   { category: "Detection", name: "Sigma rule library", role: "Detection-as-code", notes: "Hand-written rule set covering the techniques exercised in the lab tracks.", stage: "available" },
   // Identity
   { category: "Identity", name: "BloodHound CE", role: "AD graph", notes: "Privilege-path analysis on the AD environment for both red and blue exercises.", stage: "available" },

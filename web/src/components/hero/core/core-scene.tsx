@@ -14,7 +14,7 @@ import { coreVertex, coreFragment, signalsVertex, signalsFragment } from "./shad
  *   3. Particle signal field on a thin shell with custom point shader
  *
  * Pointer-aware: the core "leans" subtly toward the cursor.
- * No bloom, no postprocessing — refined surface lighting only.
+ * No bloom, no postprocessing - refined surface lighting only.
  */
 export function CoreScene() {
   return (
@@ -40,7 +40,7 @@ function SceneContents() {
   const { size } = useThree();
 
   useFrame(({ camera, mouse }, delta) => {
-    // Smooth pointer lerp — gentle parallax on the whole group
+    // Smooth pointer lerp - gentle parallax on the whole group
     pointer.current.x = THREE.MathUtils.lerp(pointer.current.x, mouse.x, 0.06);
     pointer.current.y = THREE.MathUtils.lerp(pointer.current.y, mouse.y, 0.06);
 

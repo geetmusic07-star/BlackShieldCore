@@ -40,7 +40,7 @@ const modules = [
     href: "/tools",
     name: "Security Tools",
     category: "Utilities",
-    desc: "JWT decoder, hash analyzer, log parser, entropy checker — utility-grade surfaces.",
+    desc: "JWT decoder, hash analyzer, log parser, entropy checker.",
     stage: "available" as const,
     connects: "→ Case Studies",
   },
@@ -100,7 +100,7 @@ export function PlatformGrid() {
             </h2>
           </div>
           <p className="max-w-md text-[15px] leading-relaxed text-[color:var(--bsc-text-2)]">
-            Twelve integrated modules — each purpose-built, each cross-linked. Labs feed blog
+            Twelve integrated modules. Labs feed blog
             posts, research feeds tools, case studies loop back into labs. Everything compounds.
           </p>
         </div>

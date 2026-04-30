@@ -41,7 +41,7 @@ export function AIRedTeamSection() {
             <Reveal delay={0.1}>
               <p className="mt-5 text-[15px] leading-relaxed text-[color:var(--bsc-text-2)]">
                 A working taxonomy of prompt injection, jailbreak, and exfiltration mapped to
-                the safety mechanisms they bypass — paired with a regression harness that
+                the safety mechanisms they bypass - paired with a regression harness that
                 replays every classifier change against the catalog.
               </p>
             </Reveal>
@@ -49,7 +49,7 @@ export function AIRedTeamSection() {
               <ul className="mt-7 space-y-3 text-[14px] text-[color:var(--bsc-text-2)]">
                 {[
                   "Indirect injection harness with browser- and tool-using agents",
-                  "Detection-layer scoring per technique class — not aggregate accuracy",
+                  "Detection-layer scoring per technique class - not aggregate accuracy",
                   "Adversarial regression suite replaying the catalog on every change",
                 ].map((line) => (
                   <li key={line} className="flex items-start gap-3">

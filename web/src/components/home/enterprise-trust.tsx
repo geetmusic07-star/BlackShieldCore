@@ -43,7 +43,7 @@ export function EnterpriseTrustSection() {
               </h2>
               <p className="mt-5 text-[15px] leading-relaxed text-[color:var(--bsc-text-2)]">
                 Security teams already audit everything they install. We design BlackShield Core
-                expecting that — with the controls, processes, and transparency that make those
+                expecting that with the controls, processes, and transparency that make those
                 reviews short.
               </p>
             </div>

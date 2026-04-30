@@ -72,7 +72,7 @@ export function DashboardPreviewSection() {
               <div className="rounded-xl border border-white/[0.06] bg-[color-mix(in_oklch,var(--bsc-surface)_70%,transparent)] p-5 md:col-span-8">
                 <div className="flex items-center justify-between">
                   <div className="text-[12px] font-medium text-[color:var(--bsc-text-1)]">
-                    Detection volume — last 30 days
+                    Detection volume - last 30 days
                   </div>
                   <div className="flex items-center gap-3 text-[10px] font-mono uppercase tracking-wider text-[color:var(--bsc-text-3)]">
                     <span><span className="mr-1.5 inline-block size-1.5 rounded-full bg-[color:var(--bsc-accent)]" />Detections</span>

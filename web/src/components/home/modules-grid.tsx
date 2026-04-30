@@ -48,7 +48,7 @@ const modules = [
     href: "/blog",
     name: "Technical Blog",
     category: "Writing",
-    desc: "Deep-dives written by practitioners — not beginner guides, not marketing.",
+    desc: "Deep-dives written by practitioners.",
     stage: "available" as const,
     icon: "blog",
   },
@@ -129,7 +129,7 @@ export function ModulesGrid() {
           </div>
           <p className="max-w-md text-[14px] leading-relaxed text-[color:var(--bsc-text-2)]">
             Labs feed blog posts. Research feeds tools. Case studies loop back into labs.
-            Each module deepens the others — coverage compounds, it doesn't fragment.
+            Each module deepens the others.
           </p>
         </div>
 

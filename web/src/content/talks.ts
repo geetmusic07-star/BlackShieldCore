@@ -24,7 +24,7 @@ export const talks: Talk[] = [
     duration: "30 min",
     stage: "available",
     summary:
-      "Writing Sigma rules that survive red-team validation — architectural patterns, review loops, and KPI-driven rule design.",
+      "Writing Sigma rules that survive red-team validation - architectural patterns, review loops, and KPI-driven rule design.",
     resources: [
       { label: "Slides", available: false },
       { label: "Recording", available: false },

@@ -30,7 +30,7 @@ import {
 } from "@/content/labs";
 
 // ════════════════════════════════════════════════════════════════
-// CHAPTER METADATA — visual identity per kind
+// CHAPTER METADATA - visual identity per kind
 // ════════════════════════════════════════════════════════════════
 
 const KIND_META: Record<
@@ -84,7 +84,7 @@ export default function LabRoomPage() {
   } | null>(null);
 
   // Resolve the per-lab content profile from the lab's title.
-  // Defaults to JWT until the lab metadata loads — same chapter count and
+  // Defaults to JWT until the lab metadata loads - same chapter count and
   // shape across all profiles, so the layout stays stable across the swap.
   const labProfile: LabProfile = useMemo(
     () => getLabProfile(labMeta),
@@ -127,7 +127,7 @@ export default function LabRoomPage() {
       .catch(() => {});
   }, [slug]);
 
-  // Track active chapter via IntersectionObserver — works correctly under Lenis
+  // Track active chapter via IntersectionObserver - works correctly under Lenis
   // smooth-scroll (which decouples window.scrollY from visible scroll).
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -153,7 +153,7 @@ export default function LabRoomPage() {
 
   // Nudge Lenis (and any scroll lib) to recompute max scroll height whenever a
   // chapter expands or collapses. Without this, Lenis caches the old document
-  // height and the page becomes "stuck" — unable to scroll past the previous
+  // height and the page becomes "stuck" - unable to scroll past the previous
   // max even though new content has been rendered below.
   useEffect(() => {
     const id = window.setTimeout(() => {
@@ -238,7 +238,7 @@ export default function LabRoomPage() {
           title={labMeta?.title ?? "Lab"}
           description={
             labMeta?.description ??
-            "Hands-on offensive scenario — read the chapters, capture the flag in the practical."
+            "Hands-on offensive scenario - read the chapters, capture the flag in the practical."
           }
           minutes={labMeta?.durationMinutes ?? 60}
           slug={slug}
@@ -570,7 +570,7 @@ export default function LabRoomPage() {
 }
 
 // ════════════════════════════════════════════════════════════════
-// MISSION BRIEF — replaces the THM action-pill row
+// MISSION BRIEF - replaces the THM action-pill row
 // ════════════════════════════════════════════════════════════════
 
 function MissionBrief({
@@ -604,7 +604,7 @@ function MissionBrief({
       {/* Classification banner */}
       <div className="flex items-center justify-between border-b border-white/[0.06] bg-black/30 px-5 py-1.5 font-mono text-[9px] uppercase tracking-[0.24em] text-[color:var(--bsc-text-3)]">
         <span className="text-[oklch(0.78_0.18_140)]">● Briefing</span>
-        <span>Confidential — Tier II · Internal Use</span>
+        <span>Confidential - Tier II · Internal Use</span>
         <span>OP/Operative</span>
       </div>
 
@@ -667,7 +667,7 @@ function MissionBrief({
           </span>
         </div>
 
-        {/* Action row — book-style verbs, not THM-y */}
+        {/* Action row - book-style verbs, not THM-y */}
         <div className="mt-6 flex flex-wrap gap-2">
           <BriefAction icon={<BookOpen size={13} />} label="Open notebook" />
           <BriefAction icon={<Compass size={13} />} label="Skim outline" />
@@ -716,7 +716,7 @@ function BriefAction({
 }
 
 // ════════════════════════════════════════════════════════════════
-// CHAPTER SPINE — sticky vertical timeline (left column on desktop)
+// CHAPTER SPINE - sticky vertical timeline (left column on desktop)
 // ════════════════════════════════════════════════════════════════
 
 function ChapterSpine({
@@ -865,7 +865,7 @@ function BodyBlockView({ block }: { block: BodyBlock }) {
 }
 
 // ════════════════════════════════════════════════════════════════
-// BOOT LAB — replaces THM "View Site"
+// BOOT LAB - replaces THM "View Site"
 // ════════════════════════════════════════════════════════════════
 
 function BootLab({
@@ -905,7 +905,7 @@ function BootLab({
 }
 
 // ════════════════════════════════════════════════════════════════
-// READING TELEMETRY — fixed bottom-right pill
+// READING TELEMETRY - fixed bottom-right pill
 // ════════════════════════════════════════════════════════════════
 
 function ReadingTelemetry({
@@ -930,7 +930,7 @@ function ReadingTelemetry({
 }
 
 // ════════════════════════════════════════════════════════════════
-// OPERATOR DEBRIEF — replaces NPS strip
+// OPERATOR DEBRIEF - replaces NPS strip
 // ════════════════════════════════════════════════════════════════
 
 function OperatorDebrief({
@@ -971,7 +971,7 @@ function OperatorDebrief({
           <button className="text-[color:var(--bsc-text-1)] underline-offset-4 hover:underline">
             Send a recommendation
           </button>{" "}
-          — your feedback shapes the next iteration.
+          - your feedback shapes the next iteration.
         </p>
         <button
           type="button"

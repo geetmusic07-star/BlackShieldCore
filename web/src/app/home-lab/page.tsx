@@ -8,7 +8,7 @@ import { homeLab, homeLabRepos } from "@/content/home-lab";
 export const metadata: Metadata = {
   title: "Home Lab",
   description:
-    "The self-hosted lab BlackShield Core runs against — Active Directory, SIEM, EDR, identity, and network components used for safe offensive practice and detection work.",
+    "The self-hosted lab BlackShield Core runs against - Active Directory, SIEM, EDR, identity, and network components used for safe offensive practice and detection work.",
 };
 
 export default function HomeLabPage() {
@@ -28,7 +28,7 @@ export default function HomeLabPage() {
           <span className="text-[color:var(--bsc-text-3)]">Where the labs actually run.</span>
         </>
       }
-      lede="A documented self-hosted lab — Active Directory, SIEM, EDR, identity, and network components — used for safe offensive practice and detection-engineering work. Open-source where possible, tuned for reproducibility."
+      lede="A documented self-hosted lab - Active Directory, SIEM, EDR, identity, and network components - used for safe offensive practice and detection-engineering work. Open-source where possible, tuned for reproducibility."
     >
       <Container>
         <div className="space-y-12">
@@ -97,7 +97,7 @@ export default function HomeLabPage() {
                 ))}
               </div>
               <p className="mt-5 text-[12px] leading-relaxed text-[color:var(--bsc-text-3)]">
-                Repositories are curated and published as their content stabilises — links are
+                Repositories are curated and published as their content stabilises - links are
                 added to each module page as they go live.
               </p>
             </section>

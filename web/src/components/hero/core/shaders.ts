@@ -69,7 +69,7 @@ float fbm(vec3 p) {
 
 void main() {
   vec3 p = position;
-  // Two-octave moving FBM — slow base, fast detail
+  // Two-octave moving FBM - slow base, fast detail
   float baseN = fbm(p * 1.2 + vec3(uTime * 0.18, 0.0, 0.0));
   float detailN = snoise(p * 4.0 + vec3(uTime * 0.6));
   float n = baseN + detailN * 0.18;
@@ -104,7 +104,7 @@ void main() {
   float band = smoothstep(-0.7, 0.7, vNoise);
   vec3 base = mix(uColorDeep, uColorMid, band);
 
-  // Slow rim pulse — feels like the core "breathes"
+  // Slow rim pulse - feels like the core "breathes"
   float pulse = 0.55 + 0.45 * sin(uTime * 0.5);
   vec3 rim = uColorRim * fres * (0.7 + 0.3 * pulse);
 
@@ -116,7 +116,7 @@ void main() {
 }
 `;
 
-// Particle signal field — twinkling on a sphere shell, radial drift toward core.
+// Particle signal field - twinkling on a sphere shell, radial drift toward core.
 export const signalsVertex = /* glsl */ `
 uniform float uTime;
 attribute float aSize;

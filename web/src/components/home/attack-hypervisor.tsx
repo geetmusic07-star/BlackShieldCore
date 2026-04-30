@@ -41,7 +41,7 @@ export function AttackHypervisorSection() {
               <p className="mt-5 text-[15px] leading-relaxed text-[color:var(--bsc-text-2)]">
                 Continuously model identity, endpoint, workload, AD, and data-plane
                 relationships into a single live attack graph. Every simulation,
-                detection, and AI inference operates on the same shared topology —
+                detection, and AI inference operates on the same shared topology -
                 so coverage gaps are visible, not assumed.
               </p>
             </Reveal>

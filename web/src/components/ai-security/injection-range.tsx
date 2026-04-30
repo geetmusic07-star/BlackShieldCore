@@ -196,7 +196,7 @@ export function InjectionRange() {
             })}
           </ul>
 
-          {/* Footer cluster — agent + tool roster */}
+          {/* Footer cluster - agent + tool roster */}
           <div className="mt-5 rounded-md border border-white/[0.06] bg-black/30 p-3">
             <div className="mb-2 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--bsc-text-3)]">
               <Cpu size={11} /> Agent
@@ -273,7 +273,7 @@ export function InjectionRange() {
                 </div>
                 <div className="text-[12.5px] text-[color:var(--bsc-text-2)]">
                   {level.defenses.length === 0 ? (
-                    <span className="text-[color:var(--bsc-text-3)]">None — naive baseline</span>
+                    <span className="text-[color:var(--bsc-text-3)]">None (naive baseline)</span>
                   ) : (
                     level.defenses.map((d) => d.label).join(" → ")
                   )}
@@ -406,7 +406,7 @@ export function InjectionRange() {
         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--bsc-text-3)]">
           Note ·{" "}
         </span>
-        Atlas is a deterministic state-machine simulator — no real model is called. The defense
+        Atlas is a deterministic state-machine simulator. No real model is called. The defense
         layers and tool detector are pattern-based and run client-side. The point is to make the
         attacker's choices and the defender's stack legible to each other; the techniques are
         documented in the rolodex above.

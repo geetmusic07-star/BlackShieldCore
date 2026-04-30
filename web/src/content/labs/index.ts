@@ -11,7 +11,7 @@ const ALL_PROFILES: LabProfile[] = [JWT_EXPLOIT, GRAPHQL_ABUSE, SSRF_METADATA];
  * Pick the right lab profile for a given lab. Matching is keyword-based on the
  * lab title so it survives database UUIDs changing across environments.
  *
- * Falls back to the JWT profile if nothing matches — the JWT lab is the most
+ * Falls back to the JWT profile if nothing matches - the JWT lab is the most
  * polished and serves as a sensible default for any unknown lab.
  */
 export function getLabProfile(lab: { title?: string } | null | undefined): LabProfile {

@@ -28,7 +28,7 @@ export default function OsintPage() {
           <span className="text-[color:var(--bsc-text-3)]">Documented, not dramatised.</span>
         </>
       }
-      lede="Curated investigations grounded in public source data — phishing kit infrastructure, domain squatting patterns, actor tracking, CDN abuse. Each writeup is analytical, with IoCs and detection notes published alongside."
+      lede="Curated investigations grounded in public source data - phishing kit infrastructure, domain squatting patterns, actor tracking, CDN abuse. Each writeup is analytical, with IoCs and detection notes published alongside."
     >
       <Container>
         <div className="flex flex-col gap-3">

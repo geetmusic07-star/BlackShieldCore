@@ -17,7 +17,7 @@ const surfaces = [
   {
     short: "WAF",
     name: "Web Application",
-    body: "Layer-7 attack surface — request anomalies, payload signatures, and bot intelligence.",
+    body: "Layer-7 attack surface: request anomalies, payload signatures, and bot intelligence.",
   },
   {
     short: "SIEM",
@@ -27,7 +27,7 @@ const surfaces = [
   {
     short: "SOAR",
     name: "Response",
-    body: "Playbooks fire from BSC alerts — isolate, rotate, raise tickets, post to chat.",
+    body: "Playbooks fire from BSC alerts: isolate, rotate, raise tickets, post to chat.",
   },
   {
     short: "CSPM",
@@ -37,7 +37,7 @@ const surfaces = [
   {
     short: "IAM",
     name: "Identity",
-    body: "Entitlement graphs, dormant credentials, and toxic combinations — surfaced and ranked.",
+    body: "Entitlement graphs, dormant credentials, and toxic combinations surfaced and ranked.",
   },
 ];
 
@@ -52,13 +52,13 @@ export function CoverageStrip() {
                 Coverage surfaces
               </div>
               <h2 className="text-[clamp(28px,3.4vw,40px)] font-semibold leading-[1.08] tracking-[-0.022em]">
-                The whole defensive stack — under one operating layer.
+                The whole defensive stack under one operating layer.
               </h2>
             </div>
           </Reveal>
           <Reveal delay={0.05}>
             <p className="text-[14px] leading-relaxed text-[color:var(--bsc-text-2)]">
-              BlackShield Core doesn&apos;t replace your stack — it operates it. Detection
+              BlackShield Core doesn&apos;t replace your stack, it operates it. Detection
               rules, posture findings, and identity insights flow into a single attack-graph
               view that security teams can actually act on.
             </p>

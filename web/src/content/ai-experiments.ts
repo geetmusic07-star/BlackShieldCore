@@ -45,7 +45,7 @@ export const aiExperiments: AiExperiment[] = [
       "PHISHING [0.998 confidence]\nsignals: homoglyph domain · urgency framing · credential harvest pattern",
     notes: [
       "Trained on a curated sample of 120k+ historic phishing URLs",
-      "Signals exposed alongside the classification — interpretable, not black-box",
+      "Signals exposed alongside the classification - interpretable, not black-box",
       "Detection rules publishable as Sigma for SIEM ingestion",
     ],
   },
@@ -65,7 +65,7 @@ export const aiExperiments: AiExperiment[] = [
     notes: [
       "Operates on structured Windows + EDR telemetry batches, not raw text",
       "Scores correlated with MITRE technique mapping for downstream action",
-      "Recall measured per technique class — no single aggregate accuracy claim",
+      "Recall measured per technique class - no single aggregate accuracy claim",
     ],
   },
   {
@@ -82,7 +82,7 @@ export const aiExperiments: AiExperiment[] = [
     outputSample:
       "FAMILY: dropper-cluster-A [F1 0.91]\nrationale: import shape + entropy + packer signature",
     notes: [
-      "Static-only — sample is never executed during scoring",
+      "Static-only - sample is never executed during scoring",
       "Per-family F1 published; aggregate accuracy considered misleading on its own",
       "Curated sample set spans 18 documented families",
     ],

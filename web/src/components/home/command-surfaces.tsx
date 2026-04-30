@@ -21,8 +21,8 @@ export function CommandSurfacesSection() {
           </Reveal>
           <Reveal delay={0.05}>
             <p className="text-[14px] leading-relaxed text-[color:var(--bsc-text-2)]">
-              Concrete surfaces underneath — a graph, a risk score, an AI analyst, a telemetry
-              stream — all reading from the same shared topology.
+              Concrete surfaces underneath: a graph, a risk score, an AI analyst, a telemetry
+              stream, all reading from the same shared topology.
             </p>
           </Reveal>
         </div>

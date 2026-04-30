@@ -70,7 +70,7 @@ export function Hero() {
             className="mx-auto mt-5 max-w-xl text-[15px] md:text-[15.5px] leading-relaxed text-[color:var(--bsc-text-3)]"
           >
             Hands-on labs, security tools, deep-dive research, and curated case
-            studies — built to be useful, documented, and reproducible. Made for
+            studies - built to be useful, documented, and reproducible. Made for
             practitioners who want depth, not marketing.
           </motion.p>
 

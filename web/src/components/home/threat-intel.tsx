@@ -46,7 +46,7 @@ export function ThreatIntelSection() {
             <Reveal delay={0.1}>
               <p className="mt-5 text-[15px] leading-relaxed text-[color:var(--bsc-text-2)]">
                 Continuously model adversary infrastructure, campaign topology, and indicator
-                drift. Every alert in your stack is correlated against a unified topology — so
+                drift. Every alert in your stack is correlated against a unified topology so
                 you see the threat graph, not a list of unrelated CVEs.
               </p>
             </Reveal>

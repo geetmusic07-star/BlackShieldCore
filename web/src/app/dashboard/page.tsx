@@ -39,7 +39,7 @@ export default function DashboardPage() {
           <span className="text-[color:var(--bsc-text-3)]">Analysis, not noise.</span>
         </>
       }
-      lede="A reading view across the CVE work, OSINT investigations, and detection coverage that's currently in scope. Updated as analyses are published — not real-time, deliberately."
+      lede="A reading view across the CVE work, OSINT investigations, and detection coverage that's currently in scope. Updated as analyses are published - not real-time, deliberately."
     >
       <Container>
         {/* Summary tiles */}
@@ -138,7 +138,7 @@ export default function DashboardPage() {
                   ))}
                 </ul>
                 <p className="mt-5 text-[11px] text-[color:var(--bsc-text-3)]">
-                  Coverage reflects rule sets and lab tracks currently shipped — not aspirational scope.
+                  Coverage reflects rule sets and lab tracks currently shipped - not aspirational scope.
                 </p>
               </section>
             </Reveal>

@@ -34,7 +34,7 @@ export function CommandMockup() {
       />
 
       <div className="relative grid gap-3 md:grid-cols-12 md:grid-rows-[auto_auto_auto]">
-        {/* Attack graph — large, dominant */}
+        {/* Attack graph - large, dominant */}
         <motion.div
           variants={fadeUp}
           custom={0}

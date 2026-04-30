@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ═══════════════════════════════════════════
-   BLACKSHIELD CORE — DESIGN SYSTEM
+   BLACKSHIELD CORE - DESIGN SYSTEM
    Apple system typography · Neutral dark · Restrained blue accent
    ═══════════════════════════════════════════ */
 
@@ -66,7 +66,7 @@
 }
 
 :root {
-  /* BSC tones — dark by default (single theme for now) */
+  /* BSC tones - dark by default (single theme for now) */
   --bsc-void: oklch(0.14 0.015 260);
   --bsc-surface: oklch(0.18 0.018 260);
   --bsc-elevated: oklch(0.22 0.02 260);
@@ -125,7 +125,7 @@
     background-attachment: fixed;
   }
 
-  /* Premium display type — SF Pro Display works best with slight negative tracking at large sizes only */
+  /* Premium display type - SF Pro Display works best with slight negative tracking at large sizes only */
   h1, .h1 { letter-spacing: -0.022em; font-weight: 600; }
   h2, .h2 { letter-spacing: -0.018em; font-weight: 600; }
   h3, .h3 { letter-spacing: -0.012em; font-weight: 600; }
@@ -142,7 +142,7 @@
   .lenis.lenis-stopped { overflow: clip; }
 }
 
-/* Utility — grain overlay */
+/* Utility - grain overlay */
 .bsc-grain {
   position: fixed;
   inset: 0;
@@ -153,7 +153,7 @@
   background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
-/* Premium focus ring — keyboard only */
+/* Premium focus ring - keyboard only */
 :focus-visible {
   outline: 2px solid color-mix(in oklch, var(--bsc-accent) 80%, transparent);
   outline-offset: 2px;

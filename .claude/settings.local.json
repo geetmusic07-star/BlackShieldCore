@@ -3,7 +3,8 @@
     "allow": [
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8080/)",
       "Bash(start python *)",
-      "Bash(python -m http.server 8080)"
+      "Bash(python -m http.server 8080)",
+      "Bash(pnpm create *)"
     ]
   }
 }

@@ -11,7 +11,7 @@ const features = [
   {
     kicker: "01",
     title: "Grounded in real attack patterns",
-    body: "Every lab, note, and case study maps to documented attacker behavior — not invented scenarios. The examples come from CVE analyses, incident reconstructions, and field work.",
+    body: "Every lab, note, and case study maps to documented attacker behavior. The examples come from CVE analyses, incident reconstructions, and field work.",
   },
   {
     kicker: "02",

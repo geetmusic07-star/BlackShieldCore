@@ -7,7 +7,7 @@ import { Reveal } from "@/components/ui/reveal";
 export const metadata: Metadata = {
   title: "Platform Overview",
   description:
-    "BlackShield Core as a whole — labs, tools, research, case studies, OSINT, home-lab architecture, and the AI security work that ties them together.",
+    "BlackShield Core as a whole - labs, tools, research, case studies, OSINT, home-lab architecture, and the AI security work that ties them together.",
 };
 
 export default function PlatformPage() {
@@ -30,7 +30,7 @@ export default function PlatformPage() {
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-[15.5px] leading-relaxed text-[color:var(--bsc-text-2)]">
               BlackShield Core is built as a modular research environment. Each module is a
-              standalone surface — a lab, a tool, a writeup, an investigation — but every piece
+              standalone surface - a lab, a tool, a writeup, an investigation - but every piece
               links into the others, so the depth compounds as you move through it.
             </p>
           </Reveal>

@@ -6,7 +6,7 @@ import { useMemo, useRef } from "react";
 import * as THREE from "three";
 
 /**
- * Signature 3D scene — a slow-rotating wireframe shield with an orbital
+ * Signature 3D scene - a slow-rotating wireframe shield with an orbital
  * particle field. Kept intentionally restrained: no bloom, no post-processing,
  * no neon. Reads as a premium brand device, not a game effect.
  */

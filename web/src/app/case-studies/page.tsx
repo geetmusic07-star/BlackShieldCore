@@ -8,7 +8,7 @@ import { Reveal } from "@/components/ui/reveal";
 
 export const metadata: Metadata = {
   title: "Case Studies",
-  description: "Reconstructions of real incident patterns — attack vectors, findings, and detection gaps.",
+  description: "Reconstructions of real incident patterns - attack vectors, findings, and detection gaps.",
 };
 
 export default function CaseStudiesPage() {
@@ -22,7 +22,7 @@ export default function CaseStudiesPage() {
           <span className="text-[color:var(--bsc-text-3)]">Honest writeups.</span>
         </>
       }
-      lede="Reconstructions of documented attack patterns — attack chain, findings, and detection gaps."
+      lede="Reconstructions of documented attack patterns - attack chain, findings, and detection gaps."
     >
       <Container>
         <div className="flex flex-col gap-3">

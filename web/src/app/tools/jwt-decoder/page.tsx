@@ -31,8 +31,8 @@ export default function JwtDecoderPage() {
           </h1>
           <p className="mt-5 text-[15px] leading-relaxed text-[color:var(--bsc-text-2)]">
             Decode the header and payload of a JSON Web Token in your browser. Surfaces
-            common-class warnings — <code className="font-mono text-[color:var(--bsc-text-1)]">alg:none</code>,
-            unsigned tokens, and short HMAC secrets — without sending the token anywhere.
+            common-class warnings - <code className="font-mono text-[color:var(--bsc-text-1)]">alg:none</code>,
+            unsigned tokens, and short HMAC secrets - without sending the token anywhere.
           </p>
           <p className="mt-3 text-[12px] text-[color:var(--bsc-text-3)]">
             All processing runs locally in the browser. No network request is made with the token.

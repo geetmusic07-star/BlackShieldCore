@@ -11,7 +11,7 @@ const principles = [
   {
     n: "01",
     title: "Grounded in real attack patterns",
-    body: "Every lab and writeup maps to documented attacker behavior. The examples come from CVE analyses, incident reconstructions, and field work — not invented scenarios.",
+    body: "Every lab and writeup maps to documented attacker behavior. The examples come from CVE analyses, incident reconstructions, and field work.",
   },
   {
     n: "02",

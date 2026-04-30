@@ -47,7 +47,7 @@ export default async function LabsPage() {
     tags: lab.tags ?? [],
   }));
 
-  // ✅ Typed grouping – safe fallback for missing category
+  // ✅ Typed grouping - safe fallback for missing category
   const byCategory: Record<string, Lab[]> = {};
 
   formattedLabs.forEach((lab) => {
@@ -84,7 +84,7 @@ export default async function LabsPage() {
           <Reveal delay={0.1}>
             <p className="mt-6 max-w-2xl text-[15px] md:text-base leading-relaxed text-[color:var(--bsc-text-2)]">
               Each lab reconstructs a documented vulnerability class. The goal is understanding
-              — not payload memorization. Start with{" "}
+              - not payload memorization. Start with{" "}
               {formattedLabs[0]?.title || "your first lab"}, which is the first lab
               we have taken through to a finished, documented walkthrough.
             </p>

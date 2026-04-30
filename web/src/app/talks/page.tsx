@@ -21,7 +21,7 @@ export default function TalksPage() {
           <span className="text-[color:var(--bsc-text-3)]">Delivered and documented.</span>
         </>
       }
-      lede="Talks given across security and AI conferences — each paired with slides, demo code, and writeups where available."
+      lede="Talks given across security and AI conferences - each paired with slides, demo code, and writeups where available."
     >
       <Container>
         <div className="flex flex-col gap-3">

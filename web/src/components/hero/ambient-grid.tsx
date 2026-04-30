@@ -1,13 +1,13 @@
 "use client";
 
 /**
- * Subtle ambient layer — a soft animated mesh-grid + radial glow.
+ * Subtle ambient layer - a soft animated mesh-grid + radial glow.
  * Pure CSS/SVG, no Three.js. Designed to read as background, not a feature.
  */
 export function AmbientGrid() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-      {/* Layered radial wash — calm, not neon */}
+      {/* Layered radial wash - calm, not neon */}
       <div
         className="absolute inset-0"
         style={{

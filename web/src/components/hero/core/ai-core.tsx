@@ -11,7 +11,7 @@ const CoreScene = dynamic(() => import("./core-scene").then((m) => m.CoreScene),
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
- * AI-CORE — the signature hero visual.
+ * AI-CORE - the signature hero visual.
  *
  * Frame: a soft glassmorphic vignette holds the WebGL scene with a subtle
  * gradient surround. Annotation chips overlay the core to read as a
