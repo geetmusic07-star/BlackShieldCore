@@ -18,6 +18,16 @@ export const osintCases: OsintCase[] = [
       "IoC list published to OpenCTI and MISP",
     ],
     tags: ["Phishing", "AiTM", "MS365", "Infrastructure"],
+    stage: "available",
+    body: [
+      { kind: "p", value: "This is a detailed analysis of the FakeVerify phishing kit operation." },
+      { kind: "h2", value: "Initial Discovery" },
+      { kind: "p", value: "The kit was first identified during routine monitoring of newly registered domains matching MS365 typosquatting patterns." },
+      { kind: "callout", tone: "note", value: "All IoCs have been redacted for public release." },
+      { kind: "h3", value: "Adversary-in-the-Middle Mechanics" },
+      { kind: "p", value: "Unlike standard credential harvesters, FakeVerify acts as a transparent proxy between the victim and the legitimate Microsoft login endpoint." },
+      { kind: "code", lang: "nginx", value: "proxy_pass https://login.microsoftonline.com;\nproxy_set_header Host login.microsoftonline.com;" },
+    ],
   },
   {
     slug: "finance-typosquat-q1",
@@ -35,6 +45,7 @@ export const osintCases: OsintCase[] = [
       "Mailbox-side detection rules published as Sigma",
     ],
     tags: ["Domain", "Homoglyph", "WHOIS", "Finance"],
+    stage: "build",
   },
   {
     slug: "apt-iridium-tracking",
@@ -51,6 +62,7 @@ export const osintCases: OsintCase[] = [
       "Tooling overlap with two earlier reported clusters",
     ],
     tags: ["Actor", "Attribution", "C2", "EU"],
+    stage: "build",
   },
   {
     slug: "cdn-staging-network",
@@ -67,6 +79,7 @@ export const osintCases: OsintCase[] = [
       "Detection ruleset open-sourced",
     ],
     tags: ["CDN", "Staging", "Detection"],
+    stage: "build",
   },
 ];
 

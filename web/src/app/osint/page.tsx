@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { ListingLayout } from "@/components/listings/listing-layout";
 import { Reveal } from "@/components/ui/reveal";
@@ -34,7 +35,8 @@ export default function OsintPage() {
         <div className="flex flex-col gap-3">
           {osintCases.map((c, i) => (
             <Reveal key={c.slug} delay={i * 0.04}>
-              <article className="grid gap-6 rounded-2xl border border-white/[0.07] bg-[color-mix(in_oklch,var(--bsc-surface)_72%,transparent)] p-7 transition-colors hover:border-white/15 hover:bg-[color-mix(in_oklch,var(--bsc-surface)_92%,transparent)] md:grid-cols-[1.4fr_1fr] md:p-8">
+              <Link href={`/osint/${c.slug}`} className="block">
+                <article className="grid gap-6 rounded-2xl border border-white/[0.07] bg-[color-mix(in_oklch,var(--bsc-surface)_72%,transparent)] p-7 transition-colors hover:border-white/15 hover:bg-[color-mix(in_oklch,var(--bsc-surface)_92%,transparent)] md:grid-cols-[1.4fr_1fr] md:p-8">
                 <div>
                   <div className="mb-3 flex flex-wrap items-center gap-2">
                     <span className="rounded-md border border-white/[0.06] bg-white/[0.02] px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-[color:var(--bsc-text-3)]">
@@ -95,6 +97,7 @@ export default function OsintPage() {
                   </div>
                 </div>
               </article>
+              </Link>
             </Reveal>
           ))}
         </div>

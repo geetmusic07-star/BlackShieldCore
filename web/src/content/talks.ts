@@ -15,6 +15,17 @@ export const talks: Talk[] = [
       { label: "Recording", available: false },
       { label: "Demo Repo", available: false },
     ],
+    body: [
+      { kind: "p", value: "This talk covers the practical exploitation of LLM agents hooked into enterprise APIs." },
+      { kind: "h2", value: "The Attack Chains" },
+      { kind: "p", value: "We walked through three distinct scenarios during the presentation." },
+      { kind: "ul", items: [
+        "Cross-Plugin Request Forgery (CPRF)",
+        "Data Exfiltration via Markdown Images",
+        "Indirect Prompt Injection leading to RCE"
+      ]},
+      { kind: "callout", tone: "warn", value: "The demo environment used live models; your reproduction results may vary depending on model updates." },
+    ],
   },
   {
     slug: "detection-engineering-steelcon-2025",

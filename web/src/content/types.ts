@@ -88,6 +88,7 @@ export interface Talk {
   stage: Stage;
   summary: string;
   resources: { label: string; available: boolean }[];
+  body?: BlogBlock[];
 }
 
 export interface OsintCase {
@@ -100,6 +101,8 @@ export interface OsintCase {
   summary: string;
   findings: string[];
   tags: string[];
+  stage?: Stage;
+  body?: BlogBlock[];
 }
 
 export interface HomeLabComponent {

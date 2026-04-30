@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { ListingLayout } from "@/components/listings/listing-layout";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -27,7 +28,8 @@ export default function TalksPage() {
         <div className="flex flex-col gap-3">
           {talks.map((t, i) => (
             <Reveal key={t.slug} delay={i * 0.05}>
-              <article className="grid gap-6 rounded-2xl border border-white/[0.07] bg-[color-mix(in_oklch,var(--bsc-surface)_75%,transparent)] p-7 md:grid-cols-[1.4fr_1fr] md:p-9">
+              <Link href={`/talks/${t.slug}`} className="block">
+                <article className="grid gap-6 rounded-2xl border border-white/[0.07] bg-[color-mix(in_oklch,var(--bsc-surface)_75%,transparent)] p-7 transition-colors hover:border-white/15 hover:bg-[color-mix(in_oklch,var(--bsc-surface)_95%,transparent)] md:grid-cols-[1.4fr_1fr] md:p-9">
                 <div>
                   <div className="mb-3 flex items-center gap-2">
                     <StatusBadge variant={t.stage} />
@@ -57,6 +59,7 @@ export default function TalksPage() {
                   ))}
                 </div>
               </article>
+              </Link>
             </Reveal>
           ))}
         </div>
