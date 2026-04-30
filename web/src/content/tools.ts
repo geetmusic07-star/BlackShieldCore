@@ -14,7 +14,7 @@ export const tools: Tool[] = [
     slug: "hash-analyzer",
     name: "Hash Analyzer",
     category: "Crypto",
-    stage: "build",
+    stage: "available",
     description:
       "Identify hash algorithms from format and length. Flags deprecated algorithms and password-storage anti-patterns.",
     tags: ["Crypto", "Forensics"],
