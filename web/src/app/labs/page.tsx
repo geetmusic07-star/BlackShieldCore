@@ -11,9 +11,13 @@ export const metadata: Metadata = {
 };
 
 export default async function LabsPage() {
-  // Fetch labs from API using base URL
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/labs`, {
+  const getBaseUrl = () => {
+    if (process.env.NEXT_PUBLIC_BASE_URL) return process.env.NEXT_PUBLIC_BASE_URL;
+    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+    return "http://localhost:3000";
+  };
+
+  const res = await fetch(`${getBaseUrl()}/api/labs`, {
     cache: "no-store",
   });
 
