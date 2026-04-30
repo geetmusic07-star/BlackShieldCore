@@ -106,9 +106,11 @@ export interface OsintCase {
 }
 
 export interface HomeLabComponent {
+  slug?: string;
   category: "Cyber Range" | "Detection" | "Identity" | "Network" | "Tooling";
   name: string;
   role: string;
   notes: string;
   stage: Stage;
+  body?: BlogBlock[];
 }

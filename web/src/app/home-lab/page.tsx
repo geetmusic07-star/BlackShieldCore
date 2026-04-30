@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { ListingLayout } from "@/components/listings/listing-layout";
+import Link from "next/link";
 import { Reveal } from "@/components/ui/reveal";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { homeLab, homeLabRepos } from "@/content/home-lab";
@@ -44,25 +45,36 @@ export default function HomeLabPage() {
                   </span>
                 </div>
                 <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-                  {items.map((c) => (
-                    <article
-                      key={c.name}
-                      className="rounded-2xl border border-white/[0.07] bg-[color-mix(in_oklch,var(--bsc-surface)_72%,transparent)] p-5"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="text-[10px] font-mono uppercase tracking-wider text-[color:var(--bsc-text-3)]">
-                          {c.role}
+                  {items.map((c) => {
+                    const disabled = c.stage !== "available" && c.stage !== "beta";
+                    const Comp: React.ElementType = c.slug ? Link : "article";
+                    const props = c.slug ? { href: `/home-lab/${c.slug}` } : {};
+
+                    return (
+                      <Comp
+                        key={c.name}
+                        {...props}
+                        className={`group rounded-2xl border border-white/[0.07] bg-[color-mix(in_oklch,var(--bsc-surface)_72%,transparent)] p-5 transition-colors ${
+                          c.slug
+                            ? "hover:border-white/15 hover:bg-[color-mix(in_oklch,var(--bsc-surface)_90%,transparent)] block"
+                            : ""
+                        } ${disabled ? "opacity-60" : ""}`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="text-[10px] font-mono uppercase tracking-wider text-[color:var(--bsc-text-3)]">
+                            {c.role}
+                          </div>
+                          <StatusBadge variant={c.stage} />
                         </div>
-                        <StatusBadge variant={c.stage} />
-                      </div>
-                      <h3 className="mt-2 text-[15px] font-semibold tracking-[-0.012em] text-[color:var(--bsc-text-1)]">
-                        {c.name}
-                      </h3>
-                      <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--bsc-text-2)]">
-                        {c.notes}
-                      </p>
-                    </article>
-                  ))}
+                        <h3 className="mt-2 text-[15px] font-semibold tracking-[-0.012em] text-[color:var(--bsc-text-1)]">
+                          {c.name}
+                        </h3>
+                        <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--bsc-text-2)]">
+                          {c.notes}
+                        </p>
+                      </Comp>
+                    );
+                  })}
                 </div>
               </section>
             </Reveal>
