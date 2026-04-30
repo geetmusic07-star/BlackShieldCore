@@ -119,9 +119,9 @@ export async function GET() {
 // =====================================
 export async function POST(
     req: NextRequest,
-    context: { params: Promise<{ slug: string }> }
+    context: { params: { slug: string } }
 ) {
-    const { slug } = await context.params;
+    const { slug } = context.params;
 
     try {
         const body = await req.json();
