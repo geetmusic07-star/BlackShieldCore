@@ -23,7 +23,7 @@ export const tools: Tool[] = [
     slug: "log-parser",
     name: "Log Pattern Parser",
     category: "SIEM",
-    stage: "build",
+    stage: "available",
     description:
       "Extract IoCs from raw log output and flag suspicious patterns such as path traversal, SQLi, and LOLBin invocations.",
     tags: ["SIEM", "Detection"],
@@ -32,7 +32,7 @@ export const tools: Tool[] = [
     slug: "password-entropy",
     name: "Password Entropy",
     category: "Crypto",
-    stage: "build",
+    stage: "available",
     description:
       "Calculate password entropy, detect patterns, and estimate crack time across common hashcat rule sets.",
     tags: ["Auth", "Entropy"],
