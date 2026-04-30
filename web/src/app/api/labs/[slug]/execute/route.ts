@@ -117,11 +117,8 @@ export async function GET() {
 // =====================================
 // 🚀 MAIN API (LEVEL-AWARE)
 // =====================================
-export async function POST(
-    req: NextRequest,
-    context: any
-) {
-    const { slug } = context.params;
+export async function POST(req: NextRequest, context: any) {
+    const slug = context.params?.slug;
 
     try {
         const body = await req.json();
