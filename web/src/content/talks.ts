@@ -55,6 +55,34 @@ export const talks: Talk[] = [
       { label: "Demo", available: false },
     ],
   },
+  {
+    slug: "ai-red-teaming-black-hat-2025",
+    title: "Automated Red Teaming of AI Workloads",
+    venue: "Black Hat USA 2025",
+    date: "2025-08",
+    duration: "50 min",
+    stage: "available",
+    summary:
+      "A deep dive into adversarial generation frameworks used to bypass safety filters on modern foundation models.",
+    resources: [
+      { label: "Slides", available: false },
+      { label: "Recording", available: false },
+    ],
+  },
+  {
+    slug: "cloud-breach-sim-rsa-2026",
+    title: "Cloud Breach Simulation and the Modern SIEM",
+    venue: "RSA Conference 2026",
+    date: "2026-05",
+    duration: "40 min",
+    stage: "planned",
+    summary:
+      "Upcoming keynote on simulating large-scale AWS/Azure breaches to stress-test your detection engineering pipelines.",
+    resources: [
+      { label: "Slides", available: false },
+      { label: "Recording", available: false },
+    ],
+  },
 ];
 
 export function getTalk(slug: string) {
