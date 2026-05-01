@@ -5,6 +5,7 @@ import { ListingLayout } from "@/components/listings/listing-layout";
 import { Reveal } from "@/components/ui/reveal";
 import { cveSamples, techniqueCoverage, dashboardSummary } from "@/content/dashboard";
 import { osintCases } from "@/content/osint";
+import { HtbMetrics } from "@/components/dashboard/htb-metrics";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -42,6 +43,11 @@ export default function DashboardPage() {
       lede="A reading view across the CVE work, OSINT investigations, and detection coverage that's currently in scope. Updated as analyses are published - not real-time, deliberately."
     >
       <Container>
+        {/* Live Operations Metrics */}
+        <div className="mb-12">
+          <HtbMetrics />
+        </div>
+
         {/* Summary tiles */}
         <Reveal>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
