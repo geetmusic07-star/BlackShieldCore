@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
-import { ArrowLeft, Key, ShieldAlert, ShieldCheck, Zap } from "lucide-react";
+import { ArrowLeft, Key, ShieldWarning, ShieldCheck, Lightning } from "@phosphor-icons/react";
 
 // 100 Billion hashes per second (~100 GH/s) -> Modern 8x GPU rig against fast hashes like MD5/NTLM
 const HASH_RATE_PER_SECOND = 100_000_000_000;
@@ -49,14 +49,25 @@ function formatTime(seconds: number) {
   return "Billions of years (Effectively uncrackable)";
 }
 
+import { ToolLayout, useHandshake } from "@/components/ui";
+
 export default function PasswordEntropyPage() {
   const [password, setPassword] = useState("");
+  const [analyzing, setAnalyzing] = useState(false);
+  const { startHandshake } = useHandshake();
   const { entropy, poolSize, crackTimeSeconds } = calculateEntropy(password);
 
   const isSecure = entropy >= 80;
 
+  const handleEstimate = () => {
+    if (!password) return;
+    startHandshake(() => {
+      setAnalyzing(true);
+    });
+  };
+
   return (
-    <div className="pt-32 pb-24">
+    <ToolLayout>
       <Container className="max-w-[800px]">
         <Link
           href="/tools"
@@ -80,84 +91,95 @@ export default function PasswordEntropyPage() {
           <input
             type="text"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setAnalyzing(false);
+            }}
             spellCheck={false}
             placeholder="Type a password to analyze..."
             className="w-full rounded-md border border-white/[0.08] bg-black/50 px-4 py-3 font-mono text-[14px] text-[color:var(--bsc-text-1)] outline-none focus:border-[oklch(0.78_0.18_140)]/50"
           />
         </div>
 
-        {password && (
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-xl border border-white/[0.08] bg-[color-mix(in_oklch,var(--bsc-surface)_60%,transparent)] p-5">
-              <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
-                Entropy Bits
+        <button
+          onClick={handleEstimate}
+          disabled={!password}
+          className="mt-4 w-full py-3 bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 rounded-xl font-mono text-[11px] uppercase tracking-[0.2em] text-white/40 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          Run Entropy Simulation
+        </button>
+
+        {analyzing && password && (
+          <>
+            <div className="mt-12 grid gap-4 sm:grid-cols-3">
+              <div className="rounded-xl border border-white/[0.08] bg-[color-mix(in_oklch,var(--bsc-surface)_60%,transparent)] p-5">
+                <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
+                  Entropy Bits
+                </div>
+                <div className="mt-2 text-[24px] font-semibold text-[color:var(--bsc-text-1)]">
+                  {entropy.toFixed(1)}
+                </div>
+                <p className="mt-1 text-[12px] text-[color:var(--bsc-text-2)]">
+                  {entropy < 60 ? "Weak (< 60)" : entropy < 80 ? "Moderate (60 - 80)" : "Strong (> 80)"}
+                </p>
               </div>
-              <div className="mt-2 text-[24px] font-semibold text-[color:var(--bsc-text-1)]">
-                {entropy.toFixed(1)}
+
+              <div className="rounded-xl border border-white/[0.08] bg-[color-mix(in_oklch,var(--bsc-surface)_60%,transparent)] p-5">
+                <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
+                  Character Pool
+                </div>
+                <div className="mt-2 text-[24px] font-semibold text-[color:var(--bsc-text-1)]">
+                  {poolSize}
+                </div>
+                <p className="mt-1 text-[12px] text-[color:var(--bsc-text-2)]">
+                  possible characters
+                </p>
               </div>
-              <p className="mt-1 text-[12px] text-[color:var(--bsc-text-2)]">
-                {entropy < 60 ? "Weak (< 60)" : entropy < 80 ? "Moderate (60 - 80)" : "Strong (> 80)"}
-              </p>
+
+              <div className="rounded-xl border border-white/[0.08] bg-[color-mix(in_oklch,var(--bsc-surface)_60%,transparent)] p-5">
+                <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
+                  Length
+                </div>
+                <div className="mt-2 text-[24px] font-semibold text-[color:var(--bsc-text-1)]">
+                  {password.length}
+                </div>
+                <p className="mt-1 text-[12px] text-[color:var(--bsc-text-2)]">
+                  characters
+                </p>
+              </div>
             </div>
 
-            <div className="rounded-xl border border-white/[0.08] bg-[color-mix(in_oklch,var(--bsc-surface)_60%,transparent)] p-5">
-              <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
-                Character Pool
+            <div className={`mt-4 flex gap-4 rounded-xl border p-5 ${
+              isSecure 
+                ? "border-[oklch(0.85_0.14_140)]/30 bg-[oklch(0.85_0.14_140)]/[0.06]" 
+                : "border-[color:var(--bsc-amber)]/30 bg-[color:var(--bsc-amber)]/[0.06]"
+            }`}>
+              <div className="mt-0.5 shrink-0">
+                {isSecure ? (
+                  <ShieldCheck className="text-[oklch(0.85_0.14_140)]" size={20} />
+                ) : (
+                  <ShieldWarning className="text-[color:var(--bsc-amber)]" size={20} />
+                )}
               </div>
-              <div className="mt-2 text-[24px] font-semibold text-[color:var(--bsc-text-1)]">
-                {poolSize}
-              </div>
-              <p className="mt-1 text-[12px] text-[color:var(--bsc-text-2)]">
-                possible characters
-              </p>
-            </div>
-
-            <div className="rounded-xl border border-white/[0.08] bg-[color-mix(in_oklch,var(--bsc-surface)_60%,transparent)] p-5">
-              <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
-                Length
-              </div>
-              <div className="mt-2 text-[24px] font-semibold text-[color:var(--bsc-text-1)]">
-                {password.length}
-              </div>
-              <p className="mt-1 text-[12px] text-[color:var(--bsc-text-2)]">
-                characters
-              </p>
-            </div>
-          </div>
-        )}
-
-        {password && (
-          <div className={`mt-4 flex gap-4 rounded-xl border p-5 ${
-            isSecure 
-              ? "border-[oklch(0.85_0.14_140)]/30 bg-[oklch(0.85_0.14_140)]/[0.06]" 
-              : "border-[color:var(--bsc-amber)]/30 bg-[color:var(--bsc-amber)]/[0.06]"
-          }`}>
-            <div className="mt-0.5 shrink-0">
-              {isSecure ? (
-                <ShieldCheck className="text-[oklch(0.85_0.14_140)]" size={20} />
-              ) : (
-                <ShieldAlert className="text-[color:var(--bsc-amber)]" size={20} />
-              )}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-semibold text-[color:var(--bsc-text-1)]">
-                  Estimated Crack Time: <span className="font-mono">{formatTime(crackTimeSeconds)}</span>
-                </h3>
-              </div>
-              <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--bsc-text-2)]">
-                {isSecure 
-                  ? "This password has sufficient mathematical entropy to withstand offline brute-force attacks against fast hashing algorithms."
-                  : "This password does not have enough entropy. An attacker with a modern GPU rig cracking fast hashes (like NTLM) could recover it."}
-              </p>
-              <div className="mt-3 flex items-center gap-1.5 text-[12px] text-[color:var(--bsc-text-3)]">
-                <Zap size={12} /> Assumes brute-force rate of 100 GH/s (100 billion/sec)
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-semibold text-[color:var(--bsc-text-1)]">
+                    Estimated Crack Time: <span className="font-mono">{formatTime(crackTimeSeconds)}</span>
+                  </h3>
+                </div>
+                <p className="mt-2 text-[14px] leading-relaxed text-[color:var(--bsc-text-2)]">
+                  {isSecure 
+                    ? "This password has sufficient mathematical entropy to withstand offline brute-force attacks against fast hashing algorithms."
+                    : "This password does not have enough entropy. An attacker with a modern GPU rig cracking fast hashes (like NTLM) could recover it."}
+                </p>
+                <div className="mt-3 flex items-center gap-1.5 text-[12px] text-[color:var(--bsc-text-3)]">
+                  <Lightning size={12} /> Assumes brute-force rate of 100 GH/s (100 billion/sec)
+                </div>
               </div>
             </div>
-          </div>
+          </>
         )}
       </Container>
-    </div>
+    </ToolLayout>
   );
 }

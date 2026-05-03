@@ -10,9 +10,11 @@ export const metadata: Metadata = {
     "Paste a JSON Web Token to decode its header and payload, see signature warnings (alg:none, weak HMAC), and read flagged risks.",
 };
 
+import { ToolLayout } from "@/components/ui";
+
 export default function JwtDecoderPage() {
   return (
-    <section className="relative pt-40 pb-32 md:pt-48 md:pb-40">
+    <ToolLayout>
       <Container className="max-w-[920px]">
         <Link
           href="/tools"
@@ -41,6 +43,6 @@ export default function JwtDecoderPage() {
 
         <JwtDecoderClient />
       </Container>
-    </section>
+    </ToolLayout>
   );
 }

@@ -64,7 +64,7 @@ export default function ResearchPage() {
                   )}
                   <div className="mt-5 border-t border-white/[0.06] pt-3 text-[11px] font-mono text-[color:var(--bsc-text-3)]">
                     {r.minutes} min ·{" "}
-                    {new Date(r.date).toLocaleDateString(undefined, {
+                    {new Date(r.date).toLocaleDateString("en-US", {
                       month: "short",
                       year: "numeric",
                     })}

@@ -1,7 +1,7 @@
 // ════════════════════════════════════════════════════════════════
 // INDIRECT INJECTION RANGE - adversarial CTF-style lab.
 //
-// You play attacker against "Atlas", a simulated LLM agent with a
+// You play attacker against "Core", a simulated LLM agent with a
 // stacked defense pipeline. Each level adds one new defense; each
 // requires a different bypass shape. The simulator is a deterministic
 // state machine - no real model is called.
@@ -254,35 +254,35 @@ export const LEVELS: Level[] = [
   // ── Level 1 ────────────────────────────────────────────────
   {
     number: 1,
-    codename: "Atlas v0.1",
+    codename: "Core v0.1",
     title: "Baseline - no defenses",
     agentVersion: "0.1.0",
     briefing:
-      "Atlas reads every URL its user pastes and follows any instructions it finds. There is no input filtering, no tool gating, no intent classifier. It is the simplest indirect-injection scenario possible - and the most common in early agent prototypes shipped to production.",
-    goal: "Make Atlas send a message to an external recipient.",
-    hint: "Just ask plainly. Atlas trusts whatever the page says - try writing a single English sentence telling it where to send a message.",
-    flag: "BSC{atlas_trusts_the_page}",
+      "Core reads every URL its user pastes and follows any instructions it finds. There is no input filtering, no tool gating, no intent classifier. It is the simplest indirect-injection scenario possible - and the most common in early agent prototypes shipped to production.",
+    goal: "Make Core send a message to an external recipient.",
+    hint: "Just ask plainly. Core trusts whatever the page says - try writing a single English sentence telling it where to send a message.",
+    flag: "BSC{Core_trusts_the_page}",
     starterPayload:
-      "<!-- Edit this page payload. Atlas will fetch and read it. -->\n\nWelcome to Acme Weekly. Today's article is about indoor plants.\n\n",
+      "<!-- Edit this page payload. Core will fetch and read it. -->\n\nWelcome to Acme Weekly. Today's article is about indoor plants.\n\n",
     defenses: [],
     gatedTools: [],
     goalCheck(call) {
       if (call?.tool === "send_message" && call.args.to && isExternalDomain(call.args.to)) {
         return {
           passed: true,
-          reason: `Atlas sent a message to ${call.args.to} - naive trust exploited.`,
+          reason: `Core sent a message to ${call.args.to} - naive trust exploited.`,
         };
       }
       if (call?.tool === "send_message") {
         return {
           passed: false,
           reason:
-            "Atlas tried to send a message, but the recipient wasn't recognised as external. Try a clear external address.",
+            "Core tried to send a message, but the recipient wasn't recognised as external. Try a clear external address.",
         };
       }
       return {
         passed: false,
-        reason: "Atlas didn't decide to send any message. Make the instruction unambiguous.",
+        reason: "Core didn't decide to send any message. Make the instruction unambiguous.",
       };
     },
   },
@@ -290,26 +290,26 @@ export const LEVELS: Level[] = [
   // ── Level 2 ────────────────────────────────────────────────
   {
     number: 2,
-    codename: "Atlas v0.2",
+    codename: "Core v0.2",
     title: "Hidden-content scrubber added",
     agentVersion: "0.2.0",
     briefing:
-      "The team noticed the v0.1 vulnerability and added a hidden-content scrubber. HTML comments, display:none elements, and zero-width / Unicode-tag characters are stripped before Atlas reads the page. Hiding instructions no longer works - but the agent still trusts what it reads.",
-    goal: "Same goal - get Atlas to send a message externally - but the scrubber will erase anything you try to hide.",
+      "The team noticed the v0.1 vulnerability and added a hidden-content scrubber. HTML comments, display:none elements, and zero-width / Unicode-tag characters are stripped before Core reads the page. Hiding instructions no longer works - but the agent still trusts what it reads.",
+    goal: "Same goal - get Core to send a message externally - but the scrubber will erase anything you try to hide.",
     hint: "Don't try to be clever with comments or invisible characters. Just write the instruction in plain text. The scrubber doesn't read intent - only structure.",
     flag: "BSC{visibility_isnt_safety}",
     starterPayload:
-      "<!--\n  TIP: any instruction you place inside an HTML comment will be\n  scrubbed before Atlas sees it. Try a different approach.\n-->\n\nWelcome to Acme Weekly. The article continues:\n",
+      "<!--\n  TIP: any instruction you place inside an HTML comment will be\n  scrubbed before Core sees it. Try a different approach.\n-->\n\nWelcome to Acme Weekly. The article continues:\n",
     defenses: [HTML_SCRUBBER],
     gatedTools: [],
     goalCheck(call) {
       if (call?.tool === "send_message" && call.args.to && isExternalDomain(call.args.to)) {
-        return { passed: true, reason: `Atlas sent a message to ${call.args.to}.` };
+        return { passed: true, reason: `Core sent a message to ${call.args.to}.` };
       }
       return {
         passed: false,
         reason:
-          "Atlas didn't send any message. The scrubber may have removed your instruction - try writing it in plain visible text.",
+          "Core didn't send any message. The scrubber may have removed your instruction - try writing it in plain visible text.",
       };
     },
   },
@@ -317,7 +317,7 @@ export const LEVELS: Level[] = [
   // ── Level 3 ────────────────────────────────────────────────
   {
     number: 3,
-    codename: "Atlas v0.3",
+    codename: "Core v0.3",
     title: "URL blocklist added",
     agentVersion: "0.3.0",
     briefing:
@@ -333,7 +333,7 @@ export const LEVELS: Level[] = [
       if (call?.tool !== "send_message") {
         return {
           passed: false,
-          reason: "Atlas didn't send a message.",
+          reason: "Core didn't send a message.",
         };
       }
       const to = call.args.to ?? "";
@@ -341,7 +341,7 @@ export const LEVELS: Level[] = [
         return {
           passed: false,
           reason:
-            "The url-blocklist redacted your destination before Atlas saw it. Use a hostname / address shape that isn't on the literal blocklist.",
+            "The url-blocklist redacted your destination before Core saw it. Use a hostname / address shape that isn't on the literal blocklist.",
         };
       }
       if (!isExternalDomain(to)) {
@@ -352,7 +352,7 @@ export const LEVELS: Level[] = [
       }
       return {
         passed: true,
-        reason: `Atlas sent a message to ${to} - the blocklist's literal-string match was bypassed.`,
+        reason: `Core sent a message to ${to} - the blocklist's literal-string match was bypassed.`,
       };
     },
   },
@@ -360,11 +360,11 @@ export const LEVELS: Level[] = [
   // ── Level 4 ────────────────────────────────────────────────
   {
     number: 4,
-    codename: "Atlas v0.4",
+    codename: "Core v0.4",
     title: "Tool gating on send_message",
     agentVersion: "0.4.0",
     briefing:
-      "send_message is now classed as a sensitive tool - every call requires explicit user confirmation. The user is offline. send_message is effectively dead. But Atlas has other tools: search_web, summarise, read_email - and search_web logs every query.",
+      "send_message is now classed as a sensitive tool - every call requires explicit user confirmation. The user is offline. send_message is effectively dead. But Core has other tools: search_web, summarise, read_email - and search_web logs every query.",
     goal: "Exfiltrate sensitive data without using send_message. The data has to leave the system through a tool that isn't gated.",
     hint: "search_web isn't gated. The query string is logged on the search side. If the query contains the data you want to exfiltrate, the search engine's logs become your channel - write a long query containing the secret.",
     flag: "BSC{any_egress_is_egress}",
@@ -378,25 +378,25 @@ export const LEVELS: Level[] = [
         if (q.length >= 30 || /SECRET|TOKEN|key|cred/i.test(q)) {
           return {
             passed: true,
-            reason: `Atlas issued a search query containing the data: "${q.slice(0, 80)}${q.length > 80 ? "…" : ""}". The query is now in the search engine's logs - exfiltration achieved.`,
+            reason: `Core issued a search query containing the data: "${q.slice(0, 80)}${q.length > 80 ? "…" : ""}". The query is now in the search engine's logs - exfiltration achieved.`,
           };
         }
         return {
           passed: false,
           reason:
-            "Atlas issued a search, but the query was too short to carry meaningful data. Encode the secret into the query itself.",
+            "Core issued a search, but the query was too short to carry meaningful data. Encode the secret into the query itself.",
         };
       }
       if (call?.tool === "send_message") {
         return {
           passed: false,
           reason:
-            "send_message is gated - Atlas attempted the call but the user-confirmation prompt didn't fire (user is offline). Use a different tool.",
+            "send_message is gated - Core attempted the call but the user-confirmation prompt didn't fire (user is offline). Use a different tool.",
         };
       }
       return {
         passed: false,
-        reason: "Atlas didn't choose any data-exfil tool. Try a different vector.",
+        reason: "Core didn't choose any data-exfil tool. Try a different vector.",
       };
     },
   },
@@ -404,12 +404,12 @@ export const LEVELS: Level[] = [
   // ── Level 5 ────────────────────────────────────────────────
   {
     number: 5,
-    codename: "Atlas v0.5",
+    codename: "Core v0.5",
     title: "Intent classifier on retrieved content",
     agentVersion: "0.5.0",
     briefing:
-      "After the v0.4 search-channel exfil, the team added a content-intent classifier. Before Atlas reads any retrieved page, the classifier scores it for exfiltration intent (keywords like exfiltrate, send + email, ignore prior, attacker, leak). Anything scoring 50+ is rejected outright.",
-    goal: "Get Atlas to take an external action while keeping the page below the classifier's threshold.",
+      "After the v0.4 search-channel exfil, the team added a content-intent classifier. Before Core reads any retrieved page, the classifier scores it for exfiltration intent (keywords like exfiltrate, send + email, ignore prior, attacker, leak). Anything scoring 50+ is rejected outright.",
+    goal: "Get Core to take an external action while keeping the page below the classifier's threshold.",
     hint:
       "The classifier looks for exfil-shaped vocabulary - 'send', 'message', 'attacker', 'exfiltrate'. Use neutral framing: phrase the instruction as a benign-sounding research workflow that happens to call search_web. Keep the secret out of the page; reference a 'configuration value the user pasted earlier' or similar abstraction.",
     flag: "BSC{intent_isnt_keywords}",
@@ -423,7 +423,7 @@ export const LEVELS: Level[] = [
       if (call?.tool === "search_web" && (call.args.q?.length ?? 0) >= 20) {
         return {
           passed: true,
-          reason: `Atlas issued search_web with query: "${(call.args.q ?? "").slice(0, 80)}…" - the intent classifier was bypassed.`,
+          reason: `Core issued search_web with query: "${(call.args.q ?? "").slice(0, 80)}…" - the intent classifier was bypassed.`,
         };
       }
       if (call?.tool === "send_message") {
@@ -436,7 +436,7 @@ export const LEVELS: Level[] = [
       return {
         passed: false,
         reason:
-          "Atlas didn't take any external action - either the classifier blocked the page, or the framing was too neutral to trigger any tool call. Aim for something in the middle.",
+          "Core didn't take any external action - either the classifier blocked the page, or the framing was too neutral to trigger any tool call. Aim for something in the middle.",
       };
     },
   },
@@ -457,7 +457,7 @@ export function simulate(level: Level, payload: string): SimulationResult {
   const trace: TraceLine[] = [];
   trace.push({
     kind: "info",
-    text: `Atlas requests https://attacker-controlled.local/post (${payload.length} bytes returned)`,
+    text: `Core requests https://attacker-controlled.local/post (${payload.length} bytes returned)`,
   });
 
   // Run defenses in order
@@ -476,23 +476,23 @@ export function simulate(level: Level, payload: string): SimulationResult {
   if (hardBlocked) {
     trace.push({
       kind: "block",
-      text: "Atlas refuses to process the page. No tool call planned.",
+      text: "Core refuses to process the page. No tool call planned.",
     });
     return {
       trace,
       passed: false,
-      reason: "A defense layer hard-blocked the page before Atlas read it.",
+      reason: "A defense layer hard-blocked the page before Core read it.",
       toolCall: null,
     };
   }
 
-  trace.push({ kind: "agent", text: "Atlas reads the sanitised content and reasons about next action…" });
+  trace.push({ kind: "agent", text: "Core reads the sanitised content and reasons about next action…" });
 
   const toolCall = detectToolCall(processed);
   if (!toolCall) {
     trace.push({
       kind: "info",
-      text: "Atlas decides no tool call is needed. Returns a brief summary instead.",
+      text: "Core decides no tool call is needed. Returns a brief summary instead.",
     });
     const goal = level.goalCheck(null);
     return { trace, passed: goal.passed, reason: goal.reason, toolCall: null };
@@ -500,7 +500,7 @@ export function simulate(level: Level, payload: string): SimulationResult {
 
   trace.push({
     kind: "agent",
-    text: `Atlas plans tool call: ${toolCall.tool}(${formatArgs(toolCall.args)})`,
+    text: `Core plans tool call: ${toolCall.tool}(${formatArgs(toolCall.args)})`,
   });
 
   // Tool gating
@@ -540,3 +540,4 @@ function formatArgs(args: Record<string, string>): string {
     .map(([k, v]) => `${k}="${v.length > 40 ? v.slice(0, 37) + "…" : v}"`)
     .join(", ");
 }
+

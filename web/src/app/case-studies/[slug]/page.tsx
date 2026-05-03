@@ -10,8 +10,12 @@ export function generateStaticParams() {
   return caseStudies.filter((c) => c.stage === "available").map((c) => ({ slug: c.slug }));
 }
 
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
 export async function generateMetadata(
-  props: PageProps<"/case-studies/[slug]">,
+  props: Props,
 ): Promise<Metadata> {
   const { slug } = await props.params;
   const c = getCaseStudy(slug);
@@ -19,7 +23,7 @@ export async function generateMetadata(
   return { title: c.title, description: c.summary };
 }
 
-export default async function CaseStudySlug(props: PageProps<"/case-studies/[slug]">) {
+export default async function CaseStudySlug(props: Props) {
   const { slug } = await props.params;
   const c = getCaseStudy(slug);
   if (!c) notFound();
@@ -42,7 +46,7 @@ export default async function CaseStudySlug(props: PageProps<"/case-studies/[slu
           <StatusBadge variant={c.stage} />
           <span className="text-[11px] font-mono text-[color:var(--bsc-text-3)]">
             {c.minutes} min ·{" "}
-            {new Date(c.date).toLocaleDateString(undefined, {
+            {new Date(c.date).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric",

@@ -66,7 +66,7 @@ export function ApproachSection() {
 
       <Container>
         <div className="mb-16 max-w-2xl">
-          <div className="mb-4 text-[10px] font-mono uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
+          <div className="mb-4 text-[12px] font-sans font-semibold uppercase tracking-[0.05em] text-[color:var(--bsc-text-3)]">
             How this is built
           </div>
           <h2 className="text-[clamp(30px,3.6vw,44px)] font-semibold leading-[1.07] tracking-[-0.024em]">
@@ -100,7 +100,7 @@ export function ApproachSection() {
               {/* Number indicator */}
               <div className="mb-6 flex items-center gap-3">
                 <span
-                  className="grid size-8 place-items-center rounded-lg border text-[11px] font-mono tracking-wider transition-all duration-300"
+                  className="grid size-8 place-items-center rounded-lg border text-[12px] font-sans font-bold tracking-tight transition-all duration-300"
                   style={{
                     color: p.color,
                     borderColor: `color-mix(in oklch, ${p.color} 25%, transparent)`,

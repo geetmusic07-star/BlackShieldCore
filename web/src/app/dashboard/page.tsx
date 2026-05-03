@@ -59,7 +59,7 @@ export default function DashboardPage() {
                 <div className="text-[10px] font-mono uppercase tracking-wider text-[color:var(--bsc-text-3)]">
                   {s.label}
                 </div>
-                <div className="mt-1.5 text-[28px] font-semibold tracking-[-0.022em] text-[color:var(--bsc-text-1)]">
+                <div className="mt-1.5 text-[28px] font-semibold tracking-[-0.022em] text-[color:var(--bsc-text-1)] tabular-nums">
                   {s.value}
                 </div>
                 <div className="text-[11px] font-mono text-[color:var(--bsc-text-3)]">
@@ -98,7 +98,7 @@ export default function DashboardPage() {
                     </span>
                     <span className="font-mono text-[color:var(--bsc-text-1)]">{c.id}</span>
                     <span className="text-[color:var(--bsc-text-2)]">{c.topic}</span>
-                    <span className="font-mono text-[color:var(--bsc-text-3)]">CVSS {c.cvss}</span>
+                    <span className="font-mono tabular-nums text-[color:var(--bsc-text-3)]">CVSS {c.cvss}</span>
                     <span
                       className={cn(
                         "text-right font-mono text-[10px] uppercase tracking-wider",
@@ -132,11 +132,11 @@ export default function DashboardPage() {
                           <span className="text-[color:var(--bsc-text-3)]">{t.id}</span>{" "}
                           {t.name}
                         </span>
-                        <span className="text-[color:var(--bsc-text-1)]">{t.coverage}</span>
+                        <span className="tabular-nums text-[color:var(--bsc-text-1)]">{t.coverage}</span>
                       </div>
                       <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.04]">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-[color:var(--bsc-accent)] to-[color:var(--bsc-violet)]"
+                          className="h-full rounded-full bg-[color:var(--bsc-accent)]"
                           style={{ width: `${t.coverage}%` }}
                         />
                       </div>

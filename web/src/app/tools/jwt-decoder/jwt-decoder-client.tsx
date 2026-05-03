@@ -93,12 +93,23 @@ function decode(token: string): Decoded | { error: string } {
   return { header, payload, signature, warnings };
 }
 
+import { useHandshake } from "@/components/ui";
+
 export function JwtDecoderClient() {
   const [token, setToken] = useState(SAMPLE);
+  const [analyzing, setAnalyzing] = useState(false);
+  const { startHandshake } = useHandshake();
   const result = useMemo(() => decode(token), [token]);
 
+  const handleDecode = () => {
+    if (!token.trim()) return;
+    startHandshake(() => {
+      setAnalyzing(true);
+    });
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Input */}
       <div className="rounded-2xl border border-white/[0.08] bg-[color-mix(in_oklch,var(--bsc-surface)_70%,transparent)] p-5">
         <div className="mb-3 flex items-center justify-between">
@@ -111,14 +122,20 @@ export function JwtDecoderClient() {
           <div className="flex gap-2">
             <button
               type="button"
-              onClick={() => setToken(SAMPLE)}
+              onClick={() => {
+                setToken(SAMPLE);
+                setAnalyzing(false);
+              }}
               className="rounded-md border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 text-[11px] font-mono text-[color:var(--bsc-text-2)] hover:bg-white/[0.05]"
             >
               Load sample
             </button>
             <button
               type="button"
-              onClick={() => setToken("")}
+              onClick={() => {
+                setToken("");
+                setAnalyzing(false);
+              }}
               className="rounded-md border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 text-[11px] font-mono text-[color:var(--bsc-text-2)] hover:bg-white/[0.05]"
             >
               Clear
@@ -128,15 +145,26 @@ export function JwtDecoderClient() {
         <textarea
           id="jwt-input"
           value={token}
-          onChange={(e) => setToken(e.target.value)}
+          onChange={(e) => {
+            setToken(e.target.value);
+            setAnalyzing(false);
+          }}
           spellCheck={false}
           rows={5}
           placeholder="eyJhbGciOi..."
           className="w-full resize-none rounded-lg border border-white/[0.06] bg-[color-mix(in_oklch,var(--bsc-void)_55%,transparent)] p-3 font-mono text-[12.5px] text-[color:var(--bsc-text-1)] outline-none focus:border-[color:var(--bsc-accent)]/40"
         />
+
+        <button
+          onClick={handleDecode}
+          disabled={!token.trim()}
+          className="mt-4 w-full py-3 bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 rounded-xl font-mono text-[11px] uppercase tracking-[0.2em] text-white/40 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          Decode & Verify Token
+        </button>
       </div>
 
-      {"error" in result ? (
+      {analyzing && ("error" in result ? (
         <div className="rounded-2xl border border-[color-mix(in_oklch,var(--bsc-rose)_40%,transparent)] bg-[color-mix(in_oklch,var(--bsc-rose)_8%,transparent)] p-5 font-mono text-[12.5px] text-[color:var(--bsc-rose)]">
           {result.error}
         </div>
@@ -186,7 +214,7 @@ export function JwtDecoderClient() {
             </div>
           )}
         </>
-      )}
+      ))}
     </div>
   );
 }

@@ -58,6 +58,7 @@ function analyzeJwtToken(token: string) {
             );
         }
 
+        // Note: For a true cyber range, this should validate actual path traversal syntax.
         if (header.kid && header.kid.includes("..")) {
             techniques.push("kid-injection");
             score += 120;
@@ -120,7 +121,7 @@ async function handleJwtExploit(body: any, slug: string) {
         return NextResponse.json({
             success: false,
             message: "Invalid level",
-        });
+        }, { status: 400 });
     }
 
     const completed = currentLevel.required.every((tech) =>
@@ -134,6 +135,7 @@ async function handleJwtExploit(body: any, slug: string) {
         levelName: currentLevel.name,
         levelComplete: completed,
         nextLevel: completed ? level + 1 : level,
+        ...(completed && { flag: "BSC{jwt_signature_bypassed}" }),
     });
 }
 
@@ -141,8 +143,8 @@ async function handleJwtExploit(body: any, slug: string) {
 // 🎯 GRAPHQL ABUSE LAB LOGIC
 // =====================================
 async function handleGraphqlAbuse(body: any, slug: string) {
-    const payload = body.payload; // Should be a GraphQL mutation JSON string or object
-    
+    const payload = body.payload;
+
     if (!payload) {
         return NextResponse.json(
             { success: false, message: "No payload provided" },
@@ -150,10 +152,9 @@ async function handleGraphqlAbuse(body: any, slug: string) {
         );
     }
 
-    // Convert to string for easy regex analysis
     const queryStr = typeof payload === "string" ? payload : JSON.stringify(payload);
-    
-    // We are looking for a mutation that updates a role to admin
+
+    // Note: If you want stricter validation, consider regex to ensure these keywords aren't just in a comment.
     const isMutation = queryStr.includes("mutation");
     const targetsRole = queryStr.toLowerCase().includes("role");
     const setsAdmin = queryStr.toLowerCase().includes("admin");
@@ -193,8 +194,8 @@ async function handleGraphqlAbuse(body: any, slug: string) {
 // 🎯 SSRF METADATA LAB LOGIC
 // =====================================
 async function handleSsrfMetadata(body: any, slug: string) {
-    const payload = body.payload; // Typically a URL or parameter
-    
+    const payload = body.payload;
+
     if (!payload) {
         return NextResponse.json(
             { success: false, message: "No target URL provided" },
@@ -203,8 +204,7 @@ async function handleSsrfMetadata(body: any, slug: string) {
     }
 
     const urlStr = String(payload).toLowerCase();
-    
-    // Looking for the AWS IMDSv1 IP
+
     if (urlStr.includes("169.254.169.254")) {
         if (urlStr.includes("latest/meta-data") || urlStr.includes("iam/security-credentials")) {
             return NextResponse.json({
@@ -217,7 +217,7 @@ async function handleSsrfMetadata(body: any, slug: string) {
                 levelComplete: true
             });
         }
-        
+
         return NextResponse.json({
             labId: slug,
             success: false,
@@ -236,7 +236,6 @@ async function handleSsrfMetadata(body: any, slug: string) {
     });
 }
 
-
 // =====================================
 // ✅ OPTIONAL (prevents 405 on GET)
 // =====================================
@@ -253,13 +252,34 @@ export async function POST(
     req: NextRequest,
     context: { params: Promise<{ slug: string }> } | any
 ) {
-    // Next.js 15: params is a promise
     const params = await (context.params instanceof Promise ? context.params : Promise.resolve(context.params));
     const slug = params?.slug;
 
     try {
-        const body = await req.json();
+        // 1. Read the raw text first to enforce a size limit
+        const rawBody = await req.text();
 
+        // 2. Reject payloads larger than 10KB (10000 characters)
+        // This prevents memory exhaustion in Vercel Serverless Functions
+        if (rawBody.length > 10000) {
+            return NextResponse.json(
+                { success: false, message: "Payload too large. Maximum size is 10KB." },
+                { status: 413 } // HTTP 413 Payload Too Large
+            );
+        }
+
+        // 3. Safely parse the JSON now that we know the size is reasonable
+        let body;
+        try {
+            body = JSON.parse(rawBody);
+        } catch (parseError) {
+            return NextResponse.json(
+                { success: false, message: "Invalid JSON payload format." },
+                { status: 400 }
+            );
+        }
+
+        // 4. Dispatch to the correct lab logic
         switch (slug) {
             case "jwt-exploit":
                 return await handleJwtExploit(body, slug);
@@ -274,8 +294,9 @@ export async function POST(
                 );
         }
     } catch (e) {
+        console.error(`Error processing lab execution for ${slug}:`, e);
         return NextResponse.json(
-            { success: false, message: "Server error or invalid JSON body" },
+            { success: false, message: "Server error occurred during execution." },
             { status: 500 }
         );
     }

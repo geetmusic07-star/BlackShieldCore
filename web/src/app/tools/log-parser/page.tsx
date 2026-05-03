@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
-import { ArrowLeft, TerminalSquare, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Terminal, Warning, CheckCircle } from "@phosphor-icons/react";
 
 interface LogAlert {
   line: number;
@@ -70,12 +70,23 @@ function parseLogs(logs: string): LogAlert[] {
   return alerts;
 }
 
+import { ToolLayout, useHandshake } from "@/components/ui";
+
 export default function LogParserPage() {
   const [logs, setLogs] = useState("");
+  const [analyzing, setAnalyzing] = useState(false);
+  const { startHandshake } = useHandshake();
   const alerts = parseLogs(logs);
 
+  const handleAnalyze = () => {
+    if (!logs.trim()) return;
+    startHandshake(() => {
+      setAnalyzing(true);
+    });
+  };
+
   return (
-    <div className="pt-32 pb-24">
+    <ToolLayout>
       <Container className="max-w-[1000px]">
         <Link
           href="/tools"
@@ -94,17 +105,30 @@ export default function LogParserPage() {
 
         <div className="mt-8 grid gap-8 lg:grid-cols-2">
           {/* Left Column: Input */}
-          <div className="rounded-xl border border-white/[0.08] bg-black/40 p-5">
-            <div className="mb-2 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
-              <TerminalSquare size={13} /> Raw Logs
+          <div className="flex flex-col gap-4">
+            <div className="rounded-xl border border-white/[0.08] bg-black/40 p-5">
+              <div className="mb-2 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
+                <Terminal size={13} /> Raw Logs
+              </div>
+              <textarea
+                value={logs}
+                onChange={(e) => {
+                  setLogs(e.target.value);
+                  setAnalyzing(false);
+                }}
+                spellCheck={false}
+                maxLength={50000}
+                placeholder="192.168.1.100 - - [10/Oct/2026:13:55:36 -0700] &quot;GET /login.php?user=admin' OR '1'='1 HTTP/1.1&quot; 200..."
+                className="h-[400px] w-full resize-none bg-transparent font-mono text-[13px] leading-relaxed text-[color:var(--bsc-text-1)] outline-none"
+              />
             </div>
-            <textarea
-              value={logs}
-              onChange={(e) => setLogs(e.target.value)}
-              spellCheck={false}
-              placeholder="192.168.1.100 - - [10/Oct/2026:13:55:36 -0700] &quot;GET /login.php?user=admin' OR '1'='1 HTTP/1.1&quot; 200..."
-              className="h-[500px] w-full resize-none bg-transparent font-mono text-[13px] leading-relaxed text-[color:var(--bsc-text-1)] outline-none"
-            />
+            <button
+              onClick={handleAnalyze}
+              disabled={!logs.trim()}
+              className="w-full py-3 bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 rounded-xl font-mono text-[11px] uppercase tracking-[0.2em] text-white/40 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              Parse & Audit Logs
+            </button>
           </div>
 
           {/* Right Column: Results */}
@@ -114,16 +138,16 @@ export default function LogParserPage() {
                 Analysis Alerts
               </div>
               <div className="font-mono text-[11px] text-[color:var(--bsc-text-3)]">
-                {alerts.length} detections
+                {analyzing ? alerts.length : 0} detections
               </div>
             </div>
 
-            {logs.trim() === "" ? (
+            {!analyzing || logs.trim() === "" ? (
               <div className="flex h-[200px] items-center justify-center rounded-xl border border-white/[0.05] bg-white/[0.02] p-8 text-center">
                 <div>
-                  <TerminalSquare size={24} className="mx-auto mb-3 text-[color:var(--bsc-text-3)] opacity-50" />
+                  <Terminal size={24} className="mx-auto mb-3 text-[color:var(--bsc-text-3)] opacity-50" />
                   <div className="text-[14px] text-[color:var(--bsc-text-2)]">
-                    Waiting for log input...
+                    Waiting for log audit...
                   </div>
                 </div>
               </div>
@@ -142,9 +166,9 @@ export default function LogParserPage() {
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex items-center gap-2">
-                        <AlertTriangle 
-                          size={14} 
-                          className={alert.severity === "high" ? "text-[color:var(--bsc-amber)]" : "text-[oklch(0.7_0.15_60)]"} 
+                        <Warning
+                          size={14}
+                          className={alert.severity === "high" ? "text-[color:var(--bsc-amber)]" : "text-[oklch(0.7_0.15_60)]"}
                         />
                         <span className="font-semibold text-[color:var(--bsc-text-1)]">
                           {alert.type}
@@ -166,7 +190,7 @@ export default function LogParserPage() {
             ) : (
               <div className="flex h-[200px] items-center justify-center rounded-xl border border-[oklch(0.85_0.14_140)]/20 bg-[oklch(0.85_0.14_140)]/[0.05] p-8 text-center">
                 <div>
-                  <CheckCircle2 size={24} className="mx-auto mb-3 text-[oklch(0.85_0.14_140)]" />
+                  <CheckCircle size={24} className="mx-auto mb-3 text-[oklch(0.85_0.14_140)]" />
                   <div className="text-[14px] text-[color:var(--bsc-text-1)]">
                     No threats detected
                   </div>
@@ -179,6 +203,6 @@ export default function LogParserPage() {
           </div>
         </div>
       </Container>
-    </div>
+    </ToolLayout>
   );
 }

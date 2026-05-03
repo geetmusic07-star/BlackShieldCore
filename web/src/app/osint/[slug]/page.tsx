@@ -142,7 +142,7 @@ export default async function OsintCasePage(props: { params: Promise<{ slug: str
           </span>
           {osint.stage && <StatusBadge variant={osint.stage} />}
           <span className="font-mono text-[11px] text-[color:var(--bsc-text-3)]">
-            {new Date(osint.date).toLocaleDateString(undefined, {
+            {new Date(osint.date).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric",
@@ -195,7 +195,7 @@ export default async function OsintCasePage(props: { params: Promise<{ slug: str
             ))}
           </div>
         ) : (
-          <p className="text-[15px] italic text-[color:var(--bsc-text-3)]">
+          <p className="text-[15px] text-[color:var(--bsc-text-3)]">
             This investigation is in build stage - full writeup forthcoming.
           </p>
         )}
@@ -261,7 +261,6 @@ export default async function OsintCasePage(props: { params: Promise<{ slug: str
           color: var(--bsc-text-1);
           font-size: 17px;
           line-height: 1.7;
-          font-style: italic;
         }
         .prose-blog blockquote cite {
           display: block;

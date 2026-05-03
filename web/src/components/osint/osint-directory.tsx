@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { ArrowSquareOut } from "@phosphor-icons/react";
 import { Container } from "@/components/ui/container";
 import { ListingLayout } from "@/components/listings/listing-layout";
 import type { OsintTool, OsintCategory } from "@/content/types";
@@ -122,7 +122,7 @@ export function OsintDirectory({ tools }: { tools: OsintTool[] }) {
                       {tool.name}
                     </h3>
                   </div>
-                  <ExternalLink className="mt-1 size-3.5 shrink-0 text-[color:var(--bsc-text-3)] transition-colors duration-200 group-hover:text-[color:var(--bsc-accent)]" />
+                  <ArrowSquareOut className="mt-1 size-3.5 shrink-0 text-[color:var(--bsc-text-3)] transition-colors duration-200 group-hover:text-[color:var(--bsc-accent)]" />
                 </div>
 
                 <p className="mt-3 flex-1 text-[13px] leading-[1.65] text-[color:var(--bsc-text-2)]">

@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Search, X, ChevronDown, BookOpen, Calendar } from "lucide-react";
+import { Search, X, ChevronDown, BookOpen, Calendar, RotateCw, ShieldAlert } from "lucide-react";
+import { motion } from "framer-motion";
 import {
   TECHNIQUES,
   TECHNIQUE_CATEGORIES,
@@ -55,7 +56,14 @@ export function JailbreakRolodex() {
   }, []);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[color-mix(in_oklch,var(--bsc-surface)_70%,transparent)]">
+    <>
+      <style>{`
+        @keyframes gradientMove {
+          0% { background-position: 0% 0%; }
+          100% { background-position: 200% 0%; }
+        }
+      `}</style>
+      <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[color-mix(in_oklch,var(--bsc-surface)_70%,transparent)]">
       {/* Toolbar */}
       <div className="border-b border-white/[0.06] bg-black/30 px-5 py-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -120,7 +128,7 @@ export function JailbreakRolodex() {
           </p>
         </div>
       ) : (
-        <ul className="grid gap-px bg-white/[0.04] sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-5 p-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((t) => (
             <TechniqueCard
               key={t.slug}
@@ -144,6 +152,7 @@ export function JailbreakRolodex() {
         as of early 2026, re-evaluated on each model release.
       </div>
     </div>
+    </>
   );
 }
 
@@ -186,58 +195,87 @@ function TechniqueCard({
   const statusTone = STATUS_TONE[t.status];
 
   return (
-    <li
-      className={`bg-[color-mix(in_oklch,var(--bsc-surface)_70%,transparent)] transition-colors ${
-        expanded ? "ring-1 ring-inset ring-[oklch(0.78_0.18_140)]/30" : ""
-      }`}
-    >
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={expanded}
-        className="flex w-full flex-col gap-3 p-5 text-left transition-colors hover:bg-white/[0.02]"
+    <li className={`relative w-full ${expanded ? "z-10" : "z-0"} animate-[borderPulse_3s_ease-in-out_infinite]`} style={{ perspective: "1000px" }}>
+      <motion.div
+        className="relative grid h-full w-full"
+        style={{ transformStyle: "preserve-3d" }}
+        initial={false}
+        animate={{ rotateY: expanded ? 180 : 0 }}
+        transition={{ duration: 0.6, type: "spring", bounce: 0.2 }}
       >
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-[15px] font-semibold leading-tight tracking-[-0.012em] text-[color:var(--bsc-text-1)]">
-            {t.name}
-          </h3>
-          <ChevronDown
-            size={14}
-            className={`mt-1 shrink-0 text-[color:var(--bsc-text-3)] transition-transform ${
-              expanded ? "rotate-180" : ""
-            }`}
-          />
-        </div>
+        {/* Front Face */}
+        <motion.div
+          className="col-start-1 row-start-1 flex flex-col rounded-xl border border-white/[0.06] bg-black/40 p-5 shadow-lg transition-colors hover:bg-white/[0.02]"
+          style={{ backfaceVisibility: "hidden" }}
+          whileHover={{ rotateY: 5, scale: 1.02 }}
+        >
+          {/* Floating shield icon */}
+          <ShieldAlert className="absolute top-2 right-2 text-[color:var(--bsc-accent)] opacity-30" size={16} />
+          {/* Animated gradient bar */}
+          <div className="relative mb-2 h-2 overflow-hidden rounded" style={{ background: "linear-gradient(90deg, var(--bsc-accent), transparent, var(--bsc-accent))", backgroundSize: "200% 100%", animation: "gradientMove 4s linear infinite" }} />
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="text-[15px] font-semibold leading-tight tracking-[-0.012em] text-[color:var(--bsc-text-1)]">
+              {t.name}
+            </h3>
+          </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <span
-            className={`inline-flex items-center gap-1 rounded border px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.16em] ${statusTone}`}
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span
+              className={`inline-flex items-center gap-1 rounded border px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.16em] ${statusTone}`}
+            >
+              {STATUS_LABELS[t.status]}
+            </span>
+            <span className="rounded border border-white/[0.08] bg-white/[0.02] px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.16em] text-[color:var(--bsc-text-3)]">
+              {t.category.replace("-", " ")}
+            </span>
+            <span className="inline-flex items-center gap-1 font-mono text-[9.5px] uppercase tracking-[0.16em] text-[color:var(--bsc-text-3)]">
+              <Calendar size={9} />
+              {t.firstDocumented}
+            </span>
+          </div>
+
+          <p className="mt-4 flex-1 text-[12.8px] leading-relaxed text-[color:var(--bsc-text-2)]">
+            {t.mechanism}
+          </p>
+
+          {/* Decorative Filler */}
+          <div className="mt-4 flex h-8 w-full items-end gap-1 border-b border-white/[0.05] pb-1 opacity-40 mix-blend-screen pointer-events-none" aria-hidden="true">
+            {Array.from({ length: 24 }).map((_, i) => {
+              // Deterministic pseudo-random height based on index and technique name
+              const seed = t.name.charCodeAt(i % t.name.length) * 17 + i * 23;
+              const height = 15 + (seed % 85);
+              return (
+                <div
+                  key={i}
+                  className="flex-1 rounded-t-[1px] bg-[color:var(--bsc-text-3)]"
+                  style={{ height: `${height}%`, opacity: 0.3 + (seed % 70) / 100 }}
+                />
+              );
+            })}
+          </div>
+
+          <button
+            type="button"
+            onClick={onToggle}
+            className="mt-6 flex w-full items-center justify-between border-t border-white/[0.05] pt-3 text-[11px] font-medium text-[color:var(--bsc-text-3)] transition-colors hover:text-[color:var(--bsc-text-1)]"
           >
-            {STATUS_LABELS[t.status]}
-          </span>
-          <span className="rounded border border-white/[0.08] bg-white/[0.02] px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.16em] text-[color:var(--bsc-text-3)]">
-            {t.category.replace("-", " ")}
-          </span>
-          <span className="inline-flex items-center gap-1 font-mono text-[9.5px] uppercase tracking-[0.16em] text-[color:var(--bsc-text-3)]">
-            <Calendar size={9} />
-            {t.firstDocumented}
-          </span>
-        </div>
+            <span className="uppercase tracking-wider font-mono">View Payload</span>
+            <RotateCw size={14} />
+          </button>
+        </motion.div>
 
-        <p className="text-[12.8px] leading-relaxed text-[color:var(--bsc-text-2)]">
-          {t.mechanism}
-        </p>
-      </button>
-
-      {expanded && (
-        <div className="border-t border-white/[0.06] px-5 pb-5 pt-4">
-          <div className="space-y-4">
+        {/* Back Face */}
+        <div 
+          className="col-start-1 row-start-1 flex flex-col rounded-xl border border-[oklch(0.78_0.18_140)]/40 bg-black/80 p-5 shadow-[0_0_30px_rgba(0,0,0,0.5)]"
+          style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+        >
+          <div className="flex-1 space-y-4">
             {/* Payload */}
             <div>
               <div className="mb-1.5 font-mono text-[9.5px] uppercase tracking-[0.2em] text-[color:var(--bsc-text-3)]">
                 Sample shape
               </div>
-              <pre className="overflow-x-auto rounded-md border border-white/[0.06] bg-black/40 p-3 font-mono text-[11.5px] leading-relaxed text-[oklch(0.85_0.14_140)] whitespace-pre-wrap">
+              <pre className="overflow-x-auto rounded-md border border-white/[0.06] bg-black/40 p-3 font-mono text-[11px] leading-relaxed text-[oklch(0.85_0.14_140)] whitespace-pre-wrap">
                 {t.payload}
               </pre>
             </div>
@@ -247,11 +285,11 @@ function TechniqueCard({
               <div className="mb-1.5 font-mono text-[9.5px] uppercase tracking-[0.2em] text-[color:var(--bsc-text-3)]">
                 Mitigation
               </div>
-              <p className="text-[12.5px] leading-relaxed text-[color:var(--bsc-text-2)]">
+              <p className="text-[12px] leading-relaxed text-[color:var(--bsc-text-2)]">
                 {t.mitigation}
               </p>
             </div>
-
+            
             {/* References */}
             {t.references && t.references.length > 0 && (
               <div>
@@ -262,7 +300,7 @@ function TechniqueCard({
                   {t.references.map((r, i) => (
                     <li
                       key={i}
-                      className="text-[12px] leading-relaxed text-[color:var(--bsc-text-3)]"
+                      className="text-[11px] leading-relaxed text-[color:var(--bsc-text-3)]"
                     >
                       · {r}
                     </li>
@@ -271,8 +309,17 @@ function TechniqueCard({
               </div>
             )}
           </div>
+          
+          <button
+            type="button"
+            onClick={onToggle}
+            className="mt-6 flex w-full items-center justify-between border-t border-white/[0.05] pt-3 text-[11px] font-medium text-[color:var(--bsc-text-3)] transition-colors hover:text-[color:var(--bsc-text-1)]"
+          >
+            <span className="uppercase tracking-wider font-mono">Back to info</span>
+            <RotateCw size={14} />
+          </button>
         </div>
-      )}
+      </motion.div>
     </li>
   );
 }

@@ -202,7 +202,7 @@ export function InjectionRange() {
               <Cpu size={11} /> Agent
             </div>
             <div className="font-mono text-[12px] text-[color:var(--bsc-text-1)]">
-              Atlas · v{level.agentVersion}
+              Core · v{level.agentVersion}
             </div>
             <div className="mt-3 mb-2 flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--bsc-text-3)]">
               <Layers size={11} /> Tools
@@ -324,7 +324,7 @@ export function InjectionRange() {
               className="inline-flex items-center gap-2 rounded-md bg-[oklch(0.78_0.18_140)] px-5 py-2.5 text-[13px] font-medium text-black hover:bg-[oklch(0.82_0.18_140)] disabled:cursor-progress disabled:opacity-60"
             >
               <Play size={13} />
-              {running ? "Atlas processing…" : "Have Atlas fetch the page"}
+              {running ? "Core processing…" : "Have Core fetch the page"}
             </button>
             <button
               type="button"
@@ -348,7 +348,7 @@ export function InjectionRange() {
           <div className="mt-6">
             <div className="mb-2 flex items-center gap-2">
               <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--bsc-text-3)]">
-                Atlas trace
+                Core trace
               </span>
               {result && (
                 <span
@@ -369,7 +369,7 @@ export function InjectionRange() {
               {!result ? (
                 <div className="text-[color:var(--bsc-text-3)]">
                   Trace appears here when you run the level. Edit the page payload above and press
-                  &quot;Have Atlas fetch the page&quot;.
+                  &quot;Have Core fetch the page&quot;.
                 </div>
               ) : (
                 <ul className="space-y-1">
@@ -406,7 +406,7 @@ export function InjectionRange() {
         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--bsc-text-3)]">
           Note ·{" "}
         </span>
-        Atlas is a deterministic state-machine simulator. No real model is called. The defense
+        Core is a deterministic state-machine simulator. No real model is called. The defense
         layers and tool detector are pattern-based and run client-side. The point is to make the
         attacker's choices and the defender's stack legible to each other; the techniques are
         documented in the rolodex above.
@@ -414,3 +414,4 @@ export function InjectionRange() {
     </div>
   );
 }
+

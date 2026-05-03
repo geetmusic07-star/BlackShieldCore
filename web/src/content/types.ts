@@ -54,6 +54,8 @@ export interface ResearchNote {
   abstract: string;
   findings?: string[];
   body?: string;
+  attackChain?: { id: string; label: string; description: string }[];
+  codeAnnotations?: Record<number, string>;
 }
 
 export interface CaseStudy {

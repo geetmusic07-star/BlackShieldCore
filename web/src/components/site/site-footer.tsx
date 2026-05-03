@@ -13,7 +13,7 @@ export function SiteFooter() {
                 aria-hidden="true"
                 className="relative inline-flex size-6 items-center justify-center"
               >
-                <span className="absolute inset-0 rounded-[7px] bg-gradient-to-br from-[color:var(--bsc-accent)] to-[color:var(--bsc-violet)] opacity-80" />
+                <span className="absolute inset-0 rounded-[7px] bg-gradient-to-br from-[color:var(--bsc-accent)] to-[color:var(--bsc-accent-soft)] opacity-90" />
                 <span className="absolute inset-[3px] rounded-[5px] bg-[color:var(--bsc-void)]" />
                 <span className="relative size-[6px] rounded-full bg-[color:var(--bsc-accent)]" />
               </span>

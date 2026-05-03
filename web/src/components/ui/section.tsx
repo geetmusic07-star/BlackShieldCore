@@ -19,7 +19,7 @@ export function Section({
   ...props
 }: SectionProps) {
   return (
-    <section className={cn("relative py-24 md:py-32", className)} {...props}>
+    <section className={cn("relative py-16 md:py-20", className)} {...props}>
       <Container>
         {(eyebrow || heading || lede) && (
           <header

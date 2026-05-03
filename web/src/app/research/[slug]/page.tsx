@@ -10,8 +10,12 @@ export function generateStaticParams() {
   return research.filter((r) => r.stage === "available").map((r) => ({ slug: r.slug }));
 }
 
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
 export async function generateMetadata(
-  props: PageProps<"/research/[slug]">,
+  props: Props,
 ): Promise<Metadata> {
   const { slug } = await props.params;
   const r = getResearch(slug);
@@ -19,7 +23,9 @@ export async function generateMetadata(
   return { title: r.title, description: r.abstract };
 }
 
-export default async function ResearchSlug(props: PageProps<"/research/[slug]">) {
+import { AttackChainMap, AnnotatedCode } from "@/components/ui";
+
+export default async function ResearchSlug(props: Props) {
   const { slug } = await props.params;
   const r = getResearch(slug);
   if (!r) notFound();
@@ -42,7 +48,7 @@ export default async function ResearchSlug(props: PageProps<"/research/[slug]">)
           <StatusBadge variant={r.stage} />
           <span className="text-[11px] font-mono text-[color:var(--bsc-text-3)]">
             {r.minutes} min ·{" "}
-            {new Date(r.date).toLocaleDateString(undefined, {
+            {new Date(r.date).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric",
@@ -58,8 +64,18 @@ export default async function ResearchSlug(props: PageProps<"/research/[slug]">)
           {r.abstract}
         </p>
 
+        {/* Attack Chain Visualizer */}
+        {r.attackChain && (
+          <div className="mt-12">
+            <div className="mb-4 font-mono text-[10px] uppercase tracking-[0.3em] text-white/20">
+              [ Lifecycle Visualization ]
+            </div>
+            <AttackChainMap steps={r.attackChain} />
+          </div>
+        )}
+
         {r.findings && (
-          <aside className="mt-10 rounded-2xl border border-white/[0.07] bg-[color-mix(in_oklch,var(--bsc-surface)_70%,transparent)] p-6">
+          <aside className="mt-12 rounded-2xl border border-white/[0.07] bg-[color-mix(in_oklch,var(--bsc-surface)_70%,transparent)] p-6">
             <div className="text-[10px] font-mono uppercase tracking-wider text-[color:var(--bsc-accent)]">
               Key findings
             </div>
@@ -78,13 +94,31 @@ export default async function ResearchSlug(props: PageProps<"/research/[slug]">)
         )}
 
         {r.body && (
-          <div className="mt-12 space-y-5 text-[16px] leading-[1.78] text-[color:var(--bsc-text-2)] [&_h2]:mt-12 [&_h2]:mb-4 [&_h2]:text-[22px] [&_h2]:font-semibold [&_h2]:tracking-[-0.018em] [&_h2]:text-[color:var(--bsc-text-1)] [&_strong]:text-[color:var(--bsc-text-1)] [&_code]:font-mono [&_code]:text-[14px] [&_code]:text-[color:var(--bsc-accent)] [&_code]:bg-white/[0.04] [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5">
-            {r.body.split("\n\n").map((block, i) => {
+          <div className="mt-12 space-y-8 text-[16px] leading-[1.78] text-[color:var(--bsc-text-2)] [&_h2]:mt-12 [&_h2]:mb-4 [&_h2]:text-[22px] [&_h2]:font-semibold [&_h2]:tracking-[-0.018em] [&_h2]:text-[color:var(--bsc-text-1)] [&_strong]:text-[color:var(--bsc-text-1)] [&_code]:font-mono [&_code]:text-[14px] [&_code]:text-[color:var(--bsc-accent)] [&_code]:bg-white/[0.04] [&_code]:rounded [&_code]:px-1.5 [&_code]:py-0.5">
+            {r.body.split(/\n\n(?=(?:[^`]*`[^`]*`)*[^`]*$)/).map((block, i) => {
               if (block.startsWith("## ")) {
                 return <h2 key={i}>{block.replace(/^## /, "")}</h2>;
               }
+              
+              // Handle Code Blocks
+              if (block.includes("```")) {
+                const match = block.match(/```(\w*)\n([\s\S]*?)```/);
+                if (match) {
+                  const lang = match[1] || "txt";
+                  const code = match[2];
+                  return (
+                    <div key={i} className="my-8">
+                      <AnnotatedCode 
+                        code={code} 
+                        language={lang} 
+                        annotations={r.codeAnnotations} 
+                      />
+                    </div>
+                  );
+                }
+              }
+
               if (block.match(/^\d+\. \*\*/)) {
-                // numbered list of bold items
                 const items = block.split("\n").map((item) => item.replace(/^\d+\. /, ""));
                 return (
                   <ol

@@ -1,26 +1,149 @@
 "use client";
 
-import { motion } from "motion/react";
+import { useState, useCallback } from "react";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
+import { useOperator } from "@/components/providers/operator-provider";
+import {
+  ReactFlow,
+  Background,
+  Handle,
+  Position,
+  useNodesState,
+  useEdgesState,
+  Node,
+  Edge,
+  NodeProps,
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 
-const stages = [
-  { id: "src", x: 60, y: 200, label: "Asset surface", tag: "16,420 assets" },
-  { id: "n1", x: 200, y: 90, label: "Identity", tag: "T1078" },
-  { id: "n2", x: 200, y: 200, label: "Endpoint", tag: "T1059" },
-  { id: "n3", x: 200, y: 310, label: "Workload", tag: "T1611" },
-  { id: "n4", x: 360, y: 145, label: "AD / Tier-0", tag: "T1003" },
-  { id: "n5", x: 360, y: 255, label: "Data plane", tag: "T1530" },
-  { id: "exf", x: 520, y: 200, label: "Exfil", tag: "T1041" },
-] as const;
+// 1. Custom Threat Node
+function ThreatNode({ data, isConnectable }: NodeProps) {
+  const isCompromised = data.status === "compromised";
+  const glowColor = isCompromised ? "var(--bsc-rose)" : "var(--bsc-accent)";
 
-const edges: [number, number, "warm" | "cold"][] = [
-  [0, 1, "warm"], [0, 2, "warm"], [0, 3, "cold"],
-  [1, 4, "warm"], [2, 4, "warm"], [3, 5, "warm"],
-  [4, 6, "warm"], [5, 6, "cold"],
+  return (
+    <div className="group relative flex flex-col items-center justify-center">
+      <Handle
+        type="target"
+        position={Position.Left}
+        isConnectable={isConnectable}
+        className="opacity-0"
+      />
+      
+      {/* Node Glow & Core */}
+      <div className="relative flex size-14 items-center justify-center">
+        {/* Outer Glow */}
+        <div
+          className="absolute inset-0 rounded-full opacity-55 transition-colors duration-500"
+          style={{
+            background: `radial-gradient(circle, ${glowColor} 0%, transparent 70%)`,
+          }}
+        />
+        {/* Inner ring */}
+        <div
+          className="relative size-[22px] rounded-full border transition-colors duration-500"
+          style={{
+            backgroundColor: "color-mix(in oklch, var(--bsc-surface) 90%, transparent)",
+            borderColor: `color-mix(in oklch, ${glowColor} 65%, transparent)`,
+          }}
+        />
+        {/* Core dot */}
+        <div
+          className="absolute size-[7px] rounded-full transition-colors duration-500"
+          style={{ backgroundColor: glowColor }}
+        />
+      </div>
+
+      {/* Text Labels */}
+      <div className="absolute top-[-22px] w-32 text-center text-[11px] font-medium text-[color:var(--bsc-text-1)] pointer-events-none">
+        {data.label as string}
+      </div>
+      <div className="absolute bottom-[-10px] w-32 text-center font-mono text-[9.5px] font-medium text-[color:var(--bsc-text-3)] pointer-events-none">
+        {data.tag as string}
+      </div>
+
+      <Handle
+        type="source"
+        position={Position.Right}
+        isConnectable={isConnectable}
+        className="opacity-0"
+      />
+    </div>
+  );
+}
+
+const nodeTypes = { threat: ThreatNode };
+
+// 2. Initial Data
+// Offset by 28px to correctly center the 56px wide nodes around the original SVG coordinates
+const toNode = (id: string, x: number, y: number, label: string, tag: string): Node => ({
+  id,
+  type: "threat",
+  position: { x: x - 28, y: y - 28 },
+  data: { label, tag, status: "secure" },
+});
+
+const initialNodes: Node[] = [
+  toNode("src", 60, 200, "Asset surface", "16,420 assets"),
+  toNode("n1", 200, 90, "Identity", "T1078"),
+  toNode("n2", 200, 200, "Endpoint", "T1059"),
+  toNode("n3", 200, 310, "Workload", "T1611"),
+  toNode("n4", 360, 145, "AD / Tier-0", "T1003"),
+  toNode("n5", 360, 255, "Data plane", "T1530"),
+  toNode("exf", 520, 200, "Exfil", "T1041"),
+];
+
+const toEdge = (source: string, target: string, type: "warm" | "cold"): Edge => ({
+  id: `e-${source}-${target}`,
+  source,
+  target,
+  animated: type === "warm",
+  style: {
+    stroke: type === "warm" ? "var(--bsc-accent)" : "color-mix(in oklch, white 20%, transparent)",
+    strokeWidth: type === "warm" ? 1.5 : 1,
+  },
+});
+
+const initialEdges: Edge[] = [
+  toEdge("src", "n1", "warm"),
+  toEdge("src", "n2", "warm"),
+  toEdge("src", "n3", "cold"),
+  toEdge("n1", "n4", "warm"),
+  toEdge("n2", "n4", "warm"),
+  toEdge("n3", "n5", "warm"),
+  toEdge("n4", "exf", "warm"),
+  toEdge("n5", "exf", "cold"),
 ];
 
 export function AttackHypervisorSection() {
+  const { addXp } = useOperator();
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [adCompromised, setAdCompromised] = useState(false);
+
+  const onNodeClick = useCallback(
+    (_: React.MouseEvent, clickedNode: Node) => {
+      setNodes((nds) =>
+        nds.map((node) => {
+          if (node.id === clickedNode.id) {
+            const isCurrentlySecure = node.data.status === "secure";
+            const newStatus = isCurrentlySecure ? "compromised" : "secure";
+            
+            if (node.id === "n4" && isCurrentlySecure && !adCompromised) {
+              setAdCompromised(true);
+              addXp(1000);
+            }
+
+            return { ...node, data: { ...node.data, status: newStatus } };
+          }
+          return node;
+        })
+      );
+    },
+    [setNodes, addXp, adCompromised]
+  );
+
   return (
     <section className="relative py-28 md:py-40">
       <Container>
@@ -66,109 +189,35 @@ export function AttackHypervisorSection() {
             <div className="relative overflow-hidden rounded-3xl border border-white/[0.07] bg-[color-mix(in_oklch,var(--bsc-surface)_55%,transparent)] p-5 backdrop-blur-xl shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)]">
               <div className="mb-3 flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.16em] text-[color:var(--bsc-text-3)]">
                 <span>Mapped Attack Graph</span>
-                <span className="text-[color:var(--bsc-text-2)]">7 nodes · 8 edges · 2 hot paths</span>
+                <span className="text-[color:var(--bsc-text-2)]">7 nodes · 8 edges · Interactive</span>
               </div>
-              <svg viewBox="0 0 600 400" className="w-full" aria-hidden="true">
-                <defs>
-                  <linearGradient id="warmEdge" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="var(--bsc-accent)" stopOpacity="0.85" />
-                    <stop offset="100%" stopColor="var(--bsc-rose)" stopOpacity="0.85" />
-                  </linearGradient>
-                  <radialGradient id="hotNode" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="var(--bsc-accent)" stopOpacity="0.55" />
-                    <stop offset="100%" stopColor="var(--bsc-accent)" stopOpacity="0" />
-                  </radialGradient>
-                </defs>
+              
+              {/* React Flow Sandbox replacing the SVG */}
+              <div className="h-[400px] w-full cursor-crosshair rounded-xl border border-white/[0.05] bg-black/20">
+                <ReactFlow
+                  nodes={nodes}
+                  edges={edges}
+                  onNodesChange={onNodesChange}
+                  onEdgesChange={onEdgesChange}
+                  onNodeClick={onNodeClick}
+                  nodeTypes={nodeTypes}
+                  panOnDrag={false}
+                  zoomOnScroll={false}
+                  zoomOnPinch={false}
+                  zoomOnDoubleClick={false}
+                  nodesDraggable={false}
+                  preventScrolling={false}
+                  fitView
+                  fitViewOptions={{ padding: 0.15 }}
+                  proOptions={{ hideAttribution: true }}
+                >
+                  <Background color="#ffffff" gap={50} className="opacity-5" />
+                </ReactFlow>
+              </div>
 
-                {/* Background grid */}
-                {Array.from({ length: 12 }).map((_, i) => (
-                  <line
-                    key={`vg-${i}`}
-                    x1={i * 50}
-                    y1={0}
-                    x2={i * 50}
-                    y2={400}
-                    stroke="white"
-                    strokeOpacity="0.025"
-                  />
-                ))}
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <line
-                    key={`hg-${i}`}
-                    x1={0}
-                    y1={i * 50}
-                    x2={600}
-                    y2={i * 50}
-                    stroke="white"
-                    strokeOpacity="0.025"
-                  />
-                ))}
-
-                {/* Edges */}
-                {edges.map(([a, b, kind], i) => {
-                  const A = stages[a];
-                  const B = stages[b];
-                  return (
-                    <motion.line
-                      key={`e-${i}`}
-                      x1={A.x}
-                      y1={A.y}
-                      x2={B.x}
-                      y2={B.y}
-                      stroke={kind === "warm" ? "url(#warmEdge)" : "white"}
-                      strokeOpacity={kind === "warm" ? 1 : 0.2}
-                      strokeWidth={kind === "warm" ? 1.5 : 1}
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      whileInView={{ pathLength: 1, opacity: 1 }}
-                      viewport={{ once: true, margin: "-100px" }}
-                      transition={{ duration: 0.9, delay: 0.05 + i * 0.07 }}
-                    />
-                  );
-                })}
-
-                {/* Nodes */}
-                {stages.map((s, i) => (
-                  <motion.g
-                    key={s.id}
-                    initial={{ opacity: 0, scale: 0.6 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ duration: 0.5, delay: 0.1 + i * 0.07 }}
-                  >
-                    <circle cx={s.x} cy={s.y} r="28" fill="url(#hotNode)" />
-                    <circle
-                      cx={s.x}
-                      cy={s.y}
-                      r="11"
-                      fill="color-mix(in oklch, var(--bsc-surface) 90%, transparent)"
-                      stroke="color-mix(in oklch, var(--bsc-accent) 65%, transparent)"
-                      strokeWidth="1"
-                    />
-                    <circle cx={s.x} cy={s.y} r="3.5" fill="var(--bsc-accent)" />
-                    <text
-                      x={s.x}
-                      y={s.y - 22}
-                      textAnchor="middle"
-                      className="fill-[color:var(--bsc-text-1)]"
-                      style={{ font: "500 11px var(--font-sans)" }}
-                    >
-                      {s.label}
-                    </text>
-                    <text
-                      x={s.x}
-                      y={s.y + 28}
-                      textAnchor="middle"
-                      className="fill-[color:var(--bsc-text-3)]"
-                      style={{ font: "500 9.5px var(--font-mono)" }}
-                    >
-                      {s.tag}
-                    </text>
-                  </motion.g>
-                ))}
-              </svg>
-              <div className="mt-2 flex items-center justify-between border-t border-white/[0.05] pt-3 text-[10px] font-mono uppercase tracking-[0.14em] text-[color:var(--bsc-text-3)]">
+              <div className="mt-4 flex items-center justify-between border-t border-white/[0.05] pt-3 text-[10px] font-mono uppercase tracking-[0.14em] text-[color:var(--bsc-text-3)]">
                 <span>graph · synced 14s ago</span>
-                <span className="text-[color:var(--bsc-accent)]">2 paths reach Tier-0</span>
+                <span className="text-[color:var(--bsc-accent)]">Live Sandbox Topology</span>
               </div>
             </div>
           </Reveal>

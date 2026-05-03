@@ -13,8 +13,12 @@ export function generateStaticParams() {
   return blogPosts.filter((p) => p.stage === "available").map((p) => ({ slug: p.slug }));
 }
 
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
 export async function generateMetadata(
-  props: PageProps<"/blog/[slug]">,
+  props: Props,
 ): Promise<Metadata> {
   const { slug } = await props.params;
   const post = getPost(slug);
@@ -22,7 +26,7 @@ export async function generateMetadata(
   return { title: post.title, description: post.excerpt };
 }
 
-export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
+export default async function BlogPostPage(props: Props) {
   const { slug } = await props.params;
   const post = getPost(slug);
   if (!post) notFound();
@@ -46,7 +50,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
           <StatusBadge variant={post.stage} />
           <span className="font-mono text-[11px] text-[color:var(--bsc-text-3)]">
             {post.minutes} min read ·{" "}
-            {new Date(post.date).toLocaleDateString(undefined, {
+            {new Date(post.date).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
               year: "numeric",
@@ -84,7 +88,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
             ))}
           </div>
         ) : (
-          <p className="text-[15px] italic text-[color:var(--bsc-text-3)]">
+          <p className="text-[15px] text-[color:var(--bsc-text-3)]">
             This post is in build stage - body forthcoming.
           </p>
         )}
@@ -150,7 +154,6 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
           color: var(--bsc-text-1);
           font-size: 17px;
           line-height: 1.7;
-          font-style: italic;
         }
         .prose-blog blockquote cite {
           display: block;

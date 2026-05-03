@@ -87,7 +87,7 @@ export default function BlogPage() {
                     </p>
                   </div>
                   <div className="mt-4 border-t border-white/[0.06] pt-3 text-[11px] font-mono text-[color:var(--bsc-text-3)]">
-                    {new Date(p.date).toLocaleDateString(undefined, {
+                    {new Date(p.date).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
                       year: "numeric",

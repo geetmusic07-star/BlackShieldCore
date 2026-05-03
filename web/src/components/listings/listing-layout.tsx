@@ -22,7 +22,7 @@ export function ListingLayout({
           className="pointer-events-none absolute inset-0 -z-10"
           style={{
             background:
-              "radial-gradient(ellipse 65% 55% at 60% -10%, color-mix(in oklch, var(--bsc-accent) 10%, transparent), transparent 65%), radial-gradient(ellipse 50% 40% at 10% 90%, color-mix(in oklch, var(--bsc-violet) 6%, transparent), transparent 60%)",
+              "radial-gradient(ellipse 65% 55% at 60% -10%, color-mix(in oklch, var(--bsc-accent) 10%, transparent), transparent 65%), radial-gradient(ellipse 50% 40% at 10% 90%, color-mix(in oklch, var(--bsc-accent) 5%, transparent), transparent 60%)",
           }}
         />
         {/* Grid mesh */}

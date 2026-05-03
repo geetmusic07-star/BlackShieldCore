@@ -230,7 +230,6 @@ export default async function HomeLabDetailPage(props: Props) {
           color: var(--bsc-text-1);
           font-size: 17px;
           line-height: 1.7;
-          font-style: italic;
         }
         .prose-blog pre {
           margin: 22px 0;

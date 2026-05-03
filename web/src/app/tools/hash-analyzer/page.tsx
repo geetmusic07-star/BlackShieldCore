@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
-import { ArrowLeft, Hash, ShieldAlert, ShieldCheck, Shield } from "lucide-react";
+import { ArrowLeft, Hash, ShieldWarning, ShieldCheck, Shield } from "@phosphor-icons/react";
 
 interface HashResult {
   name: string;
@@ -93,12 +93,23 @@ function analyzeHash(hash: string): HashResult[] {
   return results;
 }
 
+import { ToolLayout, useHandshake } from "@/components/ui";
+
 export default function HashAnalyzerPage() {
   const [input, setInput] = useState("");
+  const [analyzing, setAnalyzing] = useState(false);
+  const { startHandshake } = useHandshake();
   const results = analyzeHash(input);
 
+  const handleAnalyze = () => {
+    if (!input.trim()) return;
+    startHandshake(() => {
+      setAnalyzing(true);
+    });
+  };
+
   return (
-    <div className="pt-32 pb-24">
+    <ToolLayout>
       <Container className="max-w-[800px]">
         <Link
           href="/tools"
@@ -121,15 +132,26 @@ export default function HashAnalyzerPage() {
           </div>
           <textarea
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              setInput(e.target.value);
+              setAnalyzing(false);
+            }}
             spellCheck={false}
             placeholder="e.g. 5d41402abc4b2a76b9719d911017c592"
             className="h-32 w-full resize-none bg-transparent p-5 font-mono text-[14px] leading-relaxed text-[color:var(--bsc-text-1)] outline-none"
           />
         </div>
 
-        {input.trim() && (
-          <div className="mt-8 space-y-4">
+        <button
+          onClick={handleAnalyze}
+          disabled={!input.trim()}
+          className="mt-4 w-full py-3 bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 rounded-xl font-mono text-[11px] uppercase tracking-[0.2em] text-white/40 hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          Identify Algorithm
+        </button>
+
+        {analyzing && input.trim() && (
+          <div className="mt-12 space-y-4">
             <h2 className="font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
               Analysis Results
             </h2>
@@ -145,7 +167,7 @@ export default function HashAnalyzerPage() {
                       {r.secure ? (
                         <ShieldCheck className="text-[oklch(0.85_0.14_140)]" size={20} />
                       ) : (
-                        <ShieldAlert className="text-[color:var(--bsc-amber)]" size={20} />
+                        <ShieldWarning className="text-[color:var(--bsc-amber)]" size={20} />
                       )}
                     </div>
                     <div>
@@ -184,6 +206,6 @@ export default function HashAnalyzerPage() {
           </div>
         )}
       </Container>
-    </div>
+    </ToolLayout>
   );
 }

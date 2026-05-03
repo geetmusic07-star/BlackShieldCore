@@ -1,10 +1,24 @@
 import type { Metadata, Viewport } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SmoothScrollProvider } from "@/components/providers/smooth-scroll";
+
+const geistSans = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist-sans",
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
+});
 import { MotionConfigProvider } from "@/components/providers/motion-config";
 import { SiteHeader } from "@/components/site/site-header";
 import { SiteFooter } from "@/components/site/site-footer";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { OperatorProvider } from "@/components/providers/operator-provider";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -28,18 +42,24 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
+import { HandshakeProvider } from "@/components/ui/system-handshake";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${geistSans.variable} ${geistMono.variable}`}>
       <body className="relative min-h-screen flex flex-col">
         <div className="bsc-grain" aria-hidden="true" />
         <MotionConfigProvider>
-          <TooltipProvider delay={120}>
-            <SmoothScrollProvider />
-            <SiteHeader />
-            <main className="relative z-10 flex-1">{children}</main>
-            <SiteFooter />
-          </TooltipProvider>
+          <HandshakeProvider>
+            <OperatorProvider>
+              <TooltipProvider delay={120}>
+                <SmoothScrollProvider />
+                <SiteHeader />
+                <main className="relative z-10 flex-1">{children}</main>
+                <SiteFooter />
+              </TooltipProvider>
+            </OperatorProvider>
+          </HandshakeProvider>
         </MotionConfigProvider>
       </body>
     </html>

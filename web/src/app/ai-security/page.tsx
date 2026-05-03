@@ -7,6 +7,7 @@ import { aiExperiments } from "@/content/ai-experiments";
 import { InjectionSandbox } from "@/components/ai-security/injection-sandbox";
 import { JailbreakRolodex } from "@/components/ai-security/jailbreak-rolodex";
 import { InjectionRange } from "@/components/ai-security/injection-range";
+import { InterrogationTerminal } from "@/components/ai-security/interrogation-terminal";
 
 export const metadata: Metadata = {
   title: "AI Security",
@@ -57,13 +58,27 @@ export default function AISecurityPage() {
         </Reveal>
       </Container>
 
-      {/* ─────────────── 3. Indirect Injection Range ─────────────── */}
+      {/* ─────────────── 3. Stream Intercept ─────────────── */}
       <Container className="mt-24">
         <Reveal>
           <SectionHeader
-            eyebrow="03 · Range"
+            eyebrow="03 · Stream Intercept"
+            title="Interrogation Console"
+            sub="Simulates an LLM streaming its response token by token. A middleware filter monitors the stream live and aggressively drops the connection if a forbidden pattern emerges."
+          />
+        </Reveal>
+        <Reveal delay={0.05}>
+          <InterrogationTerminal />
+        </Reveal>
+      </Container>
+
+      {/* ─────────────── 4. Indirect Injection Range ─────────────── */}
+      <Container className="mt-24">
+        <Reveal>
+          <SectionHeader
+            eyebrow="04 · Range"
             title="Indirect Injection Range - adversarial CTF"
-            sub="Five progressively harder levels against a simulated agent named Atlas. Each level adds one defense layer (hidden-content scrubber → URL blocklist → tool gating → intent classifier), and each requires a genuinely different bypass to clear. Edit the page payload, watch Atlas's full processing trace, and capture the per-level flag."
+            sub="Five progressively harder levels against a simulated agent named Core. Each level adds one defense layer (hidden-content scrubber → URL blocklist → tool gating → intent classifier), and each requires a genuinely different bypass to clear. Edit the page payload, watch Core's full processing trace, and capture the per-level flag."
           />
         </Reveal>
         <Reveal delay={0.05}>
@@ -71,11 +86,11 @@ export default function AISecurityPage() {
         </Reveal>
       </Container>
 
-      {/* ─────────────── 4. Curated Experiments ─────────────── */}
+      {/* ─────────────── 5. Curated Experiments ─────────────── */}
       <Container className="mt-24">
         <Reveal>
           <SectionHeader
-            eyebrow="04 · Methodology"
+            eyebrow="05 · Methodology"
             title="Curated AI security experiments"
             sub="Walkthroughs of the classifiers, detectors, and scoring methods behind the surfaces above. Each experiment publishes its own input/output samples, signals, and reproducibility notes."
           />

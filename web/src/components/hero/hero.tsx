@@ -1,136 +1,120 @@
 "use client";
 
-import { motion, type Variants } from "motion/react";
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
-import { ArrowRight } from "lucide-react";
-import { AmbientGrid } from "./ambient-grid";
+import { ArrowRight } from "@phosphor-icons/react";
+import { SentienceOrb } from "./sentience-orb";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+/**
+ * CORE by Blackshield: Professional Redesign
+ * Philosophy: Apple/iPhone aesthetic - Clean, Sharp, Professional.
+ */
 
-const fade: Variants = {
-  hidden: { opacity: 0, y: 18 },
-  show: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: 0.1 + i * 0.07, duration: 0.85, ease: EASE },
-  }),
-};
+interface HeroProps {
+  stats: [number, string][];
+}
 
-export function Hero() {
+export function Hero({ stats }: HeroProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Clean Entry Animation
+      gsap.fromTo(".gsap-reveal", 
+        { y: 20, opacity: 0 },
+        { 
+          y: 0, 
+          opacity: 1, 
+          duration: 1, 
+          ease: "power3.out", 
+          stagger: 0.1,
+          delay: 0.1
+        }
+      );
+
+      // Number counting animation
+      const numElements = gsap.utils.toArray<HTMLElement>(".gsap-stat-num");
+      numElements.forEach((el, index) => {
+        const targetValue = stats[index]?.[0] || 0;
+        gsap.fromTo(
+          el,
+          { innerText: 0 },
+          {
+            innerText: targetValue,
+            duration: 2.5,
+            ease: "power3.out",
+            snap: { innerText: 1 },
+            delay: 0.4 + index * 0.1,
+          }
+        );
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, [stats]);
+
   return (
-    <section className="relative isolate overflow-hidden pt-36 pb-24 md:pt-52 md:pb-36">
-      <AmbientGrid />
+    <section ref={containerRef} className="relative isolate overflow-hidden pt-40 pb-24 md:pt-56 md:pb-32">
+      {/* BACKGROUND ORB - PERSISTENT */}
+      <SentienceOrb />
 
       <Container className="relative z-10">
-        <div className="mx-auto max-w-3xl text-center">
-          {/* Brand wordmark */}
-          <motion.h1
-            custom={1}
-            variants={fade}
-            initial="hidden"
-            animate="show"
-            className="mt-8 text-[clamp(48px,7.8vw,96px)] font-semibold leading-[0.96] tracking-[-0.032em] text-[color:var(--bsc-text-1)]"
-          >
-            BlackShield{" "}
-            <span
-              className="text-[color:var(--bsc-text-3)]"
-              style={{
-                backgroundImage: "linear-gradient(135deg, var(--bsc-text-3) 0%, color-mix(in oklch, var(--bsc-accent) 55%, var(--bsc-text-3)) 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Core
+        <div className="max-w-[800px]">
+          
+          {/* Professional Eyebrow */}
+          <div className="gsap-reveal mb-8 flex items-center gap-3">
+            <span className="font-sans text-[12px] font-semibold uppercase tracking-[0.2em] text-white/40">
+              Security Research & Engineering
             </span>
-          </motion.h1>
+          </div>
 
-          {/* Subtitle */}
-          <motion.p
-            custom={2}
-            variants={fade}
-            initial="hidden"
-            animate="show"
-            className="mt-6 text-[clamp(16px,1.9vw,21px)] font-medium leading-snug tracking-[-0.01em] text-[color:var(--bsc-text-2)]"
-          >
-            Offensive security.{" "}
-            <span className="text-[color:var(--bsc-accent)]">Detection engineering.</span>{" "}
-            AI adversarial research.
-          </motion.p>
+          {/* Clean, Single-line Title */}
+          <h1 className="gsap-reveal text-[clamp(32px,6vw,64px)] font-bold tracking-[-0.04em] text-white leading-[1.1] whitespace-nowrap">
+            CORE by BlackShield
+          </h1>
 
-          {/* Lede */}
-          <motion.p
-            custom={3}
-            variants={fade}
-            initial="hidden"
-            animate="show"
-            className="mx-auto mt-5 max-w-[520px] text-[15px] leading-[1.7] text-[color:var(--bsc-text-3)]"
-          >
-            A practitioner-grade platform built around real attack patterns — hands-on labs,
-            deep technical writing, and purpose-built tooling. No fluff, no vendor pitches.
-          </motion.p>
+          {/* Professional Narrative */}
+          <p className="gsap-reveal mt-8 max-w-[60ch] text-[18px] md:text-[21px] font-medium leading-[1.5] tracking-[-0.01em] text-white/70">
+            The professional environment for advanced offensive security. 
+            Built for adversarial research, threat intelligence, and high-fidelity technical training.
+          </p>
 
-          {/* CTAs */}
-          <motion.div
-            custom={4}
-            variants={fade}
-            initial="hidden"
-            animate="show"
-            className="mt-10 flex flex-wrap items-center justify-center gap-3"
-          >
+          {/* Clean CTAs */}
+          <div className="gsap-reveal mt-12 flex flex-wrap items-center gap-4">
             <LinkButton
               size="lg"
               href="/labs"
-              className="rounded-full bg-[color:var(--bsc-text-1)] text-[color:var(--bsc-void)] hover:bg-white px-7 shadow-[0_0_32px_-4px_color-mix(in_oklch,var(--bsc-accent)_35%,transparent)] hover:shadow-[0_0_48px_-4px_color-mix(in_oklch,var(--bsc-accent)_50%,transparent)] transition-shadow duration-300"
+              className="group rounded-full bg-white text-black px-8 py-6 text-[15px] font-semibold transition-all hover:bg-white/90 active:scale-[0.98]"
             >
-              Browse Labs
-              <ArrowRight className="ml-1.5 size-4" />
+              Explore Labs
+              <ArrowRight className="ml-2 size-4 transition-transform group-hover:translate-x-0.5" />
             </LinkButton>
             <LinkButton
               size="lg"
               variant="ghost"
               href="/ai-security"
-              className="rounded-full border border-white/[0.12] bg-white/[0.03] px-7 text-[color:var(--bsc-text-2)] hover:bg-white/[0.07] hover:border-white/[0.2] hover:text-[color:var(--bsc-text-1)] transition-all duration-200"
+              className="rounded-full border border-white/10 bg-white/5 px-8 py-6 text-[15px] font-semibold text-white/90 hover:bg-white/10 transition-all"
             >
-              AI Red Teaming
+              Read Research
             </LinkButton>
-          </motion.div>
-
-          {/* Divider */}
-          <motion.div
-            custom={4}
-            variants={fade}
-            initial="hidden"
-            animate="show"
-            className="mx-auto mt-16 h-px w-[min(400px,70%)] bg-gradient-to-r from-transparent via-white/[0.1] to-transparent"
-          />
-
-          {/* Stats */}
-          <motion.dl
-            custom={5}
-            variants={fade}
-            initial="hidden"
-            animate="show"
-            className="mx-auto mt-10 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-6 md:grid-cols-4"
-          >
-            {[
-              ["24", "Lab Tracks"],
-              ["142", "CVEs Reviewed"],
-              ["8", "Research Notes"],
-              ["10", "Modules"],
-            ].map(([v, l]) => (
-              <div key={l} className="group text-left md:text-center">
-                <dd className="text-[28px] font-semibold tracking-[-0.028em] text-[color:var(--bsc-text-1)] tabular-nums">
-                  {v}
-                </dd>
-                <dt className="mt-1 font-mono text-[10px] uppercase tracking-wider text-[color:var(--bsc-text-3)]">
-                  {l}
-                </dt>
-              </div>
-            ))}
-          </motion.dl>
+          </div>
         </div>
+
+        {/* Clean Stats Strip */}
+        <dl className="gsap-reveal mt-32 grid grid-cols-2 gap-12 md:grid-cols-4 border-t border-white/5 pt-12">
+          {stats.map(([v, l]) => (
+            <div key={l} className="space-y-1">
+              <dd className="gsap-stat-num font-sans text-[32px] font-bold tracking-tight text-white">
+                0
+              </dd>
+              <dt className="font-sans text-[12px] font-medium text-white/30">
+                {l}
+              </dt>
+            </div>
+          ))}
+        </dl>
       </Container>
     </section>
   );

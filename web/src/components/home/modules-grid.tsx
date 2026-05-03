@@ -6,7 +6,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Container } from "@/components/ui/container";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -125,7 +125,7 @@ export function ModulesGrid() {
   }, []);
 
   return (
-    <section className="relative py-28 md:py-36">
+    <section className="relative py-16 md:py-20">
       {/* Section ambient layer */}
       <div
         aria-hidden="true"
@@ -139,10 +139,10 @@ export function ModulesGrid() {
       <Container>
         <div className="mb-16 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
-            <div className="mb-4 text-[10px] font-mono uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
+            <div className="mb-4 text-[12px] font-sans font-semibold uppercase tracking-[0.05em] text-[color:var(--bsc-text-3)]">
               Platform Modules
             </div>
-            <h2 className="text-[clamp(32px,4.2vw,52px)] font-semibold leading-[1.05] tracking-[-0.024em]">
+            <h2 className="text-[clamp(32px,4.2vw,52px)] font-bold tracking-tight">
               Ten modules.
               <br />
               <span className="text-[color:var(--bsc-text-3)]">Each one feeds the others.</span>
@@ -185,7 +185,7 @@ export function ModulesGrid() {
                   <ModuleGlyph kind={m.icon} glowColor={m.glowColor} />
                   <StatusBadge variant={m.stage} />
                 </div>
-                <div className="text-[10px] font-mono uppercase tracking-wider text-[color:var(--bsc-text-3)]">
+                <div className="text-[11px] font-sans font-semibold uppercase tracking-[0.05em] text-[color:var(--bsc-text-3)]">
                   {m.category}
                 </div>
                 <h3 className="mt-1.5 text-[18px] font-semibold tracking-[-0.014em] text-[color:var(--bsc-text-1)]">
@@ -195,7 +195,7 @@ export function ModulesGrid() {
                   {m.desc}
                 </p>
               </div>
-              <div className="mt-6 flex items-center border-t border-[color:var(--bsc-line)] pt-4 text-[11px] font-mono text-[color:var(--bsc-text-3)] transition-colors group-hover:text-[color:var(--bsc-text-2)]">
+              <div className="mt-6 flex items-center border-t border-[color:var(--bsc-line)] pt-4 text-[12px] font-medium text-[color:var(--bsc-text-3)] transition-colors group-hover:text-[color:var(--bsc-text-2)]">
                 <span>Open module</span>
                 <ArrowUpRight className="ml-auto size-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[color:var(--bsc-text-1)]" />
               </div>

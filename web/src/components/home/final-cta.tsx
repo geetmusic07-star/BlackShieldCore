@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@phosphor-icons/react";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 

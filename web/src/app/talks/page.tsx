@@ -80,7 +80,7 @@ export default function TalksPage() {
               </span>
             ))}
             {!t.resources.some((r) => r.available) && (
-              <p className="text-[12px] font-mono text-[color:var(--bsc-text-4)] italic">
+              <p className="text-[12px] font-mono text-[color:var(--bsc-text-4)]">
                 Materials pending publication
               </p>
             )}

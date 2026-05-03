@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { LabCard } from "@/components/labs/lab-card";
 import { Reveal } from "@/components/ui/reveal";
-import type { Lab } from "@/content/types";
+import type { Lab, Stage } from "@/content/types";
 import { createClient } from "@supabase/supabase-js";
 import { ListingLayout } from "@/components/listings/listing-layout";
 
@@ -11,6 +11,19 @@ export const metadata: Metadata = {
   description:
     "Hands-on offensive security scenarios: web exploitation, auth bypasses, cloud abuse, and AI adversarial work.",
 };
+
+export interface SupabaseLabRow {
+  id: string | number;
+  title: string;
+  description: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  durationMinutes?: number;
+  xp?: number;
+  stage?: Stage;
+  summary?: string;
+  tags?: string[];
+}
+
 
 const categoryMeta: Record<string, { desc: string; color: string }> = {
   Web: {
@@ -77,7 +90,7 @@ export default async function LabsPage() {
         }
       };
 
-      formattedLabs = data.map((lab: any) => ({
+      formattedLabs = data.map((lab: SupabaseLabRow) => ({
         slug: String(lab.id),
         title: lab.title,
         description: lab.description,

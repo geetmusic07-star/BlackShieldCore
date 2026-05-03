@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -17,10 +18,16 @@ import {
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const { scrollY } = useScroll();
+  const pathname = usePathname();
 
   useMotionValueEvent(scrollY, "change", (v) => {
     setScrolled(v > 12);
   });
+
+  const isItemActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+  const isGroupActive = (items: ReadonlyArray<{ href: string }>) =>
+    items.some((it) => isItemActive(it.href));
 
   return (
     <motion.header
@@ -47,32 +54,52 @@ export function SiteHeader() {
 
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList className="gap-1">
-            {nav.primary.map((group) => (
-              <NavigationMenuItem key={group.label}>
-                <NavigationMenuTrigger className="bg-transparent text-[13px] font-medium text-[color:var(--bsc-text-2)] hover:bg-white/[0.03] hover:text-[color:var(--bsc-text-1)] data-popup-open:bg-white/[0.05] data-popup-open:text-[color:var(--bsc-text-1)]">
-                  {group.label}
-                </NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[320px] gap-1 p-2">
-                    {group.items.map((item) => (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          className="group block rounded-md px-3 py-2.5 transition-colors hover:bg-white/[0.04]"
-                        >
-                          <div className="text-[13px] font-medium text-[color:var(--bsc-text-1)]">
-                            {item.name}
-                          </div>
-                          <div className="text-[11px] text-[color:var(--bsc-text-3)] font-mono tracking-wide">
-                            {item.hint}
-                          </div>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            ))}
+            {nav.primary.map((group) => {
+              const groupActive = isGroupActive(group.items);
+              return (
+                <NavigationMenuItem key={group.label}>
+                  <NavigationMenuTrigger
+                    className={cn(
+                      "relative bg-transparent text-[13px] font-medium hover:bg-white/[0.03] data-popup-open:bg-white/[0.05] data-popup-open:text-[color:var(--bsc-text-1)]",
+                      groupActive
+                        ? "text-[color:var(--bsc-text-1)] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-px after:bg-[color:var(--bsc-accent)]"
+                        : "text-[color:var(--bsc-text-2)] hover:text-[color:var(--bsc-text-1)]",
+                    )}
+                  >
+                    {group.label}
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[320px] gap-1 p-2">
+                      {group.items.map((item) => {
+                        const active = isItemActive(item.href);
+                        return (
+                          <li key={item.href}>
+                            <Link
+                              href={item.href}
+                              aria-current={active ? "page" : undefined}
+                              className={cn(
+                                "group block rounded-md px-3 py-2.5 transition-colors",
+                                active ? "bg-white/[0.06]" : "hover:bg-white/[0.04]",
+                              )}
+                            >
+                              <div className="flex items-center gap-2 text-[13px] font-medium text-[color:var(--bsc-text-1)]">
+                                {item.name}
+                                {active && (
+                                  <span className="size-1 rounded-full bg-[color:var(--bsc-accent)]" />
+                                )}
+                              </div>
+                              <div className="text-[11px] text-[color:var(--bsc-text-3)] font-mono tracking-wide">
+                                {item.hint}
+                              </div>
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              );
+            })}
           </NavigationMenuList>
         </NavigationMenu>
 
@@ -97,7 +124,7 @@ function LogoMark() {
       className="relative inline-flex size-6 items-center justify-center"
     >
       <span
-        className="absolute inset-0 rounded-[7px] bg-gradient-to-br from-[color:var(--bsc-accent)] to-[color:var(--bsc-violet)] opacity-80"
+        className="absolute inset-0 rounded-[7px] bg-gradient-to-br from-[color:var(--bsc-accent)] to-[color:var(--bsc-accent-soft)] opacity-90"
       />
       <span className="absolute inset-[3px] rounded-[5px] bg-[color:var(--bsc-void)]" />
       <span className="relative size-[6px] rounded-full bg-[color:var(--bsc-accent)]" />

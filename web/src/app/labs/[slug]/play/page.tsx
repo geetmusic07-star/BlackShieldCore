@@ -58,11 +58,11 @@ export default function PlayPage() {
           Back to room
         </Link>
 
-        {profile.practicalKind === "jwt" && <JwtPractical profile={profile} />}
+        {profile.practicalKind === "jwt" && <JwtPractical profile={profile} slug={slug} />}
         {profile.practicalKind === "graphql" && (
-          <GraphqlPractical profile={profile} />
+          <GraphqlPractical profile={profile} slug={slug} />
         )}
-        {profile.practicalKind === "ssrf" && <SsrfPractical profile={profile} />}
+        {profile.practicalKind === "ssrf" && <SsrfPractical profile={profile} slug={slug} />}
       </Container>
     </div>
   );
@@ -134,7 +134,7 @@ const SAMPLE_PAYLOAD = `{
   "exp": 1735776000
 }`;
 
-function JwtPractical({ profile }: { profile: LabProfile }) {
+function JwtPractical({ profile, slug }: { profile: LabProfile; slug: string }) {
   const [header, setHeader] = useState(SAMPLE_HEADER);
   const [payload, setPayload] = useState(SAMPLE_PAYLOAD);
   const [token, setToken] = useState("");
@@ -146,6 +146,7 @@ function JwtPractical({ profile }: { profile: LabProfile }) {
     },
   ]);
   const [flagFound, setFlagFound] = useState(false);
+  const [capturedFlag, setCapturedFlag] = useState("");
 
   useEffect(() => {
     try {
@@ -176,46 +177,28 @@ function JwtPractical({ profile }: { profile: LabProfile }) {
     }
   };
 
-  const submitToken = () => {
+  const submitToken = async () => {
     try {
-      const parts = token.split(".");
-      if (parts.length !== 3) {
-        log("err", "Malformed token: expected 3 dot-separated segments.");
-        return;
-      }
-      const h = JSON.parse(decodeB64url(parts[0]));
-      const p = JSON.parse(decodeB64url(parts[1]));
-      const sig = parts[2];
+      log("info", "Submitting token to server...");
+      const res = await fetch(`/api/labs/${slug}/execute`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ payload: token, level: 1 }),
+      });
+      const data = await res.json();
 
-      log("info", `Header parsed → alg=${h.alg ?? "?"}`);
-      log("info", `Payload parsed → role=${p.role ?? "?"}, sub=${p.sub ?? "?"}`);
-
-      if (h.alg === "none") {
-        if (sig === "") {
-          log(
-            "ok",
-            "alg=none accepted, signature segment empty - verifier skipped.",
-          );
-          if (p.role === "admin") {
-            log("ok", `Authenticated as admin. Flag: ${profile.flag}`);
-            setFlagFound(true);
-            return;
-          } else {
-            log(
-              "err",
-              "Token accepted, but role is not admin. Try escalating the role claim.",
-            );
-            return;
-          }
-        } else {
-          log("err", "alg=none requires the signature segment to be EMPTY.");
-          return;
+      if (data.success && data.levelComplete) {
+        log("ok", `Authenticated. Flag: ${data.flag}`);
+        setCapturedFlag(data.flag);
+        setFlagFound(true);
+      } else {
+        log("err", data.message || "Token rejected.");
+        if (data.explanation) {
+          log("info", data.explanation);
         }
       }
-
-      log("err", "Signature verification failed. Token rejected.");
     } catch {
-      log("err", "Could not decode token segments. Check base64url encoding.");
+      log("err", "Network error while verifying token.");
     }
   };
 
@@ -282,7 +265,7 @@ function JwtPractical({ profile }: { profile: LabProfile }) {
       </button>
 
       <Console logs={logs} />
-      {flagFound && <FlagPanel flag={profile.flag} />}
+      {flagFound && <FlagPanel flag={capturedFlag} />}
     </>
   );
 }
@@ -313,7 +296,7 @@ const FAKE_SCHEMA_TYPES = [
   { name: "Role", fields: ["USER", "MODERATOR", "ADMIN"] },
 ];
 
-function GraphqlPractical({ profile }: { profile: LabProfile }) {
+function GraphqlPractical({ profile, slug }: { profile: LabProfile; slug: string }) {
   const [query, setQuery] = useState(SAMPLE_QUERY);
   const [logs, setLogs] = useState<LogLine[]>([
     { tone: "info", text: `Endpoint: POST /graphql · target ${profile.target}` },
@@ -323,70 +306,39 @@ function GraphqlPractical({ profile }: { profile: LabProfile }) {
     },
   ]);
   const [flagFound, setFlagFound] = useState(false);
+  const [capturedFlag, setCapturedFlag] = useState("");
 
   const log = (tone: LogLine["tone"], text: string) =>
     setLogs((l) => [...l, { tone, text }]);
 
-  const submitQuery = () => {
+  const submitQuery = async () => {
     const q = query.trim();
+    if (!q) return;
 
-    // 1) Introspection
-    if (q.includes("__schema")) {
-      log("ok", "Introspection accepted - schema returned.");
-      const dump = FAKE_SCHEMA_TYPES.map(
-        (t) => `  type ${t.name} { ${t.fields.join(", ")} }`,
-      ).join("\n");
-      log("info", `data.__schema.types →\n${dump}`);
-      log(
-        "info",
-        "Notice anything in Mutation that doesn't belong in a public API?",
-      );
-      return;
-    }
+    try {
+      log("info", "Sending query to server...");
+      const res = await fetch(`/api/labs/${slug}/execute`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ payload: q }),
+      });
+      const data = await res.json();
 
-    // 2) Field-suggestion teaser when guessing
-    if (/setRole|set_role|setrole/i.test(q) && !q.includes("internal__setRole")) {
-      log(
-        "err",
-        'Cannot query field "setRole" on type "Mutation". Did you mean "internal__setRole"?',
-      );
-      return;
-    }
-
-    // 3) The hidden mutation (must include role: ADMIN)
-    if (/internal__setRole/.test(q)) {
-      const wantsAdmin = /role:\s*ADMIN/i.test(q) || /"role":\s*"ADMIN"/i.test(q);
-      const hasUser = /id:\s*"?(me|self|u_\w+)"?/i.test(q) || /id:/i.test(q);
-      if (!hasUser) {
-        log("err", "Mutation accepted but missing the id argument.");
-        return;
+      if (data.success) {
+        log("ok", data.message);
+        if (data.explanation) log("info", data.explanation);
+        if (data.flag) {
+          log("ok", `Flag: ${data.flag}`);
+          setCapturedFlag(data.flag);
+          setFlagFound(true);
+        }
+      } else {
+        log("err", data.message || "Query rejected.");
+        if (data.explanation) log("info", data.explanation);
       }
-      if (!wantsAdmin) {
-        log(
-          "err",
-          "Mutation executed - but role is not ADMIN. The endpoint accepts USER/MODERATOR/ADMIN.",
-        );
-        return;
-      }
-      log("ok", "internal__setRole → role updated to ADMIN.");
-      log("ok", `Authorization upgraded. Flag: ${profile.flag}`);
-      setFlagFound(true);
-      return;
+    } catch {
+      log("err", "Network error while sending query.");
     }
-
-    // 4) Other queries
-    if (/\bme\b/.test(q)) {
-      log(
-        "info",
-        'data.me → { id: "u_4812", name: "operative", role: "USER" }',
-      );
-      return;
-    }
-
-    log(
-      "err",
-      "Query accepted but resolved to no useful data. Try introspecting first.",
-    );
   };
 
   return (
@@ -450,7 +402,7 @@ function GraphqlPractical({ profile }: { profile: LabProfile }) {
       </div>
 
       <Console logs={logs} />
-      {flagFound && <FlagPanel flag={profile.flag} />}
+      {flagFound && <FlagPanel flag={capturedFlag} />}
     </>
   );
 }
@@ -459,13 +411,8 @@ function GraphqlPractical({ profile }: { profile: LabProfile }) {
 // SSRF PRACTICAL - webhook tester → metadata → credentials → flag
 // ════════════════════════════════════════════════════════════════
 
-function SsrfPractical({ profile }: { profile: LabProfile }) {
+function SsrfPractical({ profile, slug }: { profile: LabProfile; slug: string }) {
   const [url, setUrl] = useState("https://example.com/health");
-  const [creds, setCreds] = useState<{
-    AccessKeyId: string;
-    SecretAccessKey: string;
-    Token: string;
-  } | null>(null);
   const [logs, setLogs] = useState<LogLine[]>([
     {
       tone: "info",
@@ -477,11 +424,12 @@ function SsrfPractical({ profile }: { profile: LabProfile }) {
     },
   ]);
   const [flagFound, setFlagFound] = useState(false);
+  const [capturedFlag, setCapturedFlag] = useState("");
 
   const log = (tone: LogLine["tone"], text: string) =>
     setLogs((l) => [...l, { tone, text }]);
 
-  const submit = () => {
+  const submit = async () => {
     const u = url.trim();
 
     if (!u) {
@@ -489,92 +437,30 @@ function SsrfPractical({ profile }: { profile: LabProfile }) {
       return;
     }
 
-    // Block the literal IP - naive filter
-    if (u.includes("169.254")) {
-      log("err", "URL rejected: blocked by hostname filter (matched '169.254').");
-      return;
-    }
+    try {
+      log("info", `Fetching ${u}...`);
+      const res = await fetch(`/api/labs/${slug}/execute`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ payload: u }),
+      });
+      const data = await res.json();
 
-    // Public probes
-    if (/example\.com|google\.com/i.test(u)) {
-      log("info", `GET ${u} → 200 OK · "alive"`);
-      return;
-    }
-
-    // Localhost / loopback
-    if (/(localhost|127\.0\.0\.1)/i.test(u)) {
-      log(
-        "ok",
-        `GET ${u} → 200 OK · service responded. The fetcher CAN reach localhost.`,
-      );
-      return;
-    }
-
-    // Decimal-encoded metadata IP (2852039166 == 169.254.169.254)
-    const isDecimalMetadata =
-      /\b2852039166\b/.test(u) || /0xa9fea9fe/i.test(u);
-
-    // Hostname-pointing-to-metadata
-    const isAttackerControlledHost =
-      /metadata\.[a-z0-9.-]+/i.test(u) || /imds\.[a-z0-9.-]+/i.test(u);
-
-    if (isDecimalMetadata || isAttackerControlledHost) {
-      log(
-        "ok",
-        `GET ${u} → 200 OK · response from 169.254.169.254 (filter bypassed via ${
-          isDecimalMetadata ? "IP encoding" : "DNS-pointing host"
-        }).`,
-      );
-
-      if (/\/iam\/security-credentials\/?$/.test(u)) {
-        log("info", "body → MyAppRole");
-        log(
-          "info",
-          "Hint: append /MyAppRole to the path to fetch the role's credentials.",
-        );
-        return;
+      if (data.success) {
+        log("ok", data.message);
+        if (data.explanation) log("info", data.explanation);
+        if (data.flag) {
+          log("ok", `Flag: ${data.flag}`);
+          setCapturedFlag(data.flag);
+          setFlagFound(true);
+        }
+      } else {
+        log("err", data.message || "Fetch failed.");
+        if (data.explanation) log("info", data.explanation);
       }
-      if (/\/iam\/security-credentials\/MyAppRole/.test(u)) {
-        const c = {
-          AccessKeyId: "ASIA" + randomString(16),
-          SecretAccessKey: randomString(40),
-          Token: randomString(48),
-        };
-        setCreds(c);
-        log(
-          "ok",
-          `body → ${JSON.stringify(c, null, 2)}\n\nCredentials captured. Send them to the crown-jewel endpoint at /api/v1/secrets to capture the flag.`,
-        );
-        return;
-      }
-      log(
-        "info",
-        "body → instance-id, public-keys, etc. Try /latest/meta-data/iam/security-credentials/.",
-      );
-      return;
+    } catch {
+      log("err", "Network error while fetching URL.");
     }
-
-    // Crown jewel endpoint - accepts captured credentials
-    if (/\/api\/v1\/secrets/.test(u)) {
-      if (!creds) {
-        log(
-          "err",
-          "GET /api/v1/secrets → 401 Unauthorized · valid IAM credentials required.",
-        );
-        return;
-      }
-      log(
-        "ok",
-        `GET ${u} → 200 OK · authenticated as MyAppRole. Flag: ${profile.flag}`,
-      );
-      setFlagFound(true);
-      return;
-    }
-
-    log(
-      "err",
-      `GET ${u} → no useful response. Try probing internal addresses (the fetcher's network is more permissive than you'd expect).`,
-    );
   };
 
   return (
@@ -632,21 +518,10 @@ function SsrfPractical({ profile }: { profile: LabProfile }) {
             set={setUrl}
           />
         </div>
-
-        {creds && (
-          <div className="mt-4 rounded-md border border-[oklch(0.82_0.14_75)]/30 bg-[oklch(0.82_0.14_75)]/[0.06] p-3 font-mono text-[12px] text-[oklch(0.88_0.12_75)]">
-            <div className="mb-1 flex items-center gap-1.5">
-              <Shield size={12} /> Captured credentials (ready to use)
-            </div>
-            <div>AccessKeyId: {creds.AccessKeyId}</div>
-            <div>SecretAccessKey: {creds.SecretAccessKey.slice(0, 8)}…</div>
-            <div>Token: {creds.Token.slice(0, 12)}…</div>
-          </div>
-        )}
       </div>
 
       <Console logs={logs} />
-      {flagFound && <FlagPanel flag={profile.flag} />}
+      {flagFound && <FlagPanel flag={capturedFlag} />}
     </>
   );
 }

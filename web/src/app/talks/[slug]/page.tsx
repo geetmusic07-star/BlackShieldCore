@@ -159,7 +159,7 @@ export default async function TalkPage(props: { params: Promise<{ slug: string }
             ))}
           </div>
         ) : (
-          <p className="text-[15px] italic text-[color:var(--bsc-text-3)]">
+          <p className="text-[15px] text-[color:var(--bsc-text-3)]">
             This talk writeup is currently being formatted for the web.
           </p>
         )}
@@ -225,7 +225,6 @@ export default async function TalkPage(props: { params: Promise<{ slug: string }
           color: var(--bsc-text-1);
           font-size: 17px;
           line-height: 1.7;
-          font-style: italic;
         }
         .prose-blog blockquote cite {
           display: block;
