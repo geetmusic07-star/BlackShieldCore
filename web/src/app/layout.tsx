@@ -30,8 +30,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark h-full">
-      <body className="relative min-h-full flex flex-col">
+    <html lang="en" className="dark">
+      <body className="relative min-h-screen flex flex-col">
         <div className="bsc-grain" aria-hidden="true" />
         <MotionConfigProvider>
           <TooltipProvider delay={120}>

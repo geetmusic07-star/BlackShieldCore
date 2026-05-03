@@ -105,6 +105,23 @@ export interface OsintCase {
   body?: BlogBlock[];
 }
 
+export type OsintCategory =
+  | "Threat Intel"
+  | "DNS & Network"
+  | "Email & Identity"
+  | "Vulnerability"
+  | "Infrastructure"
+  | "Platforms";
+
+export interface OsintTool {
+  name: string;
+  description: string;
+  url: string;
+  category: OsintCategory;
+  tags: string[];
+  featured?: boolean;
+}
+
 export interface HomeLabComponent {
   slug?: string;
   category: "Cyber Range" | "Detection" | "Identity" | "Network" | "Tooling";

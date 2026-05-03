@@ -6,6 +6,8 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { blogPosts, getPost } from "@/content/blog";
 import type { BlogBlock } from "@/content/types";
 import { ArrowLeft, Info, AlertTriangle, Lightbulb } from "lucide-react";
+import { ReadingProgress } from "@/components/blog/reading-progress";
+import { CodeBlock } from "@/components/blog/code-block";
 
 export function generateStaticParams() {
   return blogPosts.filter((p) => p.stage === "available").map((p) => ({ slug: p.slug }));
@@ -27,6 +29,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
 
   return (
     <article className="relative pt-32 pb-32 md:pt-44 md:pb-40">
+      <ReadingProgress />
       <Container className="max-w-[760px]">
         <Link
           href="/blog"
@@ -75,7 +78,7 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
         <hr className="my-10 border-white/[0.06]" />
 
         {post.body ? (
-          <div className="prose-blog">
+          <div className="prose-blog" id="post-body">
             {post.body.map((block, i) => (
               <BlockView key={i} block={block} index={i} />
             ))}
@@ -158,20 +161,12 @@ export default async function BlogPostPage(props: PageProps<"/blog/[slug]">) {
           font-family: ui-monospace, "SF Mono", Menlo, monospace;
           letter-spacing: 0.04em;
         }
-        .prose-blog pre {
-          margin: 22px 0;
-          padding: 16px 18px;
-          border-radius: 10px;
-          border: 1px solid color-mix(in oklch, white 6%, transparent);
-          background: color-mix(in oklch, var(--bsc-void) 70%, transparent);
-          overflow-x: auto;
-          font-size: 13px;
-          line-height: 1.7;
+        .prose-blog h2 {
+          border-left: 3px solid color-mix(in oklch, var(--bsc-accent) 60%, transparent);
+          padding-left: 14px;
         }
-        .prose-blog pre code {
-          font-family: ui-monospace, "SF Mono", Menlo, monospace;
-          color: var(--bsc-text-1);
-          white-space: pre;
+        .prose-blog h3 {
+          color: var(--bsc-text-2);
         }
       `}</style>
     </article>
@@ -204,16 +199,7 @@ function BlockView({ block, index }: { block: BlogBlock; index: number }) {
         </ol>
       );
     case "code":
-      return (
-        <pre>
-          {block.lang && (
-            <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
-              {block.lang}
-            </div>
-          )}
-          <code>{block.value}</code>
-        </pre>
-      );
+      return <CodeBlock lang={block.lang} value={block.value} />;
     case "callout": {
       const meta = {
         note: {

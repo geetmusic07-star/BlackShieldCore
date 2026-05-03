@@ -46,6 +46,7 @@
   --color-bsc-text-1: var(--bsc-text-1);
   --color-bsc-text-2: var(--bsc-text-2);
   --color-bsc-text-3: var(--bsc-text-3);
+  --color-bsc-text-4: var(--bsc-text-4);
   --color-bsc-accent: var(--bsc-accent);
   --color-bsc-accent-soft: var(--bsc-accent-soft);
   --color-bsc-amber: var(--bsc-amber);
@@ -67,19 +68,20 @@
 
 :root {
   /* BSC tones - dark by default (single theme for now) */
-  --bsc-void: oklch(0.14 0.015 260);
-  --bsc-surface: oklch(0.18 0.018 260);
-  --bsc-elevated: oklch(0.22 0.02 260);
-  --bsc-line: color-mix(in oklch, white 6%, transparent);
-  --bsc-line-strong: color-mix(in oklch, white 12%, transparent);
-  --bsc-text-1: oklch(0.97 0.003 260);
-  --bsc-text-2: color-mix(in oklch, white 68%, transparent);
-  --bsc-text-3: color-mix(in oklch, white 45%, transparent);
-  --bsc-accent: oklch(0.72 0.14 260);
-  --bsc-accent-soft: color-mix(in oklch, oklch(0.72 0.14 260) 15%, transparent);
-  --bsc-amber: oklch(0.82 0.14 75);
-  --bsc-violet: oklch(0.72 0.14 295);
-  --bsc-rose: oklch(0.72 0.17 20);
+  --bsc-void: oklch(0.16 0.015 260);
+  --bsc-surface: oklch(0.20 0.018 260);
+  --bsc-elevated: oklch(0.24 0.02 260);
+  --bsc-line: color-mix(in oklch, white 9%, transparent);
+  --bsc-line-strong: color-mix(in oklch, white 18%, transparent);
+  --bsc-text-1: oklch(0.98 0.003 260);
+  --bsc-text-2: color-mix(in oklch, white 78%, transparent);
+  --bsc-text-3: color-mix(in oklch, white 55%, transparent);
+  --bsc-text-4: color-mix(in oklch, white 35%, transparent);
+  --bsc-accent: oklch(0.74 0.15 260);
+  --bsc-accent-soft: color-mix(in oklch, oklch(0.74 0.15 260) 18%, transparent);
+  --bsc-amber: oklch(0.84 0.14 75);
+  --bsc-violet: oklch(0.74 0.15 295);
+  --bsc-rose: oklch(0.74 0.18 20);
 
   /* shadcn mapping → BSC dark */
   --background: var(--bsc-void);
@@ -119,8 +121,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background:
-      radial-gradient(ellipse 55% 45% at 75% 0%, color-mix(in oklch, var(--bsc-accent) 6%, transparent) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 50% at 20% 70%, color-mix(in oklch, var(--bsc-accent) 4%, transparent) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 78% 0%, color-mix(in oklch, var(--bsc-accent) 10%, transparent) 0%, transparent 65%),
+      radial-gradient(ellipse 65% 55% at 18% 72%, color-mix(in oklch, var(--bsc-violet) 7%, transparent) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 35% at 50% 50%, color-mix(in oklch, var(--bsc-accent) 3%, transparent) 0%, transparent 70%),
       var(--bsc-void);
     background-attachment: fixed;
   }
@@ -158,4 +161,87 @@
   outline: 2px solid color-mix(in oklch, var(--bsc-accent) 80%, transparent);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* ── Premium animations ─────────────────────────────── */
+
+@keyframes bsc-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes bsc-pulse-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.08); }
+}
+
+@keyframes bsc-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes bsc-scan {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+@keyframes bsc-fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bsc-orb-drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(30px, -20px) scale(1.05); }
+  66%  { transform: translate(-20px, 15px) scale(0.97); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+/* Card shimmer edge sweep on hover */
+.bsc-card-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.bsc-card-shimmer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    color-mix(in oklch, var(--bsc-accent) 8%, transparent) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.bsc-card-shimmer:hover::before {
+  opacity: 1;
+  animation: bsc-shimmer 0.75s ease forwards;
+}
+
+/* Glow dot pulse */
+.bsc-live-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--bsc-accent);
+  animation: bsc-pulse-glow 2.4s ease-in-out infinite;
+  box-shadow: 0 0 0 0 color-mix(in oklch, var(--bsc-accent) 40%, transparent);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bsc-void); }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklch, white 14%, transparent);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklch, white 24%, transparent);
 }

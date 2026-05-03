@@ -16,81 +16,91 @@ const modules = [
     href: "/labs",
     name: "Cyber Range",
     category: "Labs",
-    desc: "Hands-on offensive scenarios across web, auth, cloud, and AI surfaces.",
+    desc: "Hands-on offensive scenarios across web, auth, cloud, and AI surfaces — mapped to real CVEs and attacker TTPs.",
     stage: "available" as const,
     icon: "labs",
+    glowColor: "var(--bsc-accent)",
   },
   {
     href: "/ai-security",
     name: "AI Red Teaming",
     category: "Adversarial ML",
-    desc: "LLM jailbreak taxonomy, indirect-injection harness, classifier evaluation.",
+    desc: "LLM jailbreak taxonomy, indirect-injection harness, prompt injection chains, and classifier evaluation frameworks.",
     stage: "build" as const,
     icon: "ai",
+    glowColor: "var(--bsc-violet)",
   },
   {
     href: "/dashboard",
     name: "Threat Dashboard",
     category: "Telemetry",
-    desc: "Tracked CVE feed, severity routing, infrastructure mapping, actor pages.",
+    desc: "Live CVE feed with severity routing, infrastructure actor mapping, and HackTheBox metrics integration.",
     stage: "build" as const,
     icon: "dash",
+    glowColor: "var(--bsc-amber)",
   },
   {
     href: "/tools",
     name: "Security Tools",
     category: "Utilities",
-    desc: "Token analysis, hash identification, log parsing, entropy scoring.",
+    desc: "JWT decoding, hash identification, log parsing, and entropy scoring — lightweight and browser-native.",
     stage: "available" as const,
     icon: "tools",
+    glowColor: "var(--bsc-accent)",
   },
   {
     href: "/blog",
     name: "Technical Blog",
     category: "Writing",
-    desc: "Deep-dives written by practitioners.",
+    desc: "Practitioner-level deep-dives: how real attacks work, how detection rules break, how defenders should think.",
     stage: "available" as const,
     icon: "blog",
+    glowColor: "var(--bsc-text-3)",
   },
   {
     href: "/research",
     name: "Research Notes",
     category: "Analysis",
-    desc: "Structured analyses, architecture reviews, methodology writeups.",
+    desc: "Structured analyses, architecture reviews, and methodology writeups — more depth than a blog post.",
     stage: "available" as const,
     icon: "research",
+    glowColor: "var(--bsc-violet)",
   },
   {
     href: "/case-studies",
     name: "Case Studies",
     category: "Reconstructions",
-    desc: "Documented incident patterns: vector, dwell time, detection gaps.",
+    desc: "Documented incident patterns: full attack chain, dwell time, detection gaps, and defender takeaways.",
     stage: "available" as const,
     icon: "case",
+    glowColor: "var(--bsc-rose)",
   },
   {
     href: "/talks",
     name: "Talks & Demos",
     category: "Community",
-    desc: "Conference recordings paired with slides, code, and writeups.",
+    desc: "Conference talks paired with slides, live demo repos, and written writeups from BSides to Black Hat.",
     stage: "available" as const,
     icon: "talks",
+    glowColor: "var(--bsc-accent)",
   },
   {
     href: "/osint",
-    name: "OSINT Investigations",
-    category: "Field Work",
-    desc: "Phishing kit reconstructions, infrastructure mapping, and actor-tracking writeups.",
+    name: "OSINT Tool Directory",
+    category: "Intelligence",
+    desc: "Curated directory of open-source intelligence tools: threat intel, DNS recon, breach lookups, vulnerability databases, and infrastructure mapping.",
     stage: "available" as const,
     icon: "ops",
+    glowColor: "var(--bsc-amber)",
   },
   {
     href: "/home-lab",
     name: "Home Lab",
     category: "Architecture",
-    desc: "Self-hosted SIEM, EDR, and AD topology for safe offensive practice and detection work.",
+    desc: "Self-hosted SIEM, EDR, and AD topology for safe offensive practice, detection tuning, and purple-team work.",
     stage: "available" as const,
     icon: "lab",
+    glowColor: "var(--bsc-violet)",
   },
 ];
 
@@ -100,14 +110,15 @@ export function ModulesGrid() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       const cards = gsap.utils.toArray<HTMLElement>("[data-mg-card]");
-      gsap.set(cards, { opacity: 0, y: 30 });
+      gsap.set(cards, { opacity: 0, y: 36, scale: 0.97 });
       gsap.to(cards, {
         opacity: 1,
         y: 0,
-        duration: 0.85,
-        stagger: 0.06,
+        scale: 1,
+        duration: 0.9,
+        stagger: 0.055,
         ease: "power3.out",
-        scrollTrigger: { trigger: wrap.current, start: "top 78%", once: true },
+        scrollTrigger: { trigger: wrap.current, start: "top 80%", once: true },
       });
     }, wrap);
     return () => ctx.revert();
@@ -115,21 +126,31 @@ export function ModulesGrid() {
 
   return (
     <section className="relative py-28 md:py-36">
+      {/* Section ambient layer */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 50% at 50% 50%, color-mix(in oklch, var(--bsc-accent) 4%, transparent), transparent 75%)",
+        }}
+      />
+
       <Container>
-        <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div className="mb-16 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl">
             <div className="mb-4 text-[10px] font-mono uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)]">
-              What's inside
+              Platform Modules
             </div>
-            <h2 className="text-[clamp(32px,4vw,48px)] font-semibold leading-[1.06] tracking-[-0.022em]">
-              Modules.
+            <h2 className="text-[clamp(32px,4.2vw,52px)] font-semibold leading-[1.05] tracking-[-0.024em]">
+              Ten modules.
               <br />
-              <span className="text-[color:var(--bsc-text-3)]">Each cross-linked.</span>
+              <span className="text-[color:var(--bsc-text-3)]">Each one feeds the others.</span>
             </h2>
           </div>
-          <p className="max-w-md text-[14px] leading-relaxed text-[color:var(--bsc-text-2)]">
+          <p className="max-w-md text-[14px] leading-[1.7] text-[color:var(--bsc-text-2)]">
             Labs feed blog posts. Research feeds tools. Case studies loop back into labs.
-            Each module deepens the others.
+            Every module is cross-linked and built to compound over time.
           </p>
         </div>
 
@@ -140,30 +161,41 @@ export function ModulesGrid() {
               href={m.href}
               data-mg-card
               className={cn(
-                "group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-white/[0.07] bg-[color-mix(in_oklch,var(--bsc-surface)_72%,transparent)] p-6 transition-all duration-300",
-                "hover:border-white/15 hover:bg-[color-mix(in_oklch,var(--bsc-surface)_92%,transparent)] hover:-translate-y-0.5",
+                "bsc-card-shimmer group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border bg-[color-mix(in_oklch,var(--bsc-surface)_72%,transparent)] p-6 transition-all duration-300",
+                "border-[color:var(--bsc-line)] hover:border-[color:var(--bsc-line-strong)] hover:bg-[color-mix(in_oklch,var(--bsc-surface)_92%,transparent)] hover:-translate-y-0.5 hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.4)]",
               )}
             >
+              {/* Per-module hover glow */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -right-24 -top-24 size-56 rounded-full bg-[color:var(--bsc-accent)] opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.10]"
+                className="pointer-events-none absolute -right-20 -top-20 size-52 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.14]"
+                style={{ background: m.glowColor }}
               />
+              {/* Bottom edge glow line */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-px opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                style={{
+                  background: `linear-gradient(to right, transparent, ${m.glowColor}, transparent)`,
+                }}
+              />
+
               <div>
-                <div className="mb-3 flex items-center justify-between">
-                  <ModuleGlyph kind={m.icon} />
+                <div className="mb-4 flex items-center justify-between">
+                  <ModuleGlyph kind={m.icon} glowColor={m.glowColor} />
                   <StatusBadge variant={m.stage} />
                 </div>
                 <div className="text-[10px] font-mono uppercase tracking-wider text-[color:var(--bsc-text-3)]">
                   {m.category}
                 </div>
-                <h3 className="mt-1 text-[18px] font-semibold tracking-[-0.014em] text-[color:var(--bsc-text-1)]">
+                <h3 className="mt-1.5 text-[18px] font-semibold tracking-[-0.014em] text-[color:var(--bsc-text-1)]">
                   {m.name}
                 </h3>
-                <p className="mt-2 text-[13px] leading-relaxed text-[color:var(--bsc-text-2)]">
+                <p className="mt-2.5 text-[13px] leading-[1.65] text-[color:var(--bsc-text-2)]">
                   {m.desc}
                 </p>
               </div>
-              <div className="mt-6 flex items-center border-t border-white/[0.06] pt-4 text-[11px] font-mono text-[color:var(--bsc-text-3)]">
+              <div className="mt-6 flex items-center border-t border-[color:var(--bsc-line)] pt-4 text-[11px] font-mono text-[color:var(--bsc-text-3)] transition-colors group-hover:text-[color:var(--bsc-text-2)]">
                 <span>Open module</span>
                 <ArrowUpRight className="ml-auto size-3.5 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[color:var(--bsc-text-1)]" />
               </div>
@@ -175,7 +207,7 @@ export function ModulesGrid() {
   );
 }
 
-function ModuleGlyph({ kind }: { kind: string }) {
+function ModuleGlyph({ kind, glowColor }: { kind: string; glowColor: string }) {
   const paths: Record<string, React.ReactNode> = {
     labs: (
       <>
@@ -238,7 +270,20 @@ function ModuleGlyph({ kind }: { kind: string }) {
   };
 
   return (
-    <span className="grid size-9 place-items-center rounded-lg border border-white/[0.08] bg-white/[0.02] text-[color:var(--bsc-accent)]">
+    <span
+      className="grid size-9 place-items-center rounded-lg border border-white/[0.09] bg-white/[0.03] transition-colors duration-300 group-hover:border-white/[0.16]"
+      style={{
+        color: glowColor,
+        boxShadow: "none",
+        transition: "box-shadow 0.3s, border-color 0.3s, background-color 0.3s",
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.boxShadow = `0 0 14px -2px ${glowColor}55`;
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.boxShadow = "none";
+      }}
+    >
       <svg viewBox="0 0 24 24" className="size-4 fill-none stroke-current" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         {paths[kind] ?? null}
       </svg>

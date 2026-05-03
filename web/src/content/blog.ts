@@ -25,7 +25,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "What follows is a practitioner's tour of the five failure modes that, in our reviews of real CVEs and red-team engagements, account for roughly 90% of JWT bypasses worth talking about. Each one is conceptually distinct, but they all collapse onto the same root mistake: the verifier let data inside the token influence how the token would be verified.",
       },
-      { kind: "h2", value: "1 - alg:none, the loud one" },
+      { kind: "h2", value: "alg:none" },
       {
         kind: "p",
         value:
@@ -53,7 +53,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "If you remember exactly one rule from this post, make it this: pin the algorithm on the server side. Reject the token before the header's alg field is even consulted. Treat header.alg as untrusted user input, because that's exactly what it is.",
       },
-      { kind: "h2", value: "2 - Algorithm confusion (HS256 vs RS256)" },
+      { kind: "h2", value: "Algorithm confusion: HS256 vs RS256" },
       {
         kind: "p",
         value:
@@ -75,7 +75,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "If the attacker switches the header to alg=HS256 and signs the token with the public key bytes treated as an HMAC secret, the verifier dutifully runs HMAC-SHA256 over the message using those exact bytes and finds a match. The 'public' key has become a 'shared' key - purely because the algorithm changed underneath it. There's no exotic crypto failing here; it's a contract violation. The verifier was supposed to know in advance which algorithm it would use.",
       },
-      { kind: "h2", value: "3 - Weak HMAC secrets" },
+      { kind: "h2", value: "Weak HMAC secrets" },
       {
         kind: "p",
         value:
@@ -98,7 +98,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "If you cannot reasonably guarantee cryptographic strength of an HMAC secret across your deployment estate, switch to asymmetric tokens. RS256 / ES256 force the secret material into a single trusted location - the issuer.",
       },
-      { kind: "h2", value: "4 - kid header injection" },
+      { kind: "h2", value: "kid header injection" },
       {
         kind: "p",
         value:
@@ -114,7 +114,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "If the verifier reads the file at the kid path and uses its contents as the HMAC secret, /dev/null gives the attacker a known secret of zero length. The attacker signs the token with the empty string and it verifies cleanly. The same pattern has been reported with SQL injection in kid (SELECT key FROM keys WHERE id = '...'), SSRF in kid (https://attacker/), and prototype pollution in kid (__proto__).",
       },
-      { kind: "h2", value: "5 - jku and x5u abuse" },
+      { kind: "h2", value: "jku and x5u abuse" },
       {
         kind: "p",
         value:
@@ -295,7 +295,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "We have observed three classes of telemetry blind spot that account for the overwhelming majority of post-exploitation activity that survives modern, well-tuned EDR. None of these are novel; all of them are well-documented in the offensive community. They keep working because the defensive community has been slower to internalise the implication: a detection that lives downstream of an avoidable telemetry source is fundamentally optional.",
       },
-      { kind: "h2", value: "1 - Direct syscalls" },
+      { kind: "h2", value: "Direct syscalls" },
       {
         kind: "p",
         value:
@@ -317,7 +317,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "The mitigation is at the kernel: ETW Threat-Intelligence and Microsoft-Windows-Threat-Intelligence ETW providers report syscall events the EDR can subscribe to. Many EDRs do, but not all syscalls are reported, not all builds are covered, and provider availability varies between Windows versions. The blind spot is shrinking but is far from closed.",
       },
-      { kind: "h2", value: "2 - Heaven's Gate (WoW64 escape)" },
+      { kind: "h2", value: "Heaven's Gate" },
       {
         kind: "p",
         value:
@@ -328,7 +328,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "Heaven's Gate is old (Roy G. Biv documented it in 2009) and has been written about endlessly, but it remains effective because legacy 32-bit applications still exist in real environments and the transitional code path remains a structural feature of WoW64. The defensive answer is to move off 32-bit applications wherever possible - every time you do, you are removing an entire class of evasion surface from your environment.",
       },
-      { kind: "h2", value: "3 - Living off the land" },
+      { kind: "h2", value: "Living off the land" },
       {
         kind: "p",
         value:
@@ -606,7 +606,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "After enough cycles of this you start recognising the shapes. This post catalogues the four most common ones, all things we have seen go wrong with our own rules - and the discipline that makes them stop happening.",
       },
-      { kind: "h2", value: "1 - The wrong log source" },
+      { kind: "h2", value: "The wrong log source" },
       {
         kind: "p",
         value:
@@ -623,7 +623,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "Always check coverage before claiming a rule is in production. A Sigma rule covering 70% of fleet is a 70% detection at best, regardless of how good the logic is on the 70% it does cover. Put coverage percentages on the rule's metadata and re-check them quarterly.",
       },
-      { kind: "h2", value: "2 - Conditions that look specific and aren't" },
+      { kind: "h2", value: "Conditions that look specific but aren't" },
       {
         kind: "p",
         value:
@@ -646,7 +646,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "detection:\n  selection:\n    Image|endswith: '\\powershell.exe'\n    CommandLine|contains: '-enc'\n  parent:\n    ParentImage|endswith:\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\outlook.exe'\n  condition: selection and parent",
       },
-      { kind: "h2", value: "3 - Field-name drift" },
+      { kind: "h2", value: "Field-name drift" },
       {
         kind: "p",
         value:
@@ -657,7 +657,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "The discipline is: never trust the field exists. Validate against actual production samples for every log source the rule targets. If the field is missing, the rule is wrong for that source - there is no equivalent of 'graceful degradation' in matching logic.",
       },
-      { kind: "h2", value: "4 - The rule that is technically correct and operationally useless" },
+      { kind: "h2", value: "Technically correct, operationally useless" },
       {
         kind: "p",
         value:
@@ -737,19 +737,19 @@ export const blogPosts: BlogPost[] = [
         value:
           "If you take the asymmetry seriously, three things follow.",
       },
-      { kind: "h3", value: "First - invest in things that work without attention" },
+      { kind: "h3", value: "Invest in things that work without attention" },
       {
         kind: "p",
         value:
           "Configuration that is correct by default does not require somebody to remember it on a Tuesday. Architectural choices that close attack surface without ongoing maintenance work even when the team is busy. Detection that fires automatically on a pattern survives the week the analyst is on holiday. Anything that depends on continuous human attention is fragile to the next operational fire that demands attention. Real security infrastructure is the stuff that keeps working when no one is looking at it.",
       },
-      { kind: "h3", value: "Second - accept that some categories of defence are ineffective at scale" },
+      { kind: "h3", value: "Some defences don't scale" },
       {
         kind: "p",
         value:
           "Manual review of dependency updates, manual review of CI/CD changes, manual phishing reports - all of these can produce signal at small volume. None of them survive the volume of a real organisation. The attacker's time scales with their target's size; the defender's review capacity does not. If your defence relies on a human catching it, and there are 3,000 instances of 'it' per week, your defence does not exist.",
       },
-      { kind: "h3", value: "Third - build for the bad week, not the median week" },
+      { kind: "h3", value: "Build for the bad week, not the median week" },
       {
         kind: "p",
         value:
@@ -810,7 +810,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "Over an eight-month window in 2025-26 we pulled 217 distinct kits from live infrastructure, reverse-engineered each one, and tracked them across redeployment cycles. The data is too messy to claim as authoritative - collection bias, the difficulty of canonicalising a kit across modifications, the noise inherent in volunteer-grade infrastructure - but a clear pattern emerged that we have not seen described elsewhere. Three distinct populations, distinguished not by language or target sector, but by something more interesting: the operational half-life of the kit's deployment.",
       },
-      { kind: "h2", value: "Population A - The day kits" },
+      { kind: "h2", value: "Population A: Short-lived kits" },
       {
         kind: "p",
         value:
@@ -821,7 +821,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "These kits do not need sophisticated detection. The infrastructure is short-lived enough that domain reputation and certificate-transparency log monitoring catch them before any meaningful victim engagement. The median engagement window is short enough that even basic mailflow blocklists turn over fast enough to be effective. The attacker model here is quantity-over-quality; defence at this layer is also quantity-over-quality.",
       },
-      { kind: "h2", value: "Population B - The week kits" },
+      { kind: "h2", value: "Population B: Medium-persistence kits" },
       {
         kind: "p",
         value:
@@ -838,7 +838,7 @@ export const blogPosts: BlogPost[] = [
         value:
           "We were able to identify several Population B kits as derivative of three or four shared codebases. The 'family tree' of phishing kits is much shallower than people assume - most of what looks like distinct operations is variation on a small set of underlying source. This is why kit fingerprinting works so well as a detection primitive, and why the collection effort pays off even when individual kit instances are short-lived.",
       },
-      { kind: "h2", value: "Population C - The month kits" },
+      { kind: "h2", value: "Population C: Long-running operations" },
       {
         kind: "p",
         value:

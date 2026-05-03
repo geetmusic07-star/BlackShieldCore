@@ -24,28 +24,26 @@ export function Hero() {
 
       <Container className="relative z-10">
         <div className="mx-auto max-w-3xl text-center">
-          {/* Status pill */}
-          <motion.div
-            custom={0}
-            variants={fade}
-            initial="hidden"
-            animate="show"
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-[color:var(--bsc-text-3)] backdrop-blur"
-          >
-            <span className="size-1.5 rounded-full bg-[color:var(--bsc-accent)]" />
-            v0.1 · Active research
-          </motion.div>
-
           {/* Brand wordmark */}
           <motion.h1
             custom={1}
             variants={fade}
             initial="hidden"
             animate="show"
-            className="mt-7 text-[clamp(44px,7.4vw,92px)] font-semibold leading-[0.98] tracking-[-0.028em] text-[color:var(--bsc-text-1)]"
+            className="mt-8 text-[clamp(48px,7.8vw,96px)] font-semibold leading-[0.96] tracking-[-0.032em] text-[color:var(--bsc-text-1)]"
           >
             BlackShield{" "}
-            <span className="text-[color:var(--bsc-text-3)]">Core</span>
+            <span
+              className="text-[color:var(--bsc-text-3)]"
+              style={{
+                backgroundImage: "linear-gradient(135deg, var(--bsc-text-3) 0%, color-mix(in oklch, var(--bsc-accent) 55%, var(--bsc-text-3)) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              Core
+            </span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -54,11 +52,11 @@ export function Hero() {
             variants={fade}
             initial="hidden"
             animate="show"
-            className="mt-5 text-[clamp(17px,2vw,22px)] font-medium leading-snug tracking-[-0.012em] text-[color:var(--bsc-text-2)]"
+            className="mt-6 text-[clamp(16px,1.9vw,21px)] font-medium leading-snug tracking-[-0.01em] text-[color:var(--bsc-text-2)]"
           >
-            A cybersecurity{" "}
-            <span className="text-[color:var(--bsc-accent)]">×</span>{" "}
-            AI research environment.
+            Offensive security.{" "}
+            <span className="text-[color:var(--bsc-accent)]">Detection engineering.</span>{" "}
+            AI adversarial research.
           </motion.p>
 
           {/* Lede */}
@@ -67,11 +65,10 @@ export function Hero() {
             variants={fade}
             initial="hidden"
             animate="show"
-            className="mx-auto mt-5 max-w-xl text-[15px] md:text-[15.5px] leading-relaxed text-[color:var(--bsc-text-3)]"
+            className="mx-auto mt-5 max-w-[520px] text-[15px] leading-[1.7] text-[color:var(--bsc-text-3)]"
           >
-            Hands-on labs, security tools, deep-dive research, and curated case
-            studies - built to be useful, documented, and reproducible. Made for
-            practitioners who want depth, not marketing.
+            A practitioner-grade platform built around real attack patterns — hands-on labs,
+            deep technical writing, and purpose-built tooling. No fluff, no vendor pitches.
           </motion.p>
 
           {/* CTAs */}
@@ -80,25 +77,34 @@ export function Hero() {
             variants={fade}
             initial="hidden"
             animate="show"
-            className="mt-9 flex flex-wrap items-center justify-center gap-3"
+            className="mt-10 flex flex-wrap items-center justify-center gap-3"
           >
             <LinkButton
               size="lg"
               href="/labs"
-              className="rounded-full bg-[color:var(--bsc-text-1)] text-[color:var(--bsc-void)] hover:bg-white px-6"
+              className="rounded-full bg-[color:var(--bsc-text-1)] text-[color:var(--bsc-void)] hover:bg-white px-7 shadow-[0_0_32px_-4px_color-mix(in_oklch,var(--bsc-accent)_35%,transparent)] hover:shadow-[0_0_48px_-4px_color-mix(in_oklch,var(--bsc-accent)_50%,transparent)] transition-shadow duration-300"
             >
               Browse Labs
-              <ArrowRight className="ml-1 size-4" />
+              <ArrowRight className="ml-1.5 size-4" />
             </LinkButton>
             <LinkButton
               size="lg"
               variant="ghost"
               href="/ai-security"
-              className="rounded-full border border-white/10 bg-white/[0.02] px-6 text-[color:var(--bsc-text-2)] hover:bg-white/[0.05] hover:text-[color:var(--bsc-text-1)]"
+              className="rounded-full border border-white/[0.12] bg-white/[0.03] px-7 text-[color:var(--bsc-text-2)] hover:bg-white/[0.07] hover:border-white/[0.2] hover:text-[color:var(--bsc-text-1)] transition-all duration-200"
             >
-              AI Security range
+              AI Red Teaming
             </LinkButton>
           </motion.div>
+
+          {/* Divider */}
+          <motion.div
+            custom={4}
+            variants={fade}
+            initial="hidden"
+            animate="show"
+            className="mx-auto mt-16 h-px w-[min(400px,70%)] bg-gradient-to-r from-transparent via-white/[0.1] to-transparent"
+          />
 
           {/* Stats */}
           <motion.dl
@@ -106,21 +112,21 @@ export function Hero() {
             variants={fade}
             initial="hidden"
             animate="show"
-            className="mx-auto mt-16 grid max-w-2xl grid-cols-2 gap-x-10 gap-y-6 md:grid-cols-4"
+            className="mx-auto mt-10 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-6 md:grid-cols-4"
           >
             {[
               ["24", "Lab Tracks"],
               ["142", "CVEs Reviewed"],
-              ["18", "Research Notes"],
-              ["12", "Modules"],
+              ["8", "Research Notes"],
+              ["10", "Modules"],
             ].map(([v, l]) => (
-              <div key={l} className="text-left md:text-center">
-                <dt className="font-mono text-[10px] uppercase tracking-wider text-[color:var(--bsc-text-3)]">
-                  {l}
-                </dt>
-                <dd className="mt-1.5 text-[22px] font-semibold tracking-[-0.022em] text-[color:var(--bsc-text-1)]">
+              <div key={l} className="group text-left md:text-center">
+                <dd className="text-[28px] font-semibold tracking-[-0.028em] text-[color:var(--bsc-text-1)] tabular-nums">
                   {v}
                 </dd>
+                <dt className="mt-1 font-mono text-[10px] uppercase tracking-wider text-[color:var(--bsc-text-3)]">
+                  {l}
+                </dt>
               </div>
             ))}
           </motion.dl>
