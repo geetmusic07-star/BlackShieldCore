@@ -2,6 +2,9 @@
 
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 import { Container } from "@/components/ui/container";
 import { LinkButton } from "@/components/ui/link-button";
 import { ArrowRight } from "@phosphor-icons/react";
@@ -34,7 +37,7 @@ export function Hero({ stats }: HeroProps) {
         }
       );
 
-      // Number counting animation
+      // Number counting animation triggered once on scroll
       const numElements = gsap.utils.toArray<HTMLElement>(".gsap-stat-num");
       numElements.forEach((el, index) => {
         const targetValue = stats[index]?.[0] || 0;
@@ -46,7 +49,12 @@ export function Hero({ stats }: HeroProps) {
             duration: 2.5,
             ease: "power3.out",
             snap: { innerText: 1 },
-            delay: 0.4 + index * 0.1,
+            delay: 0.2 + index * 0.1,
+            scrollTrigger: {
+              trigger: el,
+              start: "top 90%", // Trigger when the stat hits 90% down the viewport
+              once: true, // Never reverse or replay
+            },
           }
         );
       });
@@ -71,12 +79,12 @@ export function Hero({ stats }: HeroProps) {
           </div>
 
           {/* Clean, Single-line Title */}
-          <h1 className="gsap-reveal text-[clamp(32px,6vw,64px)] font-bold tracking-[-0.04em] text-white leading-[1.1] whitespace-nowrap">
+          <h1 className="gsap-reveal text-[clamp(28px,5vw,52px)] font-bold tracking-[-0.04em] text-white leading-[1.1] whitespace-nowrap">
             CORE by BlackShield
           </h1>
 
           {/* Professional Narrative */}
-          <p className="gsap-reveal mt-8 max-w-[60ch] text-[18px] md:text-[21px] font-medium leading-[1.5] tracking-[-0.01em] text-white/70">
+          <p className="gsap-reveal mt-8 max-w-[60ch] text-[16px] md:text-[19px] font-medium leading-[1.5] tracking-[-0.01em] text-white/70">
             The professional environment for advanced offensive security. 
             Built for adversarial research, threat intelligence, and high-fidelity technical training.
           </p>
