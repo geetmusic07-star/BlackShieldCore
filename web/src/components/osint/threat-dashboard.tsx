@@ -290,7 +290,7 @@ export function ThreatDashboard() {
   }, [pulseCounter]);
 
   return (
-    <div className="flex flex-col h-[82vh] min-h-[680px] bg-[#000103] text-white select-none overflow-hidden rounded-xl border border-white/10 shadow-[0_30px_120px_-30px_rgba(0,0,0,0.9)]">
+    <div className="flex flex-col h-[88vh] min-h-[700px] bg-[#000103] text-white select-none overflow-hidden border-t border-white/[0.06]">
 
       {/* ── Top Navigation ───────────────────────────────────────────── */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#050608] z-10">

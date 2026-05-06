@@ -157,6 +157,7 @@ function arcPath(from: [number, number], to: [number, number], arch: number) {
   return `M ${from[0].toFixed(2)} ${from[1].toFixed(2)} Q ${cx.toFixed(2)} ${cy.toFixed(2)} ${to[0].toFixed(2)} ${to[1].toFixed(2)}`;
 }
 
+
 const CometParticle = memo(function CometParticle({
   comet,
 }: {
@@ -167,45 +168,46 @@ const CometParticle = memo(function CometParticle({
     () => arcPath(comet.from, comet.to, comet.archHeight),
     [comet.from, comet.to, comet.archHeight],
   );
-  const gradId = `bsc-grad-${comet.type}`;
+  const dur = `${comet.duration}ms`;
+  // Head arrives at destination at 65 % of total duration
+  const impactDelay = Math.round(comet.duration * 0.65);
 
   return (
     <>
-      {/* Faint base trail of the bezier — gives the "graceful arch" silhouette */}
+      {/*
+       * Arc — reveals itself like a line being drawn (stroke-dashoffset 1→0
+       * over first 65 % of duration), holds briefly, then fades out.
+       * pathLength="1" normalises all dash values regardless of bezier length.
+       */}
       <path
         d={path}
-        stroke={color}
-        strokeOpacity={0.08}
-        strokeWidth={0.45}
+        pathLength="1"
         fill="none"
-        vectorEffect="non-scaling-stroke"
+        stroke={color}
+        strokeWidth={0.85}
+        strokeLinecap="round"
+        className="bsc-arc-draw"
+        filter="url(#bsc-arc-glow)"
+        style={{ animationDuration: dur }}
       />
-      {/* Comet body — bright head + fading gradient tail, motion via offset-path */}
+
+      {/* Head dot — travels with the stroke leading edge */}
       <g
-        className="bsc-comet"
+        className="bsc-head"
         style={
           {
             offsetPath: `path('${path}')`,
-            offsetRotate: "auto",
             WebkitOffsetPath: `path('${path}')`,
-            animationDuration: `${comet.duration}ms`,
+            animationDuration: dur,
           } as CSSProperties
         }
       >
-        {/* Tail */}
-        <rect
-          x={-34}
-          y={-0.55}
-          width={34}
-          height={1.1}
-          rx={0.55}
-          fill={`url(#${gradId})`}
-        />
-        {/* Bright head */}
-        <circle cx={0} cy={0} r={1.5} fill={color} />
-        <circle cx={0} cy={0} r={2.6} fill={color} fillOpacity={0.35} />
+        <circle cx={0} cy={0} r={3.5} fill={color} fillOpacity={0.22} />
+        <circle cx={0} cy={0} r={1.8} fill={color} />
+        <circle cx={0} cy={0} r={0.9} fill="white" fillOpacity={0.9} />
       </g>
-      {/* Impact ring at landing */}
+
+      {/* Impact ring fires when head arrives */}
       <circle
         cx={comet.to[0]}
         cy={comet.to[1]}
@@ -214,9 +216,7 @@ const CometParticle = memo(function CometParticle({
         stroke={color}
         strokeWidth={0.7}
         className="bsc-impact"
-        style={{
-          animationDelay: `${Math.max(0, comet.duration - 180)}ms`,
-        }}
+        style={{ animationDelay: `${impactDelay}ms` }}
       />
     </>
   );
@@ -239,12 +239,16 @@ export function ThreatMap2D({
     name: string;
   } | null>(null);
   const [comets, setComets] = useState<Comet[]>([]);
+  // countryId → { color, hitKey } — hitKey increments to restart CSS animation on re-hit
+  const [hitMap, setHitMap] = useState<Record<string, { color: string; hitKey: number }>>({});
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const cometIdRef = useRef(0);
   const hoveredIdRef = useRef<string | null>(null);
   const onAttackRef = useRef(onAttack);
   const moveRafRef = useRef<number | null>(null);
+  // Reference-counting per country so overlapping hits don't cancel each other early
+  const hitCountRef = useRef<Record<string, number>>({});
 
   useEffect(() => {
     onAttackRef.current = onAttack;
@@ -304,8 +308,10 @@ export function ThreatMap2D({
         b.centroid[0] - a.centroid[0],
         b.centroid[1] - a.centroid[1],
       );
-      const duration = Math.max(700, Math.min(1600, dist * 3.2));
-      const archHeight = Math.min(dist * 0.5, 130);
+      // Longer duration → more arcs visible simultaneously (≈40 at any moment)
+      const duration = Math.max(1600, Math.min(3000, dist * 5.5));
+      // Radware-like flat arcs — barely curved
+      const archHeight = Math.min(dist * 0.14, 48);
 
       const comet: Comet = {
         id,
@@ -325,8 +331,34 @@ export function ThreatMap2D({
       }, duration + 400);
       removeTimers.add(removeTimer);
 
-      // Rapid-fire spawn — burst-y, not metronomic
-      const next = 55 + Math.random() * 110;
+      // Highlight destination country when head arrives (65% into animation)
+      const toId = b.id;
+      const hitColor = ATTACK_COLORS[type];
+      const hitDelay = Math.round(duration * 0.65);
+      const hitTimer = setTimeout(() => {
+        hitCountRef.current[toId] = (hitCountRef.current[toId] ?? 0) + 1;
+        setHitMap((prev) => ({
+          ...prev,
+          [toId]: { color: hitColor, hitKey: (prev[toId]?.hitKey ?? 0) + 1 },
+        }));
+      }, hitDelay);
+      removeTimers.add(hitTimer);
+
+      // Remove highlight after animation completes (1 800 ms glow)
+      const unhitTimer = setTimeout(() => {
+        hitCountRef.current[toId] = Math.max(0, (hitCountRef.current[toId] ?? 1) - 1);
+        if (hitCountRef.current[toId] === 0) {
+          setHitMap((prev) => {
+            const next = { ...prev };
+            delete next[toId];
+            return next;
+          });
+        }
+      }, hitDelay + 1800);
+      removeTimers.add(unhitTimer);
+
+      // More frequent spawn → dense web of simultaneous arcs like Radware
+      const next = 30 + Math.random() * 55;
       spawnTimer = setTimeout(tick, next);
     };
 
@@ -446,32 +478,24 @@ export function ThreatMap2D({
         className="absolute inset-0 w-full h-full select-none"
       >
         <defs>
-          {ATTACK_KEYS.map((k) => {
-            const color = ATTACK_COLORS[k];
-            return (
-              <linearGradient
-                key={k}
-                id={`bsc-grad-${k}`}
-                x1="0"
-                x2="1"
-                y1="0"
-                y2="0"
-              >
-                <stop offset="0%" stopColor={color} stopOpacity="0" />
-                <stop offset="55%" stopColor={color} stopOpacity="0.35" />
-                <stop offset="100%" stopColor={color} stopOpacity="1" />
-              </linearGradient>
-            );
-          })}
           <radialGradient id="bsc-vignette" cx="50%" cy="50%" r="78%">
             <stop offset="0%" stopColor="#040816" stopOpacity="0" />
             <stop offset="80%" stopColor="#000104" stopOpacity="0.4" />
             <stop offset="100%" stopColor="#000000" stopOpacity="0.85" />
           </radialGradient>
+          {/* Country hover glow */}
           <filter id="bsc-hover-glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="1.6" result="b" />
             <feMerge>
               <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          {/* Subtle arc glow — soft halo without overwhelming the thin stroke */}
+          <filter id="bsc-arc-glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="1.2" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
@@ -492,6 +516,25 @@ export function ThreatMap2D({
         </g>
 
         {countryLayer}
+
+        {/* Country hit highlights — fills destination country with attack-type color */}
+        <g pointerEvents="none">
+          {Object.entries(hitMap).map(([id, entry]) => {
+            const country = countriesById[id];
+            if (!country) return null;
+            return (
+              <path
+                key={`${id}-${entry.hitKey}`}
+                d={country.d}
+                fill={entry.color}
+                stroke={entry.color}
+                strokeWidth={0.6}
+                className="bsc-hit-country"
+                filter="url(#bsc-arc-glow)"
+              />
+            );
+          })}
+        </g>
 
         {/* Hover overlay */}
         {hovered && (
@@ -564,44 +607,73 @@ export function ThreatMap2D({
       </div>
 
       <style jsx>{`
-        :global(.bsc-comet) {
-          animation-name: bsc-comet-fly;
-          animation-iteration-count: 1;
+        /*
+         * Country hit — flashes bright on impact, then fades to invisible.
+         * hitKey on the element changes with every re-hit to restart the animation.
+         */
+        :global(.bsc-hit-country) {
+          animation: bsc-hit-country 1800ms ease-out forwards;
+          will-change: fill-opacity, stroke-opacity;
+        }
+        @keyframes bsc-hit-country {
+          0%   { fill-opacity: 0.60; stroke-opacity: 0.85; }
+          12%  { fill-opacity: 0.42; stroke-opacity: 0.65; }
+          60%  { fill-opacity: 0.28; stroke-opacity: 0.42; }
+          100% { fill-opacity: 0;    stroke-opacity: 0;    }
+        }
+
+        /*
+         * Arc draw — stroke-dashoffset 1→0 over 0–65% reveals the full bezier.
+         * Arc holds at full opacity 65–80%, then fades to 0 by 100%.
+         * pathLength="1" on the path element makes dashoffset unit = full path length.
+         *
+         * Sync proof: at time fraction t ∈ [0, 0.65]:
+         *   arc head position  = 1 - dashoffset = t / 0.65
+         *   dot offset-distance = t / 0.65 × 100%  → identical ✓
+         */
+        :global(.bsc-arc-draw) {
+          stroke-dasharray: 1 1.5;
+          animation-name: bsc-arc-draw;
+          animation-timing-function: linear;
           animation-fill-mode: forwards;
-          animation-timing-function: cubic-bezier(0.42, 0, 0.62, 1);
+          animation-iteration-count: 1;
+          will-change: stroke-dashoffset, opacity;
+        }
+        @keyframes bsc-arc-draw {
+          0%   { stroke-dashoffset: 1; opacity: 0.5;  }
+          65%  { stroke-dashoffset: 0; opacity: 0.55; }
+          80%  { stroke-dashoffset: 0; opacity: 0.55; }
+          100% { stroke-dashoffset: 0; opacity: 0;    }
+        }
+
+        /* Head dot — travels 0→100% in same 65% window, then fades */
+        :global(.bsc-head) {
+          animation-name: bsc-head-fly;
+          animation-timing-function: linear;
+          animation-fill-mode: forwards;
+          animation-iteration-count: 1;
           will-change: offset-distance, opacity;
         }
-        @keyframes bsc-comet-fly {
-          0% {
-            offset-distance: 0%;
-            opacity: 1;
-          }
-          92% {
-            opacity: 1;
-          }
-          100% {
-            offset-distance: 100%;
-            opacity: 0;
-          }
+        @keyframes bsc-head-fly {
+          0%   { offset-distance: 0%;   opacity: 1;   }
+          65%  { offset-distance: 100%; opacity: 1;   }
+          80%  { offset-distance: 100%; opacity: 0.6; }
+          100% { offset-distance: 100%; opacity: 0;   }
         }
+
+        /* Impact ring — fires at 65% via animationDelay on the element */
         :global(.bsc-impact) {
           opacity: 0;
           animation-name: bsc-impact;
-          animation-duration: 520ms;
+          animation-duration: 700ms;
           animation-iteration-count: 1;
           animation-fill-mode: forwards;
           animation-timing-function: ease-out;
           will-change: r, opacity;
         }
         @keyframes bsc-impact {
-          0% {
-            r: 1;
-            opacity: 0.95;
-          }
-          100% {
-            r: 7;
-            opacity: 0;
-          }
+          0%   { r: 1; opacity: 1; }
+          100% { r: 9; opacity: 0; }
         }
       `}</style>
     </div>

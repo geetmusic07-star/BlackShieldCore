@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 /**
@@ -15,9 +15,10 @@ export function SentienceOrb() {
     if (!canvasRef.current || !containerRef.current) return;
 
     const canvas = canvasRef.current;
+    const containerH = containerRef.current.offsetHeight;
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = 80;
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / containerH, 1, 1000);
+    camera.position.z = 92;
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
@@ -26,7 +27,7 @@ export function SentienceOrb() {
       powerPreference: 'high-performance'
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth, containerH);
     renderer.setClearColor(0x050508, 0);
 
     // --- CONFIGURATION ---
@@ -44,6 +45,12 @@ export function SentienceOrb() {
     let activeState: keyof typeof STATES = "idle";
     let engine = { ...STATES.idle };
     let transitionEnergy = 0;
+    let cycleStateIdx = 0;
+    // Deterministic 4-state cycle: idle(4s) → listening(6s) → thinking(5s) → speaking(6s) ≈ 21s loop
+    // time increments 0.01/frame → ~0.6 units/s at 60fps → 12.6 total units per loop
+    const STATE_CYCLE: Array<keyof typeof STATES> = ['idle', 'listening', 'thinking', 'speaking'];
+    const CYCLE_BPS   = [2.4, 6.0, 9.0, 12.6]; // cumulative breakpoints in "time" units
+    const CYCLE_TOTAL = 12.6;
 
     // --- ASSETS ---
     // 1. Particles
@@ -143,6 +150,118 @@ export function SentienceOrb() {
     const ambientField = new THREE.Points(ambGeo, ambMat);
     scene.add(ambientField);
 
+    // 5. SPACE STAR FIELD — deep parallax starfield with natural color variation
+    const SHARD_COUNT = 4500;
+    const SHARD_S = 7; // x, y, z, vx, vy, wrapX, wrapY
+
+    // Soft circular glow sprite (no spikes — most stars are distant)
+    const SS = 64, SH = SS / 2;
+    const starCanvas = document.createElement('canvas');
+    starCanvas.width = starCanvas.height = SS;
+    const sx = starCanvas.getContext('2d')!;
+    sx.clearRect(0, 0, SS, SS);
+    const haloG = sx.createRadialGradient(SH, SH, 0, SH, SH, SH);
+    haloG.addColorStop(0,    'rgba(255,255,255,1)');
+    haloG.addColorStop(0.08, 'rgba(255,255,255,0.9)');
+    haloG.addColorStop(0.25, 'rgba(255,255,255,0.35)');
+    haloG.addColorStop(0.6,  'rgba(255,255,255,0.06)');
+    haloG.addColorStop(1,    'rgba(0,0,0,0)');
+    sx.fillStyle = haloG;
+    sx.fillRect(0, 0, SS, SS);
+    // Subtle 4-point diffraction on bright stars only (baked into texture lightly)
+    sx.save();
+    sx.globalCompositeOperation = 'lighter';
+    [0, Math.PI / 2].forEach(angle => {
+      sx.save();
+      sx.translate(SH, SH);
+      sx.rotate(angle);
+      const spikeG = sx.createLinearGradient(0, -SH, 0, SH);
+      spikeG.addColorStop(0,    'rgba(255,255,255,0)');
+      spikeG.addColorStop(0.35, 'rgba(255,255,255,0.08)');
+      spikeG.addColorStop(0.5,  'rgba(255,255,255,0.28)');
+      spikeG.addColorStop(0.65, 'rgba(255,255,255,0.08)');
+      spikeG.addColorStop(1,    'rgba(255,255,255,0)');
+      sx.fillStyle = spikeG;
+      sx.fillRect(-1, -SH, 2, SS);
+      sx.restore();
+    });
+    sx.restore();
+    const starTex = new THREE.CanvasTexture(starCanvas);
+
+    const TAN_22 = Math.tan(22.5 * Math.PI / 180);
+    const initAspect = window.innerWidth / containerH;
+
+    const shardPos = new Float32Array(SHARD_COUNT * 3);
+    const shardCol = new Float32Array(SHARD_COUNT * 3); // RGB per star
+    const shardGeo = new THREE.BufferGeometry();
+    shardGeo.setAttribute('position', new THREE.BufferAttribute(shardPos, 3));
+    shardGeo.setAttribute('color',    new THREE.BufferAttribute(shardCol, 3));
+
+    const shardMat = new THREE.PointsMaterial({
+      map: starTex,
+      vertexColors: true,
+      size: 1.8,
+      sizeAttenuation: true,
+      transparent: true,
+      opacity: 1.0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      alphaTest: 0.004,
+    });
+    const shards = new THREE.Points(shardGeo, shardMat);
+    shards.renderOrder = -10;
+    shards.frustumCulled = false;
+    scene.add(shards);
+
+    const shardData = new Float32Array(SHARD_COUNT * SHARD_S);
+    for (let i = 0; i < SHARD_COUNT; i++) {
+      const b = i * SHARD_S;
+      const sz = Math.random() * -490 - 10;       // world z: -10 to -500 (deeper space)
+      const cd = 92 - sz;                          // camDist based on camera z=92
+      const hH = cd * TAN_22 * 1.2;
+      const hW = hH * initAspect;
+      shardData[b + 0] = (Math.random() - 0.5) * hW * 2;
+      shardData[b + 1] = (Math.random() - 0.5) * hH * 2;
+      shardData[b + 2] = sz;
+      // Very slow drift — stars are essentially stationary
+      const ang = Math.random() * Math.PI * 2;
+      const spd = 0.0005 + Math.random() * 0.001;
+      shardData[b + 3] = Math.cos(ang) * spd;
+      shardData[b + 4] = Math.sin(ang) * spd;
+      shardData[b + 5] = hW;
+      shardData[b + 6] = hH;
+      shardPos[i * 3]     = shardData[b + 0];
+      shardPos[i * 3 + 1] = shardData[b + 1];
+      shardPos[i * 3 + 2] = sz;
+
+      // Natural star colors: brightness follows power-law (most stars dim)
+      const brightness = Math.pow(Math.random(), 2.2) * 0.85 + 0.08;
+      const rnd = Math.random();
+      if (rnd < 0.55) {
+        // Blue-white (O/B/A type — most common visible stars)
+        shardCol[i*3]     = brightness * 0.75;
+        shardCol[i*3 + 1] = brightness * 0.88;
+        shardCol[i*3 + 2] = brightness;
+      } else if (rnd < 0.80) {
+        // Pure white (F/G type)
+        shardCol[i*3]     = brightness;
+        shardCol[i*3 + 1] = brightness;
+        shardCol[i*3 + 2] = brightness;
+      } else if (rnd < 0.93) {
+        // Warm white / pale yellow (K type)
+        shardCol[i*3]     = brightness;
+        shardCol[i*3 + 1] = brightness * 0.92;
+        shardCol[i*3 + 2] = brightness * 0.72;
+      } else {
+        // Rare bright blue accent
+        shardCol[i*3]     = brightness * 0.5;
+        shardCol[i*3 + 1] = brightness * 0.75;
+        shardCol[i*3 + 2] = brightness;
+      }
+    }
+    shardGeo.attributes.position.needsUpdate = true;
+    shardGeo.attributes.color.needsUpdate = true;
+
     // --- AUDIO ---
     let audioCtx: AudioContext | null = null;
     let analyser: AnalyserNode | null = null;
@@ -177,26 +296,48 @@ export function SentienceOrb() {
       frameId = requestAnimationFrame(animate);
       time += 0.01;
 
-      // 1. Audio Analysis
+      // 1. Audio Analysis — real mic data when available
       if (analyser && dataArray) {
         analyser.getByteFrequencyData(dataArray as any);
         let bSum = 0, mSum = 0;
         for (let i = 0; i < 8; i++) bSum += dataArray[i];
         for (let i = 8; i < 24; i++) mSum += dataArray[i];
         audioData.bass = bSum / (8 * 255);
-        audioData.mid = mSum / (16 * 255);
-      } else {
-        // Simulated Audio fallback - enhanced to cycle through states
-        const cycle = (Math.sin(time * 0.5) * 0.5 + 0.5); // 0 to 1 cycle
-        audioData.bass = (Math.sin(time * 2) * 0.5 + 0.5) * 0.2 + (cycle > 0.8 ? 0.3 : 0);
-        audioData.mid = (Math.cos(time * 3) * 0.5 + 0.5) * 0.2 + (cycle > 0.5 && cycle < 0.8 ? 0.35 : 0);
+        audioData.mid  = mSum / (16 * 255);
       }
 
-      // 2. State Logic
-      if (audioData.bass > 0.4) activeState = "speaking";
-      else if (audioData.mid > 0.3) activeState = "thinking";
-      else if (audioData.bass > 0.1) activeState = "listening";
-      else activeState = "idle";
+      // 2. Deterministic state cycle — visits all 4 states every ~21 real-seconds
+      const cycleMod = time % CYCLE_TOTAL;
+      let newIdx = CYCLE_BPS.length - 1;
+      for (let i = 0; i < CYCLE_BPS.length; i++) {
+        if (cycleMod < CYCLE_BPS[i]) { newIdx = i; break; }
+      }
+      if (newIdx !== cycleStateIdx) {
+        cycleStateIdx = newIdx;
+        activeState   = STATE_CYCLE[newIdx];
+        transitionEnergy = 1.0;
+      }
+
+      // Synthesise physics-driving audio when no real mic (state-matched richness)
+      if (!analyser || !dataArray) {
+        switch (activeState) {
+          case 'speaking':
+            audioData.bass = 0.20 + 0.15 * Math.abs(Math.sin(time * 8));
+            audioData.mid  = 0.15 + 0.10 * Math.abs(Math.cos(time * 6));
+            break;
+          case 'thinking':
+            audioData.bass = 0.04 + 0.02 * Math.abs(Math.sin(time * 3));
+            audioData.mid  = 0.18 + 0.08 * Math.abs(Math.sin(time * 4));
+            break;
+          case 'listening':
+            audioData.bass = 0.08 + 0.04 * Math.abs(Math.sin(time * 2));
+            audioData.mid  = 0.04;
+            break;
+          default: // idle
+            audioData.bass = 0.02;
+            audioData.mid  = 0.01;
+        }
+      }
 
       const target = STATES[activeState];
       engine.radius    += (target.radius - engine.radius) * 0.02;
@@ -228,6 +369,23 @@ export function SentienceOrb() {
         if (Math.abs(ambPos[idx+2]) > 100) ambPos[idx+2] *= -0.95;
       }
       ambGeo.attributes.position.needsUpdate = true;
+
+      // Star field drift — update position buffer directly
+      const sp = shardGeo.attributes.position.array as Float32Array;
+      for (let i = 0; i < SHARD_COUNT; i++) {
+        const b = i * SHARD_S;
+        shardData[b + 0] += shardData[b + 3];
+        shardData[b + 1] += shardData[b + 4];
+        const wx = shardData[b + 5];
+        const wy = shardData[b + 6];
+        if (shardData[b + 0] > wx)       shardData[b + 0] = -wx;
+        else if (shardData[b + 0] < -wx) shardData[b + 0] =  wx;
+        if (shardData[b + 1] > wy)       shardData[b + 1] = -wy;
+        else if (shardData[b + 1] < -wy) shardData[b + 1] =  wy;
+        sp[i * 3]     = shardData[b + 0];
+        sp[i * 3 + 1] = shardData[b + 1];
+      }
+      shardGeo.attributes.position.needsUpdate = true;
 
       // 4. Physics & Particles
       const positions = partGeo.attributes.position.array as Float32Array;
@@ -272,6 +430,14 @@ export function SentienceOrb() {
       }
       partGeo.attributes.position.needsUpdate = true;
 
+      // Transition tumble — brief spin burst on every state change
+      transitionEnergy *= 0.985;
+      if (transitionEnergy > 0.001) {
+        particles.rotation.x += transitionEnergy * 0.012 * Math.sin(time * 1.7);
+        particles.rotation.y += transitionEnergy * 0.015;
+        particles.rotation.z += transitionEnergy * 0.008 * Math.cos(time * 1.3);
+      }
+
       // 4. Lines & Connections
       let lineIdx = 0;
       const maxDistSq = Math.pow(8 * (1 + audioData.bass * 0.5), 2);
@@ -293,8 +459,9 @@ export function SentienceOrb() {
             linePosArr[lineIdx * 6 + 4] = positions[j*3+1];
             linePosArr[lineIdx * 6 + 5] = positions[j*3+2];
 
-            // Thinking State: Spawn Electron
-            if (activeState === "thinking" && Math.random() < engine.electrons) {
+            // Thinking State: Spawn Electron (max 3 alive at once)
+            const aliveElecs = elecPool.reduce((n, e) => n + (e.active ? 1 : 0), 0);
+            if (activeState === "thinking" && aliveElecs < 3 && Math.random() < engine.electrons) {
               const e = elecPool.find(el => !el.active);
               if (e) {
                 e.active = true; e.t = 0;
@@ -350,9 +517,10 @@ export function SentienceOrb() {
     animate();
 
     const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+      const h = containerRef.current?.offsetHeight ?? window.innerHeight;
+      camera.aspect = window.innerWidth / h;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(window.innerWidth, h);
     };
     window.addEventListener('resize', handleResize, { passive: true });
 
@@ -364,6 +532,9 @@ export function SentienceOrb() {
       ambMat.dispose();
       lineMat.dispose();
       elecMat.dispose();
+      shardGeo.dispose();
+      shardMat.dispose();
+      starTex.dispose();
     };
   }, []);
 

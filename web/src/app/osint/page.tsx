@@ -13,9 +13,10 @@ export const metadata: Metadata = {
 export default function OsintPage() {
   return (
     <>
-      <section className="pt-32 pb-16 md:pt-40 md:pb-20 border-b border-white/5">
+      {/* Hero text — constrained width */}
+      <section className="pt-28 pb-6 md:pt-36 md:pb-8">
         <Container>
-          <div className="mb-10 flex items-end justify-between gap-8 flex-wrap">
+          <div className="flex items-end justify-between gap-8 flex-wrap">
             <div className="max-w-[640px]">
               <div className="flex items-center gap-3 mb-4">
                 <span className="font-sans text-[12px] font-semibold uppercase tracking-[0.2em] text-white/40">
@@ -35,8 +36,12 @@ export default function OsintPage() {
               </p>
             </div>
           </div>
-          <ThreatDashboard />
         </Container>
+      </section>
+
+      {/* Full-width dashboard — touches both edges like Radware */}
+      <section className="border-b border-white/5">
+        <ThreatDashboard />
       </section>
 
       <OsintDirectory tools={osintTools} />

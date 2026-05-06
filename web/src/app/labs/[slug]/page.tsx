@@ -233,7 +233,7 @@ export default function LabRoomPage() {
   // ════════════════════════════════════════════════
   return (
     <div className="pt-28 pb-32">
-      <Container className="max-w-[1200px]">
+      <Container>
         <MissionBrief
           title={labMeta?.title ?? "Lab"}
           description={

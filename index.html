@@ -5812,7 +5812,7 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
 
       // --- CONFIGURATION ---
-      const PARTICLE_COUNT = 16000;
+      const PARTICLE_COUNT = 64000;
       const RADIUS = 1.65;
       const LERP_RATE = 0.015;
 
@@ -5825,8 +5825,79 @@
       let targetState = STATES.IDLE;
       let engine = { speed: STATES.IDLE.speed, attraction: STATES.IDLE.attraction, drag: STATES.IDLE.drag };
 
-      // --- ASSETS: INSTANCED MESH ---
-      // Low-poly circle for high performance at 16k instances
+      // --- ASSETS: BACKGROUND STARS & DUST ---
+      const starCount = 400000;
+      const starGeo = new THREE.BufferGeometry();
+      const starPosArr = new Float32Array(starCount * 3);
+      for (let i = 0; i < starCount; i++) {
+        starPosArr[i * 3] = (Math.random() - 0.5) * 60;
+        starPosArr[i * 3 + 1] = (Math.random() - 0.5) * 60;
+        starPosArr[i * 3 + 2] = -15 - Math.random() * 25;
+      }
+      starGeo.setAttribute('position', new THREE.BufferAttribute(starPosArr, 3));
+      const starMat = new THREE.PointsMaterial({
+        color: 0x5b8cff,
+        size: 0.009,
+        transparent: true,
+        opacity: 0.18,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const stars = new THREE.Points(starGeo, starMat);
+      scene.add(stars);
+
+      const dustCount = 200000;
+      const dustGeo = new THREE.BufferGeometry();
+      const dustPosArr = new Float32Array(dustCount * 3);
+      for (let i = 0; i < dustCount; i++) {
+        dustPosArr[i * 3] = (Math.random() - 0.5) * 50;
+        dustPosArr[i * 3 + 1] = (Math.random() - 0.5) * 50;
+        dustPosArr[i * 3 + 2] = -10 - Math.random() * 20;
+      }
+      dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPosArr, 3));
+      const dustMat = new THREE.PointsMaterial({
+        color: 0x3a6cd9,
+        size: 0.006,
+        transparent: true,
+        opacity: 0.12,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const dust = new THREE.Points(dustGeo, dustMat);
+      scene.add(dust);
+      // --- ASSETS: PARTICLE DISPERSION (Particles of the Orb) ---
+      const dispersionCount = 300000;
+      const dispersionGeo = new THREE.BufferGeometry();
+      const dispersionPos = new Float32Array(dispersionCount * 3);
+      const dispersionDirs = new Float32Array(dispersionCount * 3);
+      const dispersionSpeeds = new Float32Array(dispersionCount);
+      const dispersionPhases = new Float32Array(dispersionCount);
+
+      for (let i = 0; i < dispersionCount; i++) {
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+        
+        // Initial spread
+        const dist = RADIUS + Math.random() * 25.0;
+        dispersionPos[i * 3] = 2.0 + dist * Math.sin(phi) * Math.cos(theta);
+        dispersionPos[i * 3 + 1] = dist * Math.sin(phi) * Math.sin(theta);
+        dispersionPos[i * 3 + 2] = dist * Math.cos(phi) - 4.0;
+
+        // Radial direction
+        dispersionDirs[i * 3] = Math.sin(phi) * Math.cos(theta);
+        dispersionDirs[i * 3 + 1] = Math.sin(phi) * Math.sin(theta);
+        dispersionDirs[i * 3 + 2] = Math.cos(phi);
+
+        dispersionSpeeds[i] = 0.4 + Math.random() * 2.0;
+        dispersionPhases[i] = Math.random() * 100.0;
+      }
+
+      dispersionGeo.setAttribute('position', new THREE.BufferAttribute(dispersionPos, 3));
+      dispersionGeo.setAttribute('aDir', new THREE.BufferAttribute(dispersionDirs, 3));
+      dispersionGeo.setAttribute('aSpeed', new THREE.BufferAttribute(dispersionSpeeds, 1));
+      dispersionGeo.setAttribute('aPhase', new THREE.BufferAttribute(dispersionPhases, 1));
+
+      // --- ASSETS: INSTANCED MESH (SHARED DNA) ---
       const instGeo = new THREE.CircleGeometry(0.0055, 6);
       const instMat = new THREE.ShaderMaterial({
         transparent: true,
@@ -5848,8 +5919,33 @@
         `
       });
 
+      // 1. Core Orb Mesh
       const mesh = new THREE.InstancedMesh(instGeo, instMat, PARTICLE_COUNT);
       scene.add(mesh);
+
+      // 2. Dispersion Background Mesh (100% Visual Parity)
+      const DISP_COUNT = 40000;
+      const dispMesh = new THREE.InstancedMesh(instGeo, instMat, DISP_COUNT);
+      scene.add(dispMesh);
+
+      // Dispersion Data
+      const dispPos = new Float32Array(DISP_COUNT * 3);
+      const dispVel = new Float32Array(DISP_COUNT * 3);
+      for (let i = 0; i < DISP_COUNT; i++) {
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+        const dist = RADIUS + Math.random() * 30.0;
+        
+        dispPos[i * 3] = center.x + dist * Math.sin(phi) * Math.cos(theta);
+        dispPos[i * 3 + 1] = center.y + dist * Math.sin(phi) * Math.sin(theta);
+        dispPos[i * 3 + 2] = dist * Math.cos(phi) - 6.0; // Deep background
+
+        const speed = 0.001 + Math.random() * 0.003;
+        dispVel[i * 3] = Math.sin(phi) * Math.cos(theta) * speed;
+        dispVel[i * 3 + 1] = Math.sin(phi) * Math.sin(theta) * speed;
+        dispVel[i * 3 + 2] = Math.cos(phi) * speed;
+      }
+
 
       // Physics data arrays
       const posArr = new Float32Array(PARTICLE_COUNT * 3);
@@ -5938,6 +6034,42 @@
         }
         mesh.instanceMatrix.needsUpdate = true;
         mesh.rotation.y += 0.0008;
+        if (stars) {
+          stars.rotation.y += 0.00015;
+          stars.rotation.x += 0.00008;
+        }
+        if (dust) {
+          dust.rotation.y -= 0.0001;
+          dust.rotation.z += 0.00005;
+        }
+        // 4. Dispersion Mesh Updates (Drift Animation)
+        if (dispMesh) {
+          for (let i = 0; i < DISP_COUNT; i++) {
+            const idx = i * 3;
+            dispPos[idx] += dispVel[idx];
+            dispPos[idx+1] += dispVel[idx+1];
+            dispPos[idx+2] += dispVel[idx+2];
+            
+            // Recycling: if too far, return to core
+            const dx = dispPos[idx] - center.x;
+            const dy = dispPos[idx+1] - center.y;
+            const dz = dispPos[idx+2] - (center.z - 6.0);
+            if (dx*dx + dy*dy + dz*dz > 40 * 40) {
+              const theta = Math.random() * Math.PI * 2;
+              const phi = Math.acos(2 * Math.random() - 1);
+              dispPos[idx] = center.x + RADIUS * Math.sin(phi) * Math.cos(theta);
+              dispPos[idx+1] = center.y + RADIUS * Math.sin(phi) * Math.sin(theta);
+              dispPos[idx+2] = center.z + RADIUS * Math.cos(phi) - 6.0;
+            }
+
+            dummy.position.set(dispPos[idx], dispPos[idx+1], dispPos[idx+2]);
+            dummy.scale.set(1, 1, 1);
+            dummy.updateMatrix();
+            dispMesh.setMatrixAt(i, dummy.matrix);
+          }
+          dispMesh.instanceMatrix.needsUpdate = true;
+          dispMesh.rotation.y += 0.0001;
+        }
 
         renderer.render(scene, camera);
       }
@@ -5976,7 +6108,7 @@
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
       // ── NODES ──
-      const nodeCount = 80;
+      const nodeCount = 120;
       const nodes = [];
       const nodePositions = new Float32Array(nodeCount * 3);
 
@@ -6015,7 +6147,7 @@
       scene.add(lineSegments);
 
       // ── DATA FLOW PARTICLES ──
-      const flowCount = Math.min(connections.length * 2, 320);
+      const flowCount = 600;
       const flowPositions = new Float32Array(flowCount * 3);
       const flowPhases = new Float32Array(flowCount).map(() => Math.random());
       const flowGeo = new THREE.BufferGeometry();
